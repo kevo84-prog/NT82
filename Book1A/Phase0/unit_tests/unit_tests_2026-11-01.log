@@ -1,7 +1,12 @@
-Book 1A Phase 0 unit tests  2026-11-01T20:00:28+00:00  commit 04b019b  package book1a-phase0-v0.1
+Book 1A Phase 0 unit tests  2026-11-01T20:13:22+00:00  commit 1957610  package book1a-phase0-v0.1
 module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.0, plan_fields=plan-fields-v1.0, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
 python 3.13.18
-tests run 93, failures 0, errors 0, result PASS
+tests run 123, failures 0, errors 0, result PASS
+test_bar_end_rule_and_volumes (book1a.tests.test_bars.TestBars.test_bar_end_rule_and_volumes) ... ok
+test_large_trade (book1a.tests.test_bars.TestBars.test_large_trade) ... ok
+test_stacked_buy_imbalance (book1a.tests.test_bars.TestBars.test_stacked_buy_imbalance) ... ok
+test_string_times_and_bounds (book1a.tests.test_bars.TestBars.test_string_times_and_bounds) ... ok
+test_rows_and_tags_never_missing (book1a.tests.test_candidate_log.TestCandidateLog.test_rows_and_tags_never_missing) ... ok
 test_gex_tolerance_sensitivity (book1a.tests.test_families.TestCountFamilies.test_gex_tolerance_sensitivity) ... ok
 test_hand_built_jeron_nov18_zone (book1a.tests.test_families.TestCountFamilies.test_hand_built_jeron_nov18_zone) ... ok
 test_single_family_is_target (book1a.tests.test_families.TestCountFamilies.test_single_family_is_target) ... ok
@@ -12,6 +17,19 @@ test_prefixes (book1a.tests.test_families.TestFamilyMapping.test_prefixes) ... o
 test_band_level_any_overlap (book1a.tests.test_families.TestTolerances.test_band_level_any_overlap) ... ok
 test_gex_counts_inside_or_within_10_points (book1a.tests.test_families.TestTolerances.test_gex_counts_inside_or_within_10_points) ... ok
 test_other_families_5_points (book1a.tests.test_families.TestTolerances.test_other_families_5_points) ... ok
+test_commission_287_per_side_per_contract (book1a.tests.test_fills_v34.TestCommissionInNetR.test_commission_287_per_side_per_contract) ... ok
+test_latency_1000ms_stress (book1a.tests.test_fills_v34.TestEntry.test_latency_1000ms_stress) ... ok
+test_long_fills_at_ask_250ms_after_close (book1a.tests.test_fills_v34.TestEntry.test_long_fills_at_ask_250ms_after_close) ... ok
+test_short_fills_at_bid (book1a.tests.test_fills_v34.TestEntry.test_short_fills_at_bid) ... ok
+test_1455_flatten_long_at_bid_short_at_ask (book1a.tests.test_fills_v34.TestFlatten.test_1455_flatten_long_at_bid_short_at_ask) ... ok
+test_long_stop_1_tick_below (book1a.tests.test_fills_v34.TestStop.test_long_stop_1_tick_below) ... ok
+test_long_stop_stress_2_and_4 (book1a.tests.test_fills_v34.TestStop.test_long_stop_stress_2_and_4) ... ok
+test_short_stop_1_tick_above (book1a.tests.test_fills_v34.TestStop.test_short_stop_1_tick_above) ... ok
+test_stop_triggers_on_a_trade_through_not_a_touch_of_quote (book1a.tests.test_fills_v34.TestStop.test_stop_triggers_on_a_trade_through_not_a_touch_of_quote) ... ok
+test_v35_gap_fill_differs_only_on_gaps (book1a.tests.test_fills_v34.TestStop.test_v35_gap_fill_differs_only_on_gaps) ... ok
+test_long_target_needs_1_tick_through (book1a.tests.test_fills_v34.TestTarget.test_long_target_needs_1_tick_through) ... ok
+test_short_target_needs_1_tick_through (book1a.tests.test_fills_v34.TestTarget.test_short_target_needs_1_tick_through) ... ok
+test_same_timestamp_stop_and_target_is_stop (book1a.tests.test_fills_v34.TestTie.test_same_timestamp_stop_and_target_is_stop) ... ok
 test_checker_and_full_ledger (book1a.tests.test_ledger.TestFiles.test_checker_and_full_ledger) ... ok
 test_long_stop_with_1_tick_slip (book1a.tests.test_ledger.TestR.test_long_stop_with_1_tick_slip) ... ok
 test_long_target_one_contract (book1a.tests.test_ledger.TestR.test_long_target_one_contract) ... ok
@@ -50,6 +68,9 @@ test_session_tags (book1a.tests.test_map_v24.TestSwingAndRejection.test_session_
 test_swing_found_and_zone_drawn (book1a.tests.test_map_v24.TestSwingAndRejection.test_swing_found_and_zone_drawn) ... ok
 test_swing_not_known_before_15_bars_closed (book1a.tests.test_map_v24.TestSwingAndRejection.test_swing_not_known_before_15_bars_closed) ... ok
 test_window_start (book1a.tests.test_map_v24.TestSwingAndRejection.test_window_start) ... ok
+test_hand_ranking (book1a.tests.test_p1.TestGammaRanks.test_hand_ranking) ... ok
+test_coverage_table (book1a.tests.test_p1.TestGexCheck.test_coverage_table) ... ok
+test_expected_blank_0dte_after_roll (book1a.tests.test_p1.TestGexCheck.test_expected_blank_0dte_after_roll) ... ok
 test_balanced (book1a.tests.test_plan_fields.TestContext.test_balanced) ... ok
 test_bearish (book1a.tests.test_plan_fields.TestContext.test_bearish) ... ok
 test_bullish (book1a.tests.test_plan_fields.TestContext.test_bullish) ... ok
@@ -69,6 +90,13 @@ test_most_restrictive_wins_and_conflict_logged (book1a.tests.test_plan_fields.Te
 test_rejection_zone_both_any_on_balanced (book1a.tests.test_plan_fields.TestSides.test_rejection_zone_both_any_on_balanced) ... ok
 test_value_follows_divergent_up (book1a.tests.test_plan_fields.TestSides.test_value_follows_divergent_up) ... ok
 test_zone_fields_complete (book1a.tests.test_plan_fields.TestSides.test_zone_fields_complete) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestPlanBuilder.test_check_f_logged_not_applied) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestPlanBuilder.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestPlanBuilder.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestPlanBuilder.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestPlanBuilder.test_s14_reads_only_book1_keys) ... ok
+test_sizing_reject_and_ledger (book1a.tests.test_replay_risk.TestReplayRisk.test_sizing_reject_and_ledger) ... ok
+test_two_loss_halt_and_daily_budget (book1a.tests.test_replay_risk.TestReplayRisk.test_two_loss_halt_and_daily_budget) ... ok
 test_accept_and_reject_above_budget (book1a.tests.test_risk.TestDayState.test_accept_and_reject_above_budget) ... ok
 test_daily_budget_shrinks_size_then_rejects (book1a.tests.test_risk.TestDayState.test_daily_budget_shrinks_size_then_rejects) ... ok
 test_daily_dollar_limit_halts (book1a.tests.test_risk.TestDayState.test_daily_dollar_limit_halts) ... ok
@@ -84,6 +112,8 @@ test_largest_stops_that_fit_1000 (book1a.tests.test_risk.TestFormula.test_larges
 test_16_tick_stop_sizes_to_10 (book1a.tests.test_risk.TestSizing.test_16_tick_stop_sizes_to_10) ... ok
 test_196_fits_197_rejects (book1a.tests.test_risk.TestSizing.test_196_fits_197_rejects) ... ok
 test_60_tick_stop_sizes_to_3 (book1a.tests.test_risk.TestSizing.test_60_tick_stop_sizes_to_3) ... ok
+test_half_days_in_roll_days_in_holidays_out (book1a.tests.test_sessions.TestSessions.test_half_days_in_roll_days_in_holidays_out) ... ok
+test_phase_counts_match_book1 (book1a.tests.test_sessions.TestSessions.test_phase_counts_match_book1) ... ok
 test_build_and_compare (book1a.tests.test_tools.TestManifest.test_build_and_compare) ... ok
 test_identical_and_differing (book1a.tests.test_tools.TestReplayDiff.test_identical_and_differing) ... ok
 test_empty_window (book1a.tests.test_vwap.TestHandCalc.test_empty_window) ... ok
@@ -97,6 +127,6 @@ test_session_start_is_prev_day_1700 (book1a.tests.test_vwap.TestWindows.test_ses
 test_week_start_is_sunday_1700 (book1a.tests.test_vwap.TestWindows.test_week_start_is_sunday_1700) ... ok
 
 ----------------------------------------------------------------------
-Ran 93 tests in 0.015s
+Ran 123 tests in 0.419s
 
 OK
