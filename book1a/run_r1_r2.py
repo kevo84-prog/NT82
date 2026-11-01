@@ -1,4 +1,4 @@
-"""P0.4 (and P0.3): produce the R1 (A0) and R2 (C1) trade ledgers for the checker, on the PC.
+r"""P0.4 (and P0.3): produce the R1 (A0) and R2 (C1) trade ledgers for the checker, on the PC.
 
   python -m book1a.run_r1_r2 --phase phase1 --block1 K:\Databento_BackTesting --out K:\Databento_BackTesting\Book1A\Phase0\runs\phase1
   python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 ... --out ...\runs\det_A      (P0.3, run twice)
