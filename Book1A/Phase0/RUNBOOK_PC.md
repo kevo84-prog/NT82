@@ -13,6 +13,8 @@ python -m book1a.run_phase0_tests ..\Phase0\unit_tests
 
 | Item | Command | Output |
 |---|---|---|
+| 0 (C1 source) | none: `book1_ref\C1_definition_no_results.md` is the only C1 source the runner reads (created Nov 1, session 2). Do not open `FROZEN_STRATEGY.md`. | - |
+| A2 | `python -m book1a.book1_ref_compare book1_ref\MANIFEST.md K:\Databento_BackTesting ..\Phase0\A2_book1_tag_compare.md --tag <frozen tag, e.g. phase4-result> --raw K:\Databento_BackTesting\raw` (run with the frozen tag checked out; the tool changes nothing) | A2_book1_tag_compare.md: every manifest file MATCH / DIFFERS / MISSING against the tag, plus HEAD and the tag commit. Report every DIFFERS / MISSING row to Kyron before P0.4 |
 | P0.2 | `python -m book1a.manifest build K:\Databento_BackTesting\raw ..\Phase0\manifest_block1.csv` then `python -m book1a.manifest compare ..\Phase0\manifest_block1.csv K:\Databento_BackTesting\data_integrity_2025-10-21_2026-10-02.csv ..\Phase0\P0.2_checksums.md` | checksum table + comparison (must be PASS; the gate 6 table has no sha256 column, so sizes and file names are compared and our sha256 list becomes the Book 1A reference) |
 | P0.3 | `python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out ..\Phase0\replay_diff\runA` ; same with `runB` ; `python -m book1a.replay_diff ..\Phase0\replay_diff\runA ..\Phase0\replay_diff\runB ..\Phase0\replay_diff\diff.md --ignore run_id generated` | diff.md (must say DIFF EMPTY) |
 | P0.4 | `python -m book1a.run_r1_r2 --phase phase1 --block1 K:\Databento_BackTesting --out ..\Phase0\runs\phase1 --map-first-utc <map_first_utc from backtest\phase2\phase2_config.json>` ; repeat for phase2, phase3, phase4 ; then copy `runs\phase*\checker_input\R1_A0.csv` and `R2_C1.csv` into `..\Phase0\checker_input\` as `R1_A0_<phase>.csv` / `R2_C1_<phase>.csv` | the hand-off to the checker; `r1_check_a0.json` must list 0 problems on the v3.4 phases |
@@ -29,5 +31,6 @@ Notes
 - `run_r1_r2.py` builds the daily-loop config from the Book 1 layout (`tapes\`, `bars\nq_1m.csv`, `bars\es_1m.csv`,
   the calendar and GEX files). If the Book 1 phase folders used other paths or history windows, copy them from
   `backtest\phase3\build_inputs.py` into `book1_cfg()` before running; they are inputs, not results.
-- Fill model for P0.4: default `book1` (v3.4 on Phases 1-2, v3.5 on Phases 3-4). See ambiguity A1.
+- Fill model for P0.4: default `book1` (v3.4 on Phases 1-2, v3.5 on Phases 3-4) = Book 1's published per-phase setting, kept
+  on Kyron's instruction (Nov 1, session 2). The exact v3.4 / v3.5 code difference is reported in `A1_fill_model_v34_v35_diff.md`.
 - Mono must be on PATH (the harness runs `mono JeronHarness.exe` outside Windows; on Windows the exe runs directly).
