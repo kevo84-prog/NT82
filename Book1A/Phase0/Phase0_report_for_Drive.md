@@ -1,9 +1,34 @@
 # Book 1A – Phase 0 report
 
-Runner: Claude Code cloud session (kevo84-prog/NT82), Nov 1, 2026. Branch `book1a-phase0` (also mirrored on the
-session branch `ccr-634ccaf9-wh1psf`). Package tag `book1a-phase0-v0.1`; per-module tags in the table below.
+Runner: Claude Code cloud session (kevo84-prog/NT82), Nov 1, 2026, two sessions (session 1 = build; session 2 = this
+update, on the session branch `ccr-ab13936d-cx8m7e`, to be fast-forwarded onto `book1a-phase0`). Package tag `book1a-phase0-v0.1`; per-module tags in the table below.
 Controlling doc: "Book 1A – Replay plan"; task list: "Book 1A – Phase 0 build checklist" (text copies in
 `Book1A/specs/`). No P&L was opened. One blinding exposure is logged in section 5.
+
+## 0a. Session 2 (Nov 1, later): what changed since the first report
+
+The brief for session 2 was "on this PC, continue Phase 0" (`K:\Databento_BackTesting`, branch `book1a-phase0`). This
+session again ran in the cloud container with **no Remote Control folder attached** (checked at the start:
+the list of connectable PC folders was empty), so nothing that needs the PC could execute. What was done:
+
+1. **C1 results-free definition (done).** `book1_ref/C1_definition_no_results.md`: the full C1 rule set (A0 replay
+   mechanics, FZ1 / L1 / T8, RH1 retest path, M0, fill model, sessions) rebuilt from the Book 1 code only, with the
+   source lines cited and no table or result. It is now the only C1 source the runner reads; `FROZEN_STRATEGY.md`
+   was not opened again (two result numbers embedded in code were seen in passing; section 5, item 4).
+2. **A2 (partly done).** The 41 files in `book1_ref/` hash exactly to `book1_ref/MANIFEST.md` (41 match, 0 differ,
+   0 missing). The comparison against the frozen tag on the PC could not run from here. A one-command tool now does
+   it on the PC and lists every file that differs: `book1a/book1_ref_compare.py` (unit-tested; runbook row "A2").
+3. **A1 (reported, not chosen).** `A1_fill_model_v34_v35_diff.md`: in `fills.py` v3.4 and v3.5 are one function
+   with one switch (`gap_fill`), and the only behavioural difference is one line: on a stop trigger v3.4 fills at
+   `stop -/+ slip`, v3.5 at `the first traded price at or beyond the stop -/+ slip` (equal unless price jumps through
+   the stop). The exit engine the replays use carries the same line plus two stop-change rules that cannot fire for
+   M0. Where Book 1 selected each model per phase, and why the design notes give, is in the report. For the P0.4
+   ledgers the runner keeps Book 1's published per-phase setting, v3.4 for Phases 1-2 and v3.5 for Phases 3-4
+   (`run_r1_r2.py --fill book1`, the default), as instructed.
+4. **Runbook steps P0.2, P0.3, P0.4, P0.6-P0.9, P0.11-P0.13, P1.1: NOT RUN (unchanged).** They need the Block 1 data,
+   the Mono harness and `mq_levels.py`, all PC-only. `RUNBOOK_PC.md` is updated with the step-0 rule (C1 file only)
+   and the A2 row. The unit tests were rerun on this branch: 124 tests, 0 failures (123 + the new A2 tool test).
+5. **Freeze tag not applied** (nothing new passed on real days; the checker's P0.4 result is still pending).
 
 ## 0. Read first: what passed here and what still has to run on the PC
 
@@ -32,7 +57,7 @@ the real-day tests have not run. Nothing in Book 1 was edited, moved or overwrit
 | P0.1 | Blind run setup | PASS (one exposure logged) | book1a-phase0-v0.1 | Nov 1 | `P0.1_blind_run_setup.md`: layout, allowed / forbidden files, access events. Book 1 reference copy made by a separate download agent under a written blinding rule (no result folders opened). |
 | P0.2 | Data unchanged since Book 1 | BUILT / NOT RUN | manifest-v1.0 | Nov 1 | Gate 6 table obtained (`book1_ref/backtest/phase0_parity/phase0_data_integrity_2025-10-21_2026-10-02.csv`: 161 files, 155 used, 0 decode errors, roll days from the roll files). It has sizes to 0.1 MB, no checksums: the PC run compares names and sizes and writes our sha256 list as the Book 1A reference. Static inputs (`gex_levels_block1.csv`, econ calendar, roll estimate) are in `book1_ref/data/` with sha256. |
 | P0.3 | Deterministic replay | BUILT / NOT RUN | replay-diff-v1.0 | Nov 1 | `run_r1_r2.py --sessions 2025-11-05 2025-12-15` twice, then `replay_diff` (row-for-row, bit-identical floats); the only ignored columns are run_id / generated timestamps. |
-| P0.4 | R1 / R2 reproduction (E5) | BUILT / NOT RUN; ledgers not yet produced | run-r1-r2-v1.0, ledger-v1.0 | Nov 1 | Section 3. The C1 replay call equals Book 1's `final_combination.py` / `run_holdout.py` (FZ1 ∪ L1 ∪ T8 veto, RH1 15 bars / 2 ticks, M0). Ambiguity A1 (fill model) needs Kyron's confirmation before the run. |
+| P0.4 | R1 / R2 reproduction (E5) | BUILT / NOT RUN; ledgers not yet produced | run-r1-r2-v1.0, ledger-v1.0 | Nov 1 | Section 3. The C1 replay call equals Book 1's `final_combination.py` / `run_holdout.py` (FZ1 ∪ L1 ∪ T8 veto, RH1 15 bars / 2 ticks, M0); the rules are in `book1_ref/C1_definition_no_results.md`. Fill model: Book 1's published per-phase setting (A1 reported in `A1_fill_model_v34_v35_diff.md`, kept as instructed). |
 | P0.5 | Execution model v3.4 | PASS | fills.py (Book 1, unchanged, sha256 1b93cbde…) + test-fills-v34 | Nov 1 | 13 long / short cases on Book 1's `fills.simulate`: entry 250 ms at ask / bid, 1,000 ms stress, target 1 tick through (touch = no fill), stop 1 tick adverse (2 and 4 stress), same-timestamp tie = stop, 14:55 CT flatten at bid / ask, commission $2.87 per side in net R, v3.5 gap fill differs only on gaps. |
 | P0.6 | 08:10 VWAP | PASS on synthetic hand calc / real-day table NOT RUN | vwap-v1.0 | Nov 1 | 9 tests (windows, Sunday 17:00 CT, DST change Nov 2, strict 08:10:00 cut, roll-day restart, order independence). PC: `hand_checks/vwap_hand_check.py` on Oct 22, Nov 5, Dec 15 and Mar 16, independent pandas calculation beside the module. |
 | P0.7 | Map v2.4 Book 1A outputs | BUILT, 23 synthetic tests PASS / 3-day hand check NOT RUN | map-v2.4-book1a-v1.0, bars-v1.0, plan-v2.4-book1a-v1.0 | Nov 1 | PO-1 (15-bar swings, arrival delta 150 / IMB / LARGE, 0.25 ADR in 10 bars, 10-40 pt bands, 5-pt merge, 3-close flip, tags, 2-per-side selection), PO-6 (70% areas, 40-pt cap), PO-7 (top-20% delta bands), PO-9 (60 min / 80% / 20%, FAILED_RECLAIM), PO-11 (DD_EDGE), PO-13 (08:10 vs 08:29). Every zone carries available_at = 08:10 CT. PC: `hand_checks/plan_hand_check.py` writes the per-day tables with an empty "hand" column. |
@@ -57,7 +82,10 @@ the real-day tests have not run. Nothing in Book 1 was edited, moved or overwrit
 | `unit_tests/unit_tests_2026-11-01.log` | P0.5, P0.8, P0.10 and all other unit-test logs, verbose, with module tags and commit |
 | `P1.2_gex_levels.md` | the P1.2 coverage table on the real GEX file |
 | `P1_P2_status.md` | P1 / P2 readiness and replay paths |
-| `RUNBOOK_PC.md` | the exact command for every NOT RUN item |
+| `RUNBOOK_PC.md` | the exact command for every NOT RUN item (session 2: step 0 and the A2 row added) |
+| `A1_fill_model_v34_v35_diff.md` | session 2: the exact v3.4 / v3.5 difference in Book 1's code, where each phase selected it, and the design notes' reasons |
+| `../../book1_ref/C1_definition_no_results.md` | session 2: C1's rules only, from code; the runner's only C1 source |
+| `../../book1a/book1_ref_compare.py` | session 2: A2 tool, manifest vs the frozen tag on the PC (`A2_book1_tag_compare.md` when run) |
 | `checker_input/` | empty until P0.4 runs on the PC (R1_A0_<phase>.csv, R2_C1_<phase>.csv) |
 | `hand_checks/`, `lookahead/`, `replay_diff/` | empty until the PC runs |
 | `../specs/` | text exports of the ten Book 1A docs and the two Book 1 design docs, dated |
@@ -76,9 +104,10 @@ time, side, qty, entry price, stop, target, exit time, exit price, exit reason, 
 qty 1)"), one per strategy per phase, written to `checker_input/`. The runner compares nothing. The checker returns
 pass / fail and the mismatch list; that result goes into section 7 when Kyron gives it.
 
-Open before the run: ambiguity A1. Book 1 published A0 Phases 1-2 under fill model v3.4 and A0 / C1 Phases 3-4 under
-v3.5 (gap fill); the replay plan freezes v3.4 for the standardized R1-R4 comparison. The script's default reproduces
-each result under the fill model it was published with and labels the column; `--fill v3.4` forces one model.
+Fill model (A1, closed by instruction in session 2): Book 1 published A0 Phases 1-2 under fill model v3.4 and A0 / C1
+Phases 3-4 under v3.5 (gap fill); the script's default reproduces each result under the fill model it was published
+with and labels the column. The replay plan's standardized R1-R4 comparison (v3.4 for all) is a separate run
+(`--fill v3.4`). The exact code difference is in `A1_fill_model_v34_v35_diff.md`.
 
 ## 4. Deterministic replay diff (P0.3), unit-test logs (P0.5, P0.10), hand-check tables (P0.6-P0.9), samples (P0.11, P0.12), lookahead audit (P0.13)
 
@@ -99,12 +128,17 @@ each result under the fill model it was published with and labels the column; `-
 2. The Book 1A phase docs and the design v3.10 change log quote Book 1 Phase 2 / 3 per-arm and A0 numbers; those are in
    the documents the runner was told to read.
 3. The download agent listed (names only) the Phase 0 parity folder and the project folder; it opened no result file.
+4. Session 2: while rebuilding the C1 rules from code, two result numbers embedded in Book 1 source were seen:
+   `final_combination.py` line 11 (per-session figures for the C2-C4 fallback steps) and `run_holdout.py` line 22
+   (a Phase 3 drawdown constant in the holdout decision rule). Not repeated anywhere, not used. Recommendation for the
+   PC run: the checker, not the runner, should hold those two files' result lines; the runner needs only the calls.
 
 ## 6. Ambiguities and missing definitions (full list in `ambiguities.md`)
 
-Needs Kyron: A1 fill model for the C1 reproduction (v3.4 vs v3.5, above); A2 the "current Book 1 tag" is not reachable
-(no git history on Drive or GitHub; the branch was created in NT82 with the sha256-listed reference copy, to be
-confirmed against the PC's tagged checkout); A3 all real-data runs must happen on the PC.
+A1 closed by instruction (published per-phase fill model kept; difference reported). A2 still open: the "current Book 1
+tag" is not reachable from the cloud (no git history on Drive or GitHub, no PC folder connected); the reference copy is
+self-consistent (41 / 41 sha256) and `book1a.book1_ref_compare` lists every differing file once run on the PC. A3 all
+real-data runs must happen on the PC.
 Runner defaults inside the rules (changeable before the freeze): strict 08:10:00 cut; PO-1 window = min(prior-day
 08:30, Sunday 17:00); strict swing ties; FLIP overlap over the first zone's width; 40-pt cap nearest the newer swing;
 delta-band top 20% by rank and 40-pt window by largest |delta|; PO-9 volume share by bars closing beyond; gains do not
@@ -120,7 +154,8 @@ pass / fail and mismatch list.
 
 ## 8. What to do next (in order)
 
-1. Kyron: confirm A1 (fill model per phase for the reproduction) and A2 (reference copy = frozen tag).
-2. On the PC, follow `RUNBOOK_PC.md` top to bottom; hand `checker_input/` to the checker session.
+1. Connect the PC (Remote Control on `K:\Databento_BackTesting`) or run the runbook there by hand; fast-forward
+   `book1a-phase0` to this session's branch first.
+2. On the PC, follow `RUNBOOK_PC.md` top to bottom (step 0, A2, then P0.2 onward); hand `checker_input/` to the checker.
 3. Fill section 7; fix any systematic difference in code (never a threshold); rerun; then tag `book1a-phase0-freeze`.
 4. Only then Phase 1.

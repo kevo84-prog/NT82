@@ -55,3 +55,33 @@ class TestReplayDiff(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBook1RefCompare(unittest.TestCase):
+    def test_match_differ_missing(self):
+        from book1a import book1_ref_compare as C
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d) / "pc"; (root / "jeron_engine").mkdir(parents=True); (root / "raw" / "sub").mkdir(parents=True)
+            (root / "jeron_engine" / "fills.py").write_bytes(b"abc")            # match
+            (root / "jeron_engine" / "arms.py").write_bytes(b"changed")         # differs
+            (root / "raw" / "sub" / "gex_levels_block1.csv").write_bytes(b"xyz")  # found by name under --raw
+            man = Path(d) / "MANIFEST.md"
+            sha_abc = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+            sha_xyz = "3608bca1e44ea6c4d268eb6db02260269892c0b42b86bbf1e77a6fa16c3c9282"
+            man.write_text("| local path | Drive id | modifiedTime | bytes | sha256 |\n|---|---|---|---|---|\n"
+                           f"| jeron_engine/fills.py | id1 | 2026-10-27T00:15:04.012Z | 3 | {sha_abc} |\n"
+                           f"| jeron_engine/arms.py | id2 | 2026-10-26T16:07:12.825Z | 3 | {sha_abc} |\n"
+                           f"| data/gex_levels_block1.csv | id3 | 2026-10-25T04:05:00.828Z | 3 | {sha_xyz} |\n"
+                           f"| data/condition_NQ_MBO_2026-09.json (Drive name `condition.json`) | id4 | t | 3 | {sha_abc} |\n")
+            rep = Path(d) / "rep.md"
+            r = C.compare(man, root, rep, raw=root / "raw")
+            self.assertEqual((r["files"], r["match"], r["differing"], r["missing"]), (4, 2, 1, 1))
+            txt = rep.read_text()
+            self.assertIn("FAIL", txt); self.assertIn("| jeron_engine/arms.py | **DIFFERS**", txt)
+            self.assertIn("| data/condition_NQ_MBO_2026-09.json | **MISSING**", txt)
+            (root / "jeron_engine" / "arms.py").write_bytes(b"abc")
+            (root / "NQ_MBO_2026-09" / "GLBX-20260928-6GPK57A3YJ").mkdir(parents=True)
+            (root / "NQ_MBO_2026-09" / "GLBX-20260928-6GPK57A3YJ" / "condition.json").write_bytes(b"abc")
+            r = C.compare(man, root, rep, raw=root / "raw")
+            self.assertEqual((r["match"], r["differing"], r["missing"]), (4, 0, 0))
+            self.assertIn("PASS", rep.read_text())
