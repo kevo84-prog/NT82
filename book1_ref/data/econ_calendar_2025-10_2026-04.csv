@@ -1,0 +1,79 @@
+date,time_ct,event,category,ref_period,status,action,no_trade_ct,gex_event,original_date,source,notes
+2025-10-23,,Tesla earnings (Oct 22 after close),EARNINGS,Q3 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.moneyweek.com/investments/tech-stocks/magnificent-seven-earnings-preview,Reported Oct 22 AMC; affects Oct 23 session
+2025-10-24,07:30,CPI,DATA_TIER1,Sep 2025,RELEASED,no_trade,08:30-08:40,CPI,2025-10-15,https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm,Released during shutdown (COLA exception)
+2025-10-29,13:00,FOMC decision + press conference,FOMC,Oct 2025 meeting,RELEASED,no_trade,12:45-15:00,FOMC,,https://therighttrader.com/economic-calendar/fomc,Statement 2:00 PM ET
+2025-10-30,,MSFT / GOOGL / META earnings (Oct 29 after close),EARNINGS,Q3 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.moneyweek.com/investments/tech-stocks/magnificent-seven-earnings-preview,Reported Oct 29 AMC
+2025-10-30,,GDP Q3 advance,DATA_TIER1,Q3 2025,CANCELED,none,,,2025-10-30,https://www.bea.gov/home?page=3,Canceled by BEA; no window
+2025-10-31,,AAPL / AMZN earnings (Oct 30 after close),EARNINGS,Q3 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.moneyweek.com/investments/tech-stocks/magnificent-seven-earnings-preview,Reported Oct 30 AMC
+2025-11-03,09:00,ISM Manufacturing PMI,DATA_TIER1,Oct 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/,First business day rule (ISM not affected by shutdown)
+2025-11-05,09:00,ISM Services PMI,DATA_TIER1,Oct 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/,Third business day rule
+2025-11-07,,Employment Situation (NFP),DATA_TIER1,Oct 2025,CANCELED,none,,,2025-11-07,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Canceled; Oct payrolls came with Nov report on Dec 16
+2025-11-13,,CPI,DATA_TIER1,Oct 2025,CANCELED,none,,,2025-11-13,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Canceled
+2025-11-14,,PPI,DATA_TIER1,Oct 2025,CANCELED,none,,,2025-11-14,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Canceled; Oct data came with Nov PPI on Jan 14
+2025-11-20,07:30,Employment Situation (NFP),DATA_TIER1,Sep 2025,RELEASED,no_trade,08:30-08:40,NFP,2025-10-03,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2025-11-20,,NVDA earnings (Nov 19 after close),EARNINGS,Q3 FY2026,RELEASED,max_trades=1,,EARNINGS,,https://www.moneyweek.com/investments/tech-stocks/magnificent-seven-earnings-preview,Reported Nov 19 AMC
+2025-11-21,,Monthly options expiration,INFO,Nov 2025,RELEASED,none,,OPEX,,,Third Friday; logged only
+2025-11-25,07:30,PPI,DATA_TIER1,Sep 2025,RELEASED,no_trade,08:30-08:40,PPI,2025-10-16,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Same time as retail sales
+2025-11-25,07:30,Retail sales (advance),DATA_TIER1,Sep 2025,RELEASED,no_trade,08:30-08:40,RETAIL,,https://www.calculatedriskblog.com/2025/11/retail-sales-increased-02-in-september.html,Census Sep advance report delayed by shutdown
+2025-11-27,,Thanksgiving,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/trading-hours.html,No cash session; CME equity futures halt 12:00 CT
+2025-11-28,,Day after Thanksgiving (half day),MARKET_CALENDAR,,HALF_DAY,LOG_ONLY,,HALF_DAY,,https://www.cmegroup.com/trading-hours.html,Cash ends 12:00 CT; CME equity futures close 12:15 CT
+2025-12-01,09:00,ISM Manufacturing PMI,DATA_TIER1,Nov 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/,
+2025-12-03,09:00,ISM Services PMI,DATA_TIER1,Nov 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/,
+2025-12-05,09:00,Personal income and outlays (PCE),DATA_TIER1,Sep 2025,RELEASED,no_trade,08:58-09:15,PCE,2025-10-31,https://www.bea.gov/home?page=3,10:00 AM ET release; NFP originally due this day was moved to Dec 16
+2025-12-10,13:00,FOMC decision + SEP + press conference,FOMC,Dec 2025 meeting,RELEASED,no_trade,12:45-15:00,FOMC,,https://therighttrader.com/economic-calendar/fomc,CPI originally due this day was moved to Dec 18
+2025-12-15,,NQ roll day (Dec 25 to Mar 26),MARKET_CALENDAR,,ROLL,LOG_ONLY,,ROLL,2025-12-11,,"NinjaTrader rollover date (from its database on Kyron's PC); CME calendar roll was 2025-12-11; Databento NQ.v.0 switched 2 trading days later, so roll-day files replace the continuous data"
+2025-12-16,07:30,Employment Situation (NFP),DATA_TIER1,Nov 2025,RELEASED,no_trade,08:30-08:40,NFP,2025-12-05,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Includes Oct payrolls
+2025-12-16,07:30,Retail sales (advance),DATA_TIER1,Oct 2025,RELEASED,no_trade,08:30-08:40,RETAIL,2025-11-14,https://www.census.gov/retail/ecommerce.html,
+2025-12-18,07:30,CPI,DATA_TIER1,Nov 2025,RELEASED,no_trade,08:30-08:40,CPI,2025-12-10,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2025-12-19,,Quarterly expiration (quad witching),INFO,Dec 2025,RELEASED,none,,OPEX,,,NQ Dec 25 expiry; logged only
+2025-12-23,07:30,GDP Q3 initial + PCE Jul-Sep updates,DATA_TIER1,Q3 2025,RELEASED,no_trade,08:30-08:40,GDP,2025-11-26,https://bea.gov/news/blog?tid=1136,Replaced the canceled advance and the second estimate
+2025-12-24,,Christmas Eve (half day),MARKET_CALENDAR,,HALF_DAY,LOG_ONLY,,HALF_DAY,,https://www.cmegroup.com/trading-hours.html,Cash ends 12:00 CT; CME equity futures close 12:15 CT
+2025-12-25,,Christmas,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/trading-hours.html,Closed
+2026-01-01,,New Year's Day,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/trading-hours.html,Closed
+2026-01-05,09:00,ISM Manufacturing PMI,DATA_TIER1,Dec 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,Moved to Jan 5 for ISM holiday
+2026-01-07,09:00,ISM Services PMI,DATA_TIER1,Dec 2025,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-01-09,07:30,Employment Situation (NFP),DATA_TIER1,Dec 2025,RELEASED,no_trade,08:30-08:40,NFP,,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2026-01-13,07:30,CPI,DATA_TIER1,Dec 2025,RELEASED,no_trade,08:30-08:40,CPI,,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2026-01-14,07:30,PPI,DATA_TIER1,Nov 2025,RELEASED,no_trade,08:30-08:40,PPI,2025-12-11,https://www.bls.gov/schedule/news_release/ppi.htm,Includes Oct data
+2026-01-14,07:30,Retail sales (advance),DATA_TIER1,Nov 2025,RELEASED,no_trade,08:30-08:40,RETAIL,2025-12-17,https://www.census.gov/retail/index.html,
+2026-01-16,,Monthly options expiration,INFO,Jan 2026,RELEASED,none,,OPEX,,,Third Friday; logged only
+2026-01-19,,Martin Luther King Jr. Day,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/trading-hours.html,NYSE closed; CME equity futures halt 12:00 CT; no cash session
+2026-01-22,07:30,GDP Q3 updated estimate,DATA_TIER1,Q3 2025,RELEASED,no_trade,08:30-08:40,GDP,2025-12-19,https://bea.gov/news/blog/2025-12-10/economic-release-schedule-updates,
+2026-01-22,09:00,Personal income and outlays (PCE),DATA_TIER1,Oct + Nov 2025,RELEASED,no_trade,08:58-09:15,PCE,2025-11-26,https://bea.gov/news/blog?tid=1136,10:00 AM ET; two months in one release
+2026-01-28,13:00,FOMC decision + press conference,FOMC,Jan 2026 meeting,RELEASED,no_trade,12:45-15:00,FOMC,,https://www.federalreserve.gov/newsevents/pressreleases/monetary20260128a.htm,
+2026-01-29,,MSFT / META / TSLA earnings (Jan 28 after close),EARNINGS,Q4 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.nasdaq.com/articles/microsoft-meta-tesla-and-apple-are-part-zacks-earnings-preview,Reported Jan 28 AMC
+2026-01-30,07:30,PPI,DATA_TIER1,Dec 2025,RELEASED,no_trade,08:30-08:40,PPI,2026-01-14,https://www.bls.gov/schedule/news_release/ppi.htm,
+2026-01-30,,AAPL earnings (Jan 29 after close),EARNINGS,Q4 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.nasdaq.com/articles/microsoft-meta-tesla-and-apple-are-part-zacks-earnings-preview,Reported Jan 29 AMC
+2026-02-02,09:00,ISM Manufacturing PMI,DATA_TIER1,Jan 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-02-04,09:00,ISM Services PMI,DATA_TIER1,Jan 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-02-05,,GOOGL earnings (Feb 4 after close),EARNINGS,Q4 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.sec.gov/Archives/edgar/data/1652044/000165204426000012/googexhibit991q42025.htm,Reported Feb 4 AMC
+2026-02-06,,AMZN earnings (Feb 5 after close),EARNINGS,Q4 2025,RELEASED,max_trades=1,,EARNINGS,,https://www.nasdaq.com/articles/amazon-alphabet-and-nvidia-are-part-zacks-earnings-preview,Reported Feb 5 AMC (date from secondary sources; confirm on Amazon IR)
+2026-02-06,,Employment Situation (NFP),DATA_TIER1,Jan 2026,CANCELED,none,,,2026-02-06,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Moved to Feb 11 (2026 funding lapse); no window on Feb 6
+2026-02-10,07:30,Retail sales (advance),DATA_TIER1,Dec 2025,RELEASED,no_trade,08:30-08:40,RETAIL,,https://www.financecalendar.com/us-retail-sales/,Delayed schedule after the shutdown
+2026-02-11,07:30,Employment Situation (NFP),DATA_TIER1,Jan 2026,RELEASED,no_trade,08:30-08:40,NFP,2026-02-06,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Includes annual benchmark revision
+2026-02-13,07:30,CPI,DATA_TIER1,Jan 2026,RELEASED,no_trade,08:30-08:40,CPI,2026-02-11,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2026-02-16,,Presidents' Day,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/trading-hours.html,NYSE closed; CME equity futures halt 12:00 CT; no cash session
+2026-02-20,07:30,GDP Q4 advance + PCE,DATA_TIER1,Q4 2025 / Dec 2025,RELEASED,no_trade,08:30-08:40,GDP,2026-01-29,https://www.bea.gov/index.php/news/2026/personal-income-and-outlays-december-2025,
+2026-02-20,,Monthly options expiration,INFO,Feb 2026,RELEASED,none,,OPEX,,,Third Friday; logged only
+2026-02-26,,NVDA earnings (Feb 25 after close),EARNINGS,Q4 FY2026,RELEASED,max_trades=1,,EARNINGS,,https://www.nasdaq.com/articles/amazon-alphabet-and-nvidia-are-part-zacks-earnings-preview,Reported Feb 25 AMC
+2026-02-27,07:30,PPI,DATA_TIER1,Jan 2026,RELEASED,no_trade,08:30-08:40,PPI,2026-02-12,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,
+2026-03-02,09:00,ISM Manufacturing PMI,DATA_TIER1,Feb 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-03-04,09:00,ISM Services PMI,DATA_TIER1,Feb 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-03-06,07:30,Employment Situation (NFP),DATA_TIER1,Feb 2026,RELEASED,no_trade,08:30-08:40,NFP,,https://www.bls.gov/schedule/2026/03_sched_list.htm,
+2026-03-06,07:30,Retail sales (advance),DATA_TIER1,Jan 2026,RELEASED,no_trade,08:30-08:40,RETAIL,,https://www.financecalendar.com/us-retail-sales/,
+2026-03-11,07:30,CPI,DATA_TIER1,Feb 2026,RELEASED,no_trade,08:30-08:40,CPI,,https://www.bls.gov/schedule/2026/03_sched_list.htm,
+2026-03-13,07:30,GDP Q4 second estimate + PCE,DATA_TIER1,Q4 2025 / Jan 2026,RELEASED,no_trade,08:30-08:40,GDP,2026-02-26,https://bea.gov/news/blog/2026-01-15/economic-release-schedule-updates-gdp-personal-income-and-outlays,
+2026-03-16,,NQ roll day (Mar 26 to Jun 26),MARKET_CALENDAR,,ROLL,LOG_ONLY,,ROLL,2026-03-12,,"NinjaTrader rollover date (from its database on Kyron's PC); CME calendar roll was 2026-03-12; Databento NQ.v.0 switched 2 trading days later, so roll-day files replace the continuous data"
+2026-03-18,07:30,PPI,DATA_TIER1,Feb 2026,RELEASED,no_trade,08:30-08:40,PPI,2026-03-12,https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm,Same day as FOMC
+2026-03-18,13:00,FOMC decision + SEP + press conference,FOMC,Mar 2026 meeting,RELEASED,no_trade,12:45-15:00,FOMC,,https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm,
+2026-03-20,,Quarterly expiration (quad witching),INFO,Mar 2026,RELEASED,none,,OPEX,,,NQ Mar 26 expiry; logged only
+2026-04-01,09:00,ISM Manufacturing PMI,DATA_TIER1,Mar 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,
+2026-04-01,07:30,Retail sales (advance),DATA_TIER1,Feb 2026,RELEASED,no_trade,08:30-08:40,RETAIL,2026-03-16,https://census.gov/retail/sales.html,
+2026-04-03,07:30,Employment Situation (NFP),DATA_TIER1,Mar 2026,RELEASED,none,,NFP,,https://www.bls.gov/schedule/2026/04_sched_list.htm,Released on Good Friday; no cash session that day
+2026-04-03,,Good Friday,MARKET_CALENDAR,,HOLIDAY,LOG_ONLY,,HOLIDAY,,https://www.cmegroup.com/tools-information/holiday-calendar/files/2026/good-friday-holiday-settlement-times-2026.pdf,NYSE closed; CME equity futures abbreviated session around NFP with special settlement
+2026-04-06,09:00,ISM Services PMI,DATA_TIER1,Mar 2026,RELEASED,no_trade,08:58-09:15,ISM,,https://ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/,Moved to Apr 6
+2026-04-09,07:30,GDP Q4 third estimate + PCE,DATA_TIER1,Q4 2025 / Feb 2026,RELEASED,no_trade,08:30-08:40,GDP,2026-03-27,https://bea.gov/news/blog/2026-01-15/economic-release-schedule-updates-gdp-personal-income-and-outlays,
+2026-04-10,07:30,CPI,DATA_TIER1,Mar 2026,RELEASED,no_trade,08:30-08:40,CPI,,https://www.bls.gov/schedule/2026/04_sched_list.htm,
+2026-04-14,07:30,PPI,DATA_TIER1,Mar 2026,RELEASED,no_trade,08:30-08:40,PPI,,https://www.bls.gov/schedule/news_release/ppi.htm,
+2026-04-17,,Monthly options expiration,INFO,Apr 2026,RELEASED,none,,OPEX,,,Third Friday; logged only
+2026-04-21,07:30,Retail sales (advance),DATA_TIER1,Mar 2026,RELEASED,no_trade,08:30-08:40,RETAIL,2026-04-16,https://www.financecalendar.com/us-retail-sales/,

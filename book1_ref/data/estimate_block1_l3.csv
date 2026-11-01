@@ -1,0 +1,73 @@
+name,schema,start,end,cost_usd,size_gb
+nq_trades_lookback,trades,2025-07-20,2025-10-21,26.79,1.03
+nq_ohlcv_1m,ohlcv-1m,2025-07-20,2026-04-22,0.97,0.01
+nq_ohlcv_1d,ohlcv-1d,2025-07-20,2026-04-22,0.00,0.00
+es_ohlcv_1m,ohlcv-1m,2025-07-20,2026-04-22,0.97,0.01
+es_ohlcv_1d,ohlcv-1d,2025-07-20,2026-04-22,0.00,0.00
+zn_ohlcv_1m,ohlcv-1m,2025-07-20,2026-04-22,0.89,0.01
+zn_ohlcv_1d,ohlcv-1d,2025-07-20,2026-04-22,0.00,0.00
+cl_ohlcv_1m,ohlcv-1m,2025-07-20,2026-04-22,0.95,0.01
+cl_ohlcv_1d,ohlcv-1d,2025-07-20,2026-04-22,0.00,0.00
+nq_fut_statistics,statistics,2025-07-20,2026-04-22,0.06,0.07
+nq_fut_definition,definition,2025-07-20,2026-04-22,0.01,0.00
+es_fut_statistics,statistics,2025-07-20,2026-04-22,0.03,0.03
+es_fut_definition,definition,2025-07-20,2026-04-22,0.01,0.01
+opt_nq_definition,definition,2025-10-20,2026-04-22,0.35,0.22
+opt_nq_statistics,statistics,2025-10-20,2026-04-22,1.03,1.10
+opt_q1a_definition,definition,2025-10-20,2026-04-22,0.12,0.08
+opt_q1a_statistics,statistics,2025-10-20,2026-04-22,0.50,0.53
+opt_q2a_definition,definition,2025-10-20,2026-04-22,0.12,0.08
+opt_q2a_statistics,statistics,2025-10-20,2026-04-22,0.54,0.58
+opt_q3a_definition,definition,2025-10-20,2026-04-22,0.09,0.05
+opt_q3a_statistics,statistics,2025-10-20,2026-04-22,0.38,0.41
+opt_q4a_definition,definition,2025-10-20,2026-04-22,0.12,0.08
+opt_q4a_statistics,statistics,2025-10-20,2026-04-22,0.59,0.63
+opt_q5a_definition,definition,2025-10-20,2026-04-22,0.04,0.02
+opt_q5a_statistics,statistics,2025-10-20,2026-04-22,0.14,0.15
+opt_q1b_definition,definition,2025-10-20,2026-04-22,0.11,0.07
+opt_q1b_statistics,statistics,2025-10-20,2026-04-22,0.50,0.54
+opt_q2b_definition,definition,2025-10-20,2026-04-22,0.11,0.07
+opt_q2b_statistics,statistics,2025-10-20,2026-04-22,0.50,0.54
+opt_q3b_definition,definition,2025-10-20,2026-04-22,0.12,0.08
+opt_q3b_statistics,statistics,2025-10-20,2026-04-22,0.53,0.57
+opt_q4b_definition,definition,2025-10-20,2026-04-22,0.10,0.07
+opt_q4b_statistics,statistics,2025-10-20,2026-04-22,0.50,0.53
+opt_q5b_definition,definition,2025-10-20,2026-04-22,0.01,0.01
+opt_q5b_statistics,statistics,2025-10-20,2026-04-22,0.04,0.05
+opt_q1c_definition,definition,2025-10-20,2026-04-22,0.10,0.06
+opt_q1c_statistics,statistics,2025-10-20,2026-04-22,0.54,0.58
+opt_q2c_definition,definition,2025-10-20,2026-04-22,0.09,0.06
+opt_q2c_statistics,statistics,2025-10-20,2026-04-22,0.49,0.53
+opt_q3c_definition,definition,2025-10-20,2026-04-22,0.10,0.06
+opt_q3c_statistics,statistics,2025-10-20,2026-04-22,0.53,0.56
+opt_q4c_definition,definition,2025-10-20,2026-04-22,0.10,0.06
+opt_q4c_statistics,statistics,2025-10-20,2026-04-22,0.50,0.54
+opt_q5c_definition,definition,2025-10-20,2026-04-22,0.02,0.01
+opt_q5c_statistics,statistics,2025-10-20,2026-04-22,0.08,0.08
+opt_q1d_definition,definition,2025-10-20,2026-04-22,0.07,0.05
+opt_q1d_statistics,statistics,2025-10-20,2026-04-22,0.50,0.53
+opt_q2d_definition,definition,2025-10-20,2026-04-22,0.08,0.05
+opt_q2d_statistics,statistics,2025-10-20,2026-04-22,0.54,0.58
+opt_q3d_definition,definition,2025-10-20,2026-04-22,0.08,0.05
+opt_q3d_statistics,statistics,2025-10-20,2026-04-22,0.57,0.61
+opt_q4d_definition,definition,2025-10-20,2026-04-22,0.05,0.03
+opt_q4d_statistics,statistics,2025-10-20,2026-04-22,0.34,0.37
+opt_q5d_definition,definition,2025-10-20,2026-04-22,0.03,0.02
+opt_q5d_statistics,statistics,2025-10-20,2026-04-22,0.16,0.17
+opt_qn1_definition,definition,2025-10-20,2026-04-22,0.15,0.09
+opt_qn1_statistics,statistics,2025-10-20,2026-04-22,0.97,1.04
+opt_qn2_definition,definition,2025-10-20,2026-04-22,0.16,0.10
+opt_qn2_statistics,statistics,2025-10-20,2026-04-22,1.08,1.16
+opt_qn3_definition,definition,2025-10-20,2026-04-22,0.32,0.20
+opt_qn3_statistics,statistics,2025-10-20,2026-04-22,1.57,1.69
+opt_qn4_definition,definition,2025-10-20,2026-04-22,0.10,0.06
+opt_qn4_statistics,statistics,2025-10-20,2026-04-22,0.70,0.75
+opt_qn5_definition,definition,2025-10-20,2026-04-22,ERROR,"422 symbology_invalid_request
+None of the symbols could be resolved
+documentation: https://databento.com/docs/api-reference-historical/basics/symbology"
+opt_qn5_statistics,statistics,2025-10-20,2026-04-22,ERROR,"422 symbology_invalid_request
+None of the symbols could be resolved
+documentation: https://databento.com/docs/api-reference-historical/basics/symbology"
+opt_qne_definition,definition,2025-10-20,2026-04-22,0.38,0.24
+opt_qne_statistics,statistics,2025-10-20,2026-04-22,1.72,1.85
+nq_mbo_20251021_20260421,mbo,2025-10-21,2026-04-22,249.37,148.76
