@@ -1,0 +1,115 @@
+"""Plan builder test on a synthetic packet + bars + profiles (the real 3-day sample plans run on the PC)."""
+import unittest
+from datetime import date, datetime, time, timedelta
+
+from book1a import plan_v24 as P, vwap as V
+from book1a.bars import CT, bars_from_rows, profiles_from_rows
+
+
+def tick_rows():
+    """A synthetic overnight: flat trading near 24000 with a rejection high at 24060 around 20:20 CT, then lower."""
+    d = date(2025, 10, 21)
+    t0 = datetime.combine(d, time(17, 0), tzinfo=CT)
+    rows = []
+    def add(minute, px, vol, ag, sec=30):
+        rows.append((t0 + timedelta(minutes=minute, seconds=sec), px, vol, ag))
+    for k in range(0, 200):
+        add(k, 24000.0 + (k % 3) * 0.25, 10, "B" if k % 2 else "S")
+    # arrival buying then rejection
+    add(200, 24028.0, 400, "B", 10); add(200, 24030.0, 5, "S", 20)
+    add(201, 24040.0, 350, "B", 10); add(201, 24045.0, 20, "S", 20)
+    add(202, 24060.0, 200, "B", 10); add(202, 24032.0, 260, "S", 40)
+    add(203, 24012.0, 300, "S", 10); add(204, 23995.0, 300, "S", 10)
+    for k in range(205, 700):
+        add(k, 23990.0 + (k % 3) * 0.25, 10, "B" if k % 2 else "S")
+    return rows
+
+
+class TestPlanBuilder(unittest.TestCase):
+    def setUp(self):
+        d = date(2025, 10, 22)
+        self.as_of = datetime.combine(d, time(8, 10), tzinfo=CT)
+        rows = tick_rows()
+        self.bars = bars_from_rows(rows, end=self.as_of)
+        wk_start = V.week_start(d); s_start = V.session_start(d)
+        self.profiles = profiles_from_rows(rows, {"WK": (wk_start, self.as_of), "ON": (s_start, self.as_of),
+                                                  "PD": (datetime.combine(d - timedelta(days=1), time(8, 30), tzinfo=CT),
+                                                         datetime.combine(d - timedelta(days=1), time(15, 0), tzinfo=CT))})
+        import numpy as np
+        ts = np.array([int(r[0].timestamp()) * 10**9 for r in rows]); px = np.array([r[1] for r in rows]); sz = np.array([r[2] for r in rows])
+        self.vwap = V.vwap_0810(ts, px, sz, d)
+        self.packet = {
+            "date": "2025-10-22", "ref_price": 23990.0, "asof_ct": "08:10", "ranges": {"adr_full": 200.0},
+            "levels": [{"name": "WKVAL", "price": 23985.0}, {"name": "WKVAH", "price": 24150.0}, {"name": "WKPOC", "price": 24050.0},
+                       {"name": "HTFVAL", "price": 23900.0}, {"name": "HTFVAH", "price": 24300.0}, {"name": "HTFPOC", "price": 24120.0},
+                       {"name": "PDVAH", "price": 24055.0}, {"name": "PDVAL", "price": 23950.0}, {"name": "PDPOC", "price": 24000.0},
+                       {"name": "PDH", "price": 24080.0}, {"name": "PDL", "price": 23930.0}, {"name": "SETTLE", "price": 24010.0}],
+            "zones": [{"lo": 23945.0, "hi": 23955.0, "label": "D_PDVAL_WKVAL", "tier": "DECISION", "levels": ["PDVAL"],
+                       "tests": {"from_below": 1, "from_above": 1}},
+                      {"lo": 23925.0, "hi": 23935.0, "label": "T_PDL", "tier": "TARGET", "levels": ["PDL"]}],
+            "balance_composite": {"overlapping": False},
+            "prior_sessions": [{"slot": "PD", "covered": True, "day_high": 24080.0, "day_low": 23930.0, "vah": 24055.0, "val": 23950.0, "poc": 24000.0, "settle": 24010.0},
+                               {"slot": "PD2", "covered": True, "day_high": 24060.0, "day_low": 23900.0, "vah": 24040.0, "val": 23940.0, "poc": 23990.0}],
+            "overnight": {"vah": 24040.0, "val": 23985.0, "poc": 24000.0, "high": 24060.0, "low": 23985.0, "vwap": 24001.0},
+            "weekly": {"vah": 24150.0, "val": 23985.0, "poc": 24050.0}, "structure": {"swing_highs": [24000, 24060], "swing_lows": [23950, 23985]},
+            "data": {"gaps": []}, "calendar": {"half_day_today": False},
+        }
+        self.gex = {"ok": "True", "regime": "positive", "call_resistance_nt": "24150.00", "put_support_nt": "23850.00", "hvl_nt": "24000.00"}
+
+    def test_plan_text_and_sidecar(self):
+        text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())
+        self.assertIn("end=1", text)
+        self.assertIn("context=", text)
+        self.assertNotIn("lava=", text)
+        self.assertIn("market_context=", text)
+        self.assertIn("draw_status=", text)
+        self.assertIn("review=APPROVED", text)
+        self.assertTrue(any(l.startswith("zone=") and "|DECISION|" in l for l in text.splitlines()))
+        metas = [l for l in text.splitlines() if l.startswith("zone_meta=")]
+        self.assertTrue(metas)
+        self.assertTrue(all("families=" in m and "levels=" in m for m in metas))
+        self.assertTrue(any(l.startswith("ladder=") for l in text.splitlines()))
+        self.assertTrue(all(z["available_at"] == self.as_of.isoformat() for z in side["zones"]))
+        self.assertTrue(all(len(z["families"]) >= 2 for z in side["zones"]))
+        self.assertIn("vwap_0810=", text)
+        self.assertIn("gex_regime=POS", text)
+        for z in side["zones"]:
+            self.assertIn(z["long"], ("ANY", "RESPONSE", "INITIATION", "NONE"))
+            self.assertIn(z["short"], ("ANY", "RESPONSE", "INITIATION", "NONE"))
+
+    def test_rejection_zone_appears_with_structure_family(self):
+        text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [])
+        rf = side["rej_flip_zones"]
+        self.assertTrue(rf, "expected a REJ_HIGH zone from the synthetic overnight")
+        self.assertEqual(rf[0]["kind"], "REJ_HIGH")
+        self.assertEqual(rf[0]["hi"], 24060.0)
+
+    def test_roll_day_and_half_day_log_only(self):
+        pk = dict(self.packet); pk["date"] = "2025-12-15"
+        text, side = P.build(pk, [], {}, {"SESSION": None, "WEEKLY": None}, None, [], roll_dates=("2025-12-15",),
+                             as_of=datetime(2025, 12, 15, 8, 10, tzinfo=CT))
+        self.assertIn("review=LOG_ONLY", text)
+        pk = dict(self.packet); pk["calendar"] = {"half_day_today": True}
+        text, _ = P.build(pk, self.bars, self.profiles, self.vwap, self.gex, [])
+        self.assertIn("review=LOG_ONLY", text); self.assertIn("A: half day", text)
+
+    def test_check_f_logged_not_applied(self):
+        cal = [{"date": "2025-10-22", "category": "DATA", "event": "CPI", "no_trade_ct": "07:25-08:35", "status": ""}]
+        text, _ = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, cal)
+        self.assertNotIn("\nno_trade=", text)
+        self.assertIn("research_check_f=no_trade=07:25-08:35", text)
+        self.assertIn("review=APPROVED", text)
+
+    def test_s14_reads_only_book1_keys(self):
+        # every Book 1 key keeps its exact spelling; Book 1A keys come after the marker
+        text, _ = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [])
+        lines = text.splitlines()
+        marker = lines.index("# --- Book 1A fields (logged by S1.4, not read) ---")
+        before = [l.split("=")[0] for l in lines[:marker] if "=" in l and not l.startswith("#")]
+        for k in before:
+            self.assertIn(k, ("plan_id", "date", "asof", "packet_asof", "context", "context_note", "zone", "balance", "balance_poc",
+                              "invalidate_above", "invalidate_below", "macro", "news"))
+
+
+if __name__ == "__main__":
+    unittest.main()
