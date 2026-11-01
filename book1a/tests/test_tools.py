@@ -29,10 +29,10 @@ class TestManifest(unittest.TestCase):
             # Book 1 gate 6 layout: relative path in 'file', size_mb rounded to 0.1
             (root / "big.dbn.zst").write_bytes(b"x" * 1_250_000)
             manifest.build(root, ours)
-            ref.write_text("date,file,size_mb,session\n2025-10-22,raw\\block1\\big.dbn.zst,1.3,NORMAL\n2025-10-22,raw\\block1\\a.dbn.zst,0.0,NORMAL\n")
+            ref.write_text("date,file,size_mb,session\n2025-10-22,raw\\block1\\big.dbn.zst,1.2,NORMAL\n2025-10-22,raw\\block1\\a.dbn.zst,0.0,NORMAL\n")   # round(1.25, 1) = 1.2, as data_integrity.py writes
             r = manifest.compare(ours, ref, rep)
             self.assertEqual((r["missing"], r["differing"]), (0, 0))
-            ref.write_text("date,file,size_mb,session\n2025-10-22,raw\\block1\\big.dbn.zst,1.2,NORMAL\n")
+            ref.write_text("date,file,size_mb,session\n2025-10-22,raw\\block1\\big.dbn.zst,1.3,NORMAL\n")
             self.assertEqual(manifest.compare(ours, ref, rep)["differing"], 1)
 
 
