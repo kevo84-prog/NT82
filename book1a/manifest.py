@@ -6,8 +6,9 @@ Usage:
 
 build: one row per file under <root>: relative path, bytes, mtime (UTC), sha256.
 compare: joins on the file name (basename) and reports missing / extra / size or hash differences.
-The reference is the Book 1 Phase 0 gate 6 table (data_integrity_*.csv) or any CSV with a column
-holding the file name and, if present, columns 'bytes'/'size' and 'sha256'/'md5'.
+The reference is the Book 1 Phase 0 gate 6 table (data_integrity_*.csv: columns date, file, size_mb, ...; no
+checksums, so sizes are compared to 0.1 MB and our sha256 list becomes the Book 1A reference) or any CSV with a
+file-name column and, if present, 'bytes'/'size' and 'sha256'.
 """
 from __future__ import annotations
 
@@ -55,7 +56,8 @@ def _load(path: Path) -> Dict[str, dict]:
     rows = list(csv.DictReader(open(path, newline="")))
     out = {}
     for r in rows:
-        name = r.get("name") or r.get("file") or r.get("filename") or os.path.basename(r.get("path", ""))
+        raw = r.get("name") or r.get("file") or r.get("filename") or r.get("path", "")
+        name = raw.replace("\\", "/").split("/")[-1] if raw else ""
         if name:
             out[name] = r
     return out
@@ -87,10 +89,15 @@ def compare(ours_csv: Path, ref_csv: Path, report_md: Path) -> dict:
     for n in sorted(set(ours) & set(ref)):
         a, b = ours[n], ref[n]
         sa, sb = _num(a, "bytes", "size", "size_bytes"), _num(b, "bytes", "size", "size_bytes", "file_size")
+        size_diff = sa is not None and sb is not None and sa != sb
+        if sb is None and "size_mb" in b and b["size_mb"] not in ("", None) and sa is not None:
+            # Book 1 gate 6 table (data_integrity.py): size_mb = round(bytes / 1e6, 1)
+            size_diff = round(sa / 1e6, 1) != round(float(b["size_mb"]), 1)
+            sb = f"{float(b['size_mb']):.1f} MB"
         ha, hb = _hash(a, "sha256"), _hash(b, "sha256")
         if ha and hb:
             checked_hash += 1
-        if (sa is not None and sb is not None and sa != sb) or (ha and hb and ha != hb):
+        if size_diff or (ha and hb and ha != hb):
             diffs.append((n, sa, sb, ha, hb))
     with open(report_md, "w") as f:
         f.write(f"# P0.2 data manifest comparison\n\nours: {ours_csv}\nreference: {ref_csv}\n\n")
