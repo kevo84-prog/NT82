@@ -30,20 +30,40 @@ from book1a import ledger as L, sessions as S
 VERSION = "run-r1-r2-v1.0"
 
 
-def book1_cfg(block1: Path, sessions: list, out: Path, fill_model: str, instrument: str = "NQ 12-25") -> dict:
-    """The daily_loop config, Book 1 phase pattern. Paths follow the Book 1 layout under K:\\Databento_BackTesting."""
+CONTRACT_LABELS = [(dt.date(2025, 9, 15), "DEC25", "NQ DEC25", "ES DEC25"), (dt.date(2025, 12, 15), "MAR26", "NQ MAR26", "ES MAR26"),
+                   (dt.date(2026, 3, 16), "JUN26", "NQ JUN26", "ES JUN26"), (dt.date(2026, 6, 12), "SEP26", "NQ SEP26", "ES SEP26")]
+
+
+def labels_for(d: dt.date):
+    nq, es = "NQ DEC25", "ES DEC25"
+    for start, _, n, e in CONTRACT_LABELS:
+        if d >= start:
+            nq, es = n, e
+    return nq, es
+
+
+def book1_cfg(block1: Path, sessions: list, out: Path, fill_model: str, map_first_utc: str = None) -> dict:
+    """The daily_loop config in the Book 1 phase pattern (backtest/phase3/build_inputs.py, phase4/build_inputs.py):
+    strategy warm-up from the UTC day two days before the first session (17:00 CT), run to the last session 16:15 CT,
+    one --instrument label per phase (the harness uses it as a label only), EsInstrument map/strategy settings,
+    tapes in <block1>/tapes, 1-minute bars cut at the last session 17:00 CT. map_first_utc (the map's history
+    start) is inherited from phase2_config.json on the PC; default here = 14 UTC days before the first session."""
     s0, s1 = sessions[0], sessions[-1]
-    first_utc = (s0 - dt.timedelta(days=10)).strftime("%Y%m%d")          # map history: the developing + prior week
-    strat_first_utc = (s0 - dt.timedelta(days=1)).strftime("%Y%m%d")      # warm-up evening
-    last_utc = (s1 + dt.timedelta(days=1)).strftime("%Y%m%d")
+    nq_label, es_label = labels_for(s1)
+    first_utc = map_first_utc or (s0 - dt.timedelta(days=14)).strftime("%Y%m%d")
+    warm = s0 - dt.timedelta(days=2)
     return dict(
         sessions=[d.isoformat() for d in sessions], tapes_dir=str(block1 / "tapes"),
-        map_first_utc=first_utc, strategy_first_utc=strat_first_utc, last_utc=last_utc,
-        nq_1m=str(block1 / "bars" / "nq_1m.csv"), es_1m=str(block1 / "bars" / "es_1m.csv"),
+        map_first_utc=first_utc, strategy_first_utc=warm.strftime("%Y%m%d"), last_utc=s1.strftime("%Y%m%d"),
+        nq_1m=str(out / "nq_1m.csv"), es_1m=str(out / "es_1m.csv"),
         calendar=str(block1 / "econ_calendar_2025-10_2026-04.csv"), gex=str(block1 / "gex_levels_block1.csv"),
-        out_dir=str(out), map_from=f"{(s0 - dt.timedelta(days=9)).isoformat()} 17:00", strategy_from=f"{(s0 - dt.timedelta(days=1)).isoformat()} 17:00",
-        to=f"{s1.isoformat()} 15:15", holidays=S.harness_dates(S.NO_CASH_SESSION), half_days=",".join(f"{d.isoformat()}@12:00" for d in sorted(S.HALF_DAYS)),
-        roll_dates=[d.isoformat() for d in sorted(S.ROLL_DATES)], instrument=instrument, fill_model=fill_model,
+        out_dir=str(out), map_from=f"{(dt.datetime.strptime(first_utc, '%Y%m%d').date() + dt.timedelta(days=1)).isoformat()} 17:00",
+        strategy_from=f"{warm.isoformat()} 17:00", to=f"{s1.isoformat()} 16:15",
+        holidays=S.harness_dates(S.NO_CASH_SESSION), half_days=",".join(f"{d.isoformat()}@12:00" for d in sorted(S.HALF_DAYS)),
+        roll_dates=[d.isoformat() for d in sorted(S.ROLL_DATES)], instrument=nq_label, fill_model=fill_model,
+        map_settings=[f"EsInstrument={es_label}"], strategy_settings=[f"EsInstrument={es_label}"],
+        bars_note="build nq_1m.csv / es_1m.csv with jeron_engine.block_inputs.bars_csv from 20250720 to the last session, "
+                  "with the roll-fix files, cut at <last session> 17:00:00 (phase3/phase4 build_inputs.py pattern)",
     )
 
 
@@ -65,6 +85,7 @@ def main(argv=None):
     ap.add_argument("--phase", choices=list(S.PHASES)); ap.add_argument("--sessions", nargs="*")
     ap.add_argument("--fill", choices=["book1", "v3.4", "v3.5"], default="book1")
     ap.add_argument("--skip-daily-loop", action="store_true", help="reuse an existing A0 run in --out")
+    ap.add_argument("--map-first-utc", default=None, help="map history start (UTC yyyymmdd) from phase2_config.json")
     a = ap.parse_args(argv)
     block1, out = Path(a.block1), Path(a.out)
     os.environ["BOOK1_ROOT"] = str(block1)
@@ -74,7 +95,7 @@ def main(argv=None):
     phase_fill = "v3.5" if a.phase in ("phase3", "phase4") else "v3.4"
     f1 = f2 = a.fill if a.fill != "book1" else phase_fill
     out.mkdir(parents=True, exist_ok=True)
-    cfg = book1_cfg(block1, sess, out, f1)
+    cfg = book1_cfg(block1, sess, out, f1, a.map_first_utc)
     (out / "daily_loop_config.json").write_text(json.dumps(cfg, indent=1))
     if not a.skip_daily_loop:
         DL.run(cfg)

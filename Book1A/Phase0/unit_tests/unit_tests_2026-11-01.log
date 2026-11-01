@@ -1,4 +1,4 @@
-Book 1A Phase 0 unit tests  2026-11-01T20:13:22+00:00  commit 1957610  package book1a-phase0-v0.1
+Book 1A Phase 0 unit tests  2026-11-01T21:39:20+00:00  commit 8672c26  package book1a-phase0-v0.1
 module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.0, plan_fields=plan-fields-v1.0, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
 python 3.13.18
 tests run 123, failures 0, errors 0, result PASS
@@ -127,6 +127,6 @@ test_session_start_is_prev_day_1700 (book1a.tests.test_vwap.TestWindows.test_ses
 test_week_start_is_sunday_1700 (book1a.tests.test_vwap.TestWindows.test_week_start_is_sunday_1700) ... ok
 
 ----------------------------------------------------------------------
-Ran 123 tests in 0.419s
+Ran 123 tests in 0.303s
 
 OK
