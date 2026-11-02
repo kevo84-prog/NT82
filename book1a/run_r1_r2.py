@@ -137,7 +137,7 @@ def main(argv=None):
     ap.add_argument("--skip-daily-loop", action="store_true", help="reuse an existing A0 run in --out")
     ap.add_argument("--map-first-utc", default=None, help="map history start (UTC yyyymmdd); default Book 1's 20250921")
     a = ap.parse_args(argv)
-    block1, out = Path(a.block1), Path(a.out)
+    block1, out = Path(a.block1).resolve(), Path(a.out).resolve()   # absolute: build_bars changes folder
     os.environ["BOOK1_ROOT"] = str(block1)
     from book1a.book1_import import jeron_engine  # noqa: F401
     from jeron_engine import arm_replay as AR, arms as A, daily_loop as DL, fills

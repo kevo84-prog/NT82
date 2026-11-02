@@ -116,6 +116,48 @@ class TestStop(TapeCase):
         self.assertEqual(fills.simulate(self.tape(self.rows), +1, t, 23990.0, 24030.0, gap_fill=True)["exit"], 23989.75)
 
 
+class TestV35GapThrough(TapeCase):
+    """v3.5 (Book 1A standard for R1-R4; Book 1 Phases 3-4): a stop that price jumps through fills 1 tick beyond the
+    first traded price at or beyond the stop (2 and 4 ticks in stress), long and short, on both Book 1 fill paths:
+    fills.simulate (the daily_loop ledger) and exit_replay.replay (the arm / R1-R4 replays, with the v3.5 kwargs)."""
+    V35 = dict(gap_fill=True, stop_delay_ms=250, crossed="live")
+
+    def setUp(self):
+        from book1a.book1_import import jeron_engine  # noqa: F401
+        from jeron_engine import exit_replay
+        self.XR = exit_replay
+        self.t = dt.datetime.combine(D, dt.time(9, 3))
+        # long: stop 23990, first trade at or below it is 23985.00 (5 points through)
+        self.long_gap = [row(9, 3, 0, 100, 24000.25, 24000.00, 24000.25), row(9, 5, 0, 0, 23985.00, 23984.75, 23985.00)]
+        # short: stop 24010, first trade at or above it is 24015.00
+        self.short_gap = [row(9, 3, 0, 100, 24000.00, 24000.00, 24000.25), row(9, 5, 0, 0, 24015.00, 24015.00, 24015.25)]
+
+    def test_long_gap_through(self):
+        tp = self.tape(self.long_gap)
+        self.assertEqual(fills.simulate(tp, +1, self.t, 23990.0, 24030.0)["exit"], 23989.75)                     # v3.4
+        for slip, px in ((1, 23984.75), (2, 23984.50), (4, 23984.00)):
+            self.assertEqual(fills.simulate(tp, +1, self.t, 23990.0, 24030.0, stop_slip=slip, gap_fill=True)["exit"], px)
+            leg = self.XR.replay(tp, +1, self.t, 23990.0, [24030.0], stop_slip=slip, **self.V35)["legs"][0]
+            self.assertEqual((leg["reason"], leg["exit"]), ("STOP", px))
+
+    def test_short_gap_through(self):
+        tp = self.tape(self.short_gap)
+        self.assertEqual(fills.simulate(tp, -1, self.t, 24010.0, 23970.0)["exit"], 24010.25)                     # v3.4
+        for slip, px in ((1, 24015.25), (2, 24015.50), (4, 24016.00)):
+            self.assertEqual(fills.simulate(tp, -1, self.t, 24010.0, 23970.0, stop_slip=slip, gap_fill=True)["exit"], px)
+            leg = self.XR.replay(tp, -1, self.t, 24010.0, [23970.0], stop_slip=slip, **self.V35)["legs"][0]
+            self.assertEqual((leg["reason"], leg["exit"]), ("STOP", px))
+
+    def test_no_gap_v35_equals_v34(self):
+        long_touch = [row(9, 3, 0, 100, 24000.25, 24000.00, 24000.25), row(9, 5, 0, 0, 23990.00, 23989.75, 23990.00)]
+        short_touch = [row(9, 3, 0, 100, 24000.00, 24000.00, 24000.25), row(9, 5, 0, 0, 24010.00, 24010.00, 24010.25)]
+        self.assertEqual(fills.simulate(self.tape(long_touch), +1, self.t, 23990.0, 24030.0, gap_fill=True)["exit"], 23989.75)
+        self.assertEqual(fills.simulate(self.tape(short_touch), -1, self.t, 24010.0, 23970.0, gap_fill=True)["exit"], 24010.25)
+        for rows, side, stop, tgt, px in ((long_touch, +1, 23990.0, 24030.0, 23989.75), (short_touch, -1, 24010.0, 23970.0, 24010.25)):
+            leg = self.XR.replay(self.tape(rows), side, self.t, stop, [tgt], **self.V35)["legs"][0]
+            self.assertEqual((leg["reason"], leg["exit"]), ("STOP", px))
+
+
 class TestTie(TapeCase):
     def test_same_timestamp_stop_and_target_is_stop(self):
         rows = [row(9, 3, 0, 100, 24000.25, 24000.00, 24000.25),

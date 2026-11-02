@@ -52,15 +52,28 @@ def build(root: Path, out_csv: Path, patterns: Optional[List[str]] = None) -> in
     return len(files)
 
 
-def _load(path: Path) -> Dict[str, dict]:
+def _load(path: Path, by_path: bool = False) -> Dict[str, dict]:
+    """Key = file name, or with by_path the relative path (ours: 'path'; the gate 6 table: 'file')."""
     rows = list(csv.DictReader(open(path, newline="")))
     out = {}
     for r in rows:
-        raw = r.get("name") or r.get("file") or r.get("filename") or r.get("path", "")
-        name = raw.replace("\\", "/").split("/")[-1] if raw else ""
+        if by_path:
+            raw = r.get("path") or r.get("file") or ""
+            name = raw.replace("\\", "/").lstrip("./")
+        else:
+            raw = r.get("name") or r.get("file") or r.get("filename") or r.get("path", "")
+            name = raw.replace("\\", "/").split("/")[-1] if raw else ""
         if name:
             out[name] = r
     return out
+
+
+def _ref_has_paths(path: Path) -> bool:
+    """The gate 6 table names each file by its path under the Book 1 root; the same file name can occur twice
+    (Sep 14-15, 2026: the continuous file and the roll-day file), so such a table is joined on the path."""
+    rows = list(csv.DictReader(open(path, newline="")))
+    names = [(r.get("file") or "").replace("\\", "/") for r in rows]
+    return bool(names) and all("/" in n for n in names) and len({n.split("/")[-1] for n in names}) < len(set(names))
 
 
 def _num(r: dict, *keys):
@@ -81,7 +94,8 @@ def _hash(r: dict, *keys):
 
 
 def compare(ours_csv: Path, ref_csv: Path, report_md: Path) -> dict:
-    ours, ref = _load(ours_csv), _load(ref_csv)
+    by_path = _ref_has_paths(ref_csv)
+    ours, ref = _load(ours_csv, by_path), _load(ref_csv, by_path)
     missing = sorted(n for n in ref if n not in ours)
     extra = sorted(n for n in ours if n not in ref)
     diffs = []
@@ -100,7 +114,8 @@ def compare(ours_csv: Path, ref_csv: Path, report_md: Path) -> dict:
         if size_diff or (ha and hb and ha != hb):
             diffs.append((n, sa, sb, ha, hb))
     with open(report_md, "w") as f:
-        f.write(f"# P0.2 data manifest comparison\n\nours: {ours_csv}\nreference: {ref_csv}\n\n")
+        f.write(f"# P0.2 data manifest comparison\n\nours: {ours_csv}\nreference: {ref_csv}\n"
+                f"joined on: {'relative path (the reference repeats some file names)' if by_path else 'file name'}\n\n")
         f.write(f"- files in reference: {len(ref)}\n- files in ours: {len(ours)}\n- common: {len(set(ours) & set(ref))}\n")
         f.write(f"- hash-checked: {checked_hash}\n- missing from ours: {len(missing)}\n- extra in ours: {len(extra)}\n- differing: {len(diffs)}\n\n")
         verdict = "PASS" if not missing and not diffs else "FAIL"

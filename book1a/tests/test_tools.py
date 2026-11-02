@@ -65,6 +65,18 @@ class TestBook1Cfg(unittest.TestCase):
         self.assertEqual((c["instrument"], c["map_settings"]), ("NQ DEC25", ["EsInstrument=ES DEC25"]))
 
 
+class TestManifestSameNameTwice(unittest.TestCase):
+    def test_gate6_table_joined_on_path(self):
+        # gate 6 lists glbx-mdp3-20260914 twice (continuous file and roll-day file, different sizes)
+        with tempfile.TemporaryDirectory() as d:
+            ours = Path(d) / "ours.csv"
+            ours.write_text("path,name,bytes,mtime_utc,sha256\nA/x.mbo.dbn.zst,x.mbo.dbn.zst,3000000,t,aa\nB/x.mbo.dbn.zst,x.mbo.dbn.zst,5000000,t,bb\n")
+            ref = Path(d) / "ref.csv"
+            ref.write_text("date,file,size_mb\nd,A/x.mbo.dbn.zst,3.0\nd,B/x.mbo.dbn.zst,5.0\n")
+            r = manifest.compare(ours, ref, Path(d) / "rep.md")
+            self.assertEqual((r["reference"], r["missing"], r["differing"]), (2, 0, 0))
+
+
 if __name__ == "__main__":
     unittest.main()
 
