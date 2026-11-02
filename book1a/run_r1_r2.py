@@ -42,28 +42,78 @@ def labels_for(d: dt.date):
     return nq, es
 
 
+# Book 1 phase configs (phase1_config.json .. phase4_config.json, identical in these keys): map history from UTC
+# Sep 21, 2025 with map_from on that same date at 17:00 CT; holidays incl. Labor Day 2025; "; " separators.
+BOOK1_MAP_FIRST_UTC = "20250921"
+BOOK1_EXTRA_HOLIDAYS = {dt.date(2025, 9, 1)}
+
+
+def build_bars(block1: Path, out: Path, last_session: dt.date) -> dict:
+    """nq_1m.csv / es_1m.csv in the Book 1 pattern (backtest/phase3/build_inputs.py, phase4/build_inputs.py): Book 1
+    block_inputs.bars_csv from raw/block1/<sym>_ohlcv_1m with the roll-fix files roll_<SYM>*_ohlcv_1m_202*, UTC
+    Jul 20, 2025 to the last session, then cut at the last session 17:00:00 CT. Built from raw, never copied from a
+    Book 1 phase folder. Skipped when both files already exist in out."""
+    from jeron_engine import block_inputs
+    cut = f"{last_session.isoformat()} 17:00:00"
+    info, cwd = {}, os.getcwd()
+    os.chdir(block1)                    # bars_csv globs are relative to the Book 1 root, as in the phase scripts
+    try:
+        for sym in ("nq", "es"):
+            f = out / f"{sym}_1m.csv"
+            if not f.exists():
+                block_inputs.bars_csv(f, f"raw/block1/{sym}_ohlcv_1m/*/*.ohlcv-1m.dbn.zst",
+                                      f"raw/block1/roll_{sym.upper()}*_ohlcv_1m_202*/*/*.ohlcv-1m.dbn.zst", "20250720",
+                                      last_session.strftime("%Y%m%d"))
+                lines = open(f).read().splitlines()
+                kept = [lines[0]] + [l for l in lines[1:] if l[:19] <= cut]
+                open(f, "w", newline="").write("\n".join(kept) + "\n")
+            lines = open(f).read().splitlines()
+            info[sym] = dict(bars=len(lines) - 1, first=lines[1][:19], last=lines[-1][:19], cut=cut)
+            if lines[-1][:19] > cut:
+                raise SystemExit(f"{f}: bars after the cut {cut}")
+    finally:
+        os.chdir(cwd)
+    return info
+
+
+def phase_tapes_dir(block1: Path, out: Path, phase: str, first_utc: str, last_utc: str) -> Path:
+    """The tape folder each Book 1 phase ran on. Phase 3 ran before the Phase 4 holdout rebuilt UTC Feb 4, 2026 in full;
+    its Feb 4 tape was cut at 17:00 CT and is kept in tapes/phase3_cut/ (phase4/build_inputs.py). For phase3 a folder of
+    hard links (read-only use) with that cut tape is made in out; every other run uses <block1>/tapes as is."""
+    src = block1 / "tapes"
+    cut = src / "phase3_cut" / "tape_20260204.csv.gz"
+    if phase != "phase3" or not cut.exists():
+        return src
+    dst = out / "tapes_phase3"
+    dst.mkdir(parents=True, exist_ok=True)
+    for f in src.glob("tape_*.csv.gz"):
+        if first_utc <= f.name[5:13] <= last_utc and not (dst / f.name).exists():
+            os.link(cut if f.name == cut.name else f, dst / f.name)
+    return dst
+
+
 def book1_cfg(block1: Path, sessions: list, out: Path, fill_model: str, map_first_utc: str = None) -> dict:
     """The daily_loop config in the Book 1 phase pattern (backtest/phase3/build_inputs.py, phase4/build_inputs.py):
     strategy warm-up from the UTC day two days before the first session (17:00 CT), run to the last session 16:15 CT,
     one --instrument label per phase (the harness uses it as a label only), EsInstrument map/strategy settings,
     tapes in <block1>/tapes, 1-minute bars cut at the last session 17:00 CT. map_first_utc (the map's history
-    start) is inherited from phase2_config.json on the PC; default here = 14 UTC days before the first session."""
+    start) is Book 1's (phase2_config.json, kept by every phase): UTC Sep 21, 2025; map_from = that date 17:00 CT.
+    holidays / half_days are written exactly as in the Book 1 configs ("; " separated, Labor Day 2025 included)."""
     s0, s1 = sessions[0], sessions[-1]
     nq_label, es_label = labels_for(s1)
-    first_utc = map_first_utc or (s0 - dt.timedelta(days=14)).strftime("%Y%m%d")
+    first_utc = map_first_utc or BOOK1_MAP_FIRST_UTC
     warm = s0 - dt.timedelta(days=2)
     return dict(
         sessions=[d.isoformat() for d in sessions], tapes_dir=str(block1 / "tapes"),
         map_first_utc=first_utc, strategy_first_utc=warm.strftime("%Y%m%d"), last_utc=s1.strftime("%Y%m%d"),
         nq_1m=str(out / "nq_1m.csv"), es_1m=str(out / "es_1m.csv"),
         calendar=str(block1 / "econ_calendar_2025-10_2026-04.csv"), gex=str(block1 / "gex_levels_block1.csv"),
-        out_dir=str(out), map_from=f"{(dt.datetime.strptime(first_utc, '%Y%m%d').date() + dt.timedelta(days=1)).isoformat()} 17:00",
+        out_dir=str(out), map_from=f"{dt.datetime.strptime(first_utc, '%Y%m%d').date().isoformat()} 17:00",
         strategy_from=f"{warm.isoformat()} 17:00", to=f"{s1.isoformat()} 16:15",
-        holidays=S.harness_dates(S.NO_CASH_SESSION), half_days=",".join(f"{d.isoformat()}@12:00" for d in sorted(S.HALF_DAYS)),
+        holidays="; ".join(d.isoformat() for d in sorted(set(S.NO_CASH_SESSION) | BOOK1_EXTRA_HOLIDAYS)),
+        half_days="; ".join(f"{d.isoformat()}@12:00" for d in sorted(S.HALF_DAYS)),
         roll_dates=[d.isoformat() for d in sorted(S.ROLL_DATES)], instrument=nq_label, fill_model=fill_model,
         map_settings=[f"EsInstrument={es_label}"], strategy_settings=[f"EsInstrument={es_label}"],
-        bars_note="build nq_1m.csv / es_1m.csv with jeron_engine.block_inputs.bars_csv from 20250720 to the last session, "
-                  "with the roll-fix files, cut at <last session> 17:00:00 (phase3/phase4 build_inputs.py pattern)",
     )
 
 
@@ -85,7 +135,7 @@ def main(argv=None):
     ap.add_argument("--phase", choices=list(S.PHASES)); ap.add_argument("--sessions", nargs="*")
     ap.add_argument("--fill", choices=["book1", "v3.4", "v3.5"], default="book1")
     ap.add_argument("--skip-daily-loop", action="store_true", help="reuse an existing A0 run in --out")
-    ap.add_argument("--map-first-utc", default=None, help="map history start (UTC yyyymmdd) from phase2_config.json")
+    ap.add_argument("--map-first-utc", default=None, help="map history start (UTC yyyymmdd); default Book 1's 20250921")
     a = ap.parse_args(argv)
     block1, out = Path(a.block1), Path(a.out)
     os.environ["BOOK1_ROOT"] = str(block1)
@@ -96,6 +146,8 @@ def main(argv=None):
     f1 = f2 = a.fill if a.fill != "book1" else phase_fill
     out.mkdir(parents=True, exist_ok=True)
     cfg = book1_cfg(block1, sess, out, f1, a.map_first_utc)
+    cfg["tapes_dir"] = str(phase_tapes_dir(block1, out, a.phase, cfg["map_first_utc"], cfg["last_utc"]))
+    cfg["bars"] = build_bars(block1, out, sess[-1])
     (out / "daily_loop_config.json").write_text(json.dumps(cfg, indent=1))
     if not a.skip_daily_loop:
         DL.run(cfg)

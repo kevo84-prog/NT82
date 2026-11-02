@@ -53,6 +53,18 @@ class TestReplayDiff(unittest.TestCase):
             self.assertEqual(replay_diff.diff_runs(a, b, ["run_id"])["extra.csv"]["status"], "ONLY_IN_B")
 
 
+class TestBook1Cfg(unittest.TestCase):
+    def test_matches_book1_phase_config_keys(self):
+        # values as in K:\Databento_BackTesting\backtest\phase2\phase2_config.json (same in phase1, 3, 4)
+        from book1a import run_r1_r2 as R, sessions as S
+        c = R.book1_cfg(Path("B"), S.phase_sessions("phase2"), Path("O"), "v3.4")
+        self.assertEqual((c["map_first_utc"], c["map_from"], c["strategy_first_utc"], c["strategy_from"], c["to"]),
+                         ("20250921", "2025-09-21 17:00", "20251103", "2025-11-03 17:00", "2025-12-04 16:15"))
+        self.assertEqual(c["holidays"], "2025-09-01; 2025-11-27; 2025-12-25; 2026-01-01; 2026-01-19; 2026-02-16; 2026-04-03")
+        self.assertEqual(c["half_days"], "2025-11-28@12:00; 2025-12-24@12:00")
+        self.assertEqual((c["instrument"], c["map_settings"]), ("NQ DEC25", ["EsInstrument=ES DEC25"]))
+
+
 if __name__ == "__main__":
     unittest.main()
 
