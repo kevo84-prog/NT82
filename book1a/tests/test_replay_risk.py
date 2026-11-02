@@ -78,6 +78,19 @@ class TestReplayRisk(unittest.TestCase):
             self.assertEqual(a3["reasons"], "HALT:LOSS_HALT")
             self.assertAlmostEqual(a3["risk_remaining_daily_usd"], 2000 - 2 * (197 * 5 + 5.74), places=2)
 
+    def test_r3_r4_default_fill_is_v35(self):
+        # replay plan 4a (Nov 1, 2026): v3.5 for all four strategies; R3 / R4 must get it without asking
+        import inspect
+        self.assertEqual(inspect.signature(RR.replay).parameters["fill"].default, "v3.5")
+        with tempfile.TemporaryDirectory() as d:
+            cands = [row(RecordType="CANDIDATE", EventId="E-0", EvidenceTimeCT="2025-10-22 09:03:00.000", Direction="Long",
+                         SetupFamily="RESPONSE", CandidateStatus="Qualified", Grade="B+", LocationType="FROZEN_PREOPEN", LocationId="Z",
+                         ZoneLo="23985", ZoneHi="23995", EntryRef="24000.00", StopAnchor="23951.00", TargetPrice="24100.00", RewardRisk="2")]
+            run, tape = make_run(d, cands, [("09:03:00.100", 24000.0), ("09:20:00", 23951.0), ("14:55:00", 24000.0)])
+            for strat in ("R3", "R4"):
+                rep = RR.replay(AR.Log(run), fills.Tape(tape), strat)
+                self.assertEqual([t.fill_model for t in rep["trades"]], ["v3.5"])
+
 
 if __name__ == "__main__":
     unittest.main()

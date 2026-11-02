@@ -10,6 +10,8 @@ R3 / R4 only (replay plan 4a, E2):
   - RISK_BREACH_FILL when a realized loss exceeds the plan; every trade records N, planned risk, theoretical R and
     realized net R (commission on every contract).
 R1 and R2 keep Book 1's own replay (qty 1, 400-tick halt): see run_r1_r2.py.
+Fill model: v3.5 by default for R3 / R4 (replay plan 4a, changed Nov 1, 2026: v3.5 for all four strategies);
+v3.4 only when asked for explicitly.
 """
 from __future__ import annotations
 
@@ -26,7 +28,7 @@ VERSION = "replay-risk-v1.0"
 TK = fills.TICK
 
 
-def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Optional[dict] = None, fill: str = "v3.4",
+def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Optional[dict] = None, fill: str = "v3.5",
            stop_slip: int = 1, risk_cfg: RK.RiskConfig = RK.DEFAULT) -> dict:
     kw = dict(gap_fill=True, stop_delay_ms=250, crossed="live") if fill == "v3.5" else {}
     if fill not in ("v3.4", "v3.5"):
