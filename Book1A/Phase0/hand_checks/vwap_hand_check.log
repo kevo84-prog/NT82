@@ -1,0 +1,49 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "K:\Databento_BackTesting\Book1A\code\book1a\hand_checks\vwap_hand_check.py", line 110, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "K:\Databento_BackTesting\Book1A\code\book1a\hand_checks\vwap_hand_check.py", line 89, in main
+    t, front = load_trades(files)
+               ~~~~~~~~~~~^^^^^^^
+  File "K:\Databento_BackTesting\Book1A\code\book1a\hand_checks\vwap_hand_check.py", line 48, in load_trades
+    df = store.to_df(price_type="float", pretty_ts=False, map_symbols=False)
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\databento\common\dbnstore.py", line 979, in to_df
+    return next(df_iter)
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\databento\common\dbnstore.py", line 1478, in __next__
+    df = pd.DataFrame(
+        next(self._records),
+        columns=self._struct_type._ordered_fields,
+    )
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\frame.py", line 795, in __init__
+    mgr = rec_array_to_mgr(
+        data,
+    ...<3 lines>...
+        copy,
+    )
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\construction.py", line 182, in rec_array_to_mgr
+    mgr = arrays_to_mgr(arrays, columns, index, dtype=dtype)
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\construction.py", line 150, in arrays_to_mgr
+    return create_block_manager_from_column_arrays(
+        arrays, axes, consolidate=consolidate, refs=refs
+    )
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\managers.py", line 2355, in create_block_manager_from_column_arrays
+    mgr._consolidate_inplace()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\managers.py", line 1977, in _consolidate_inplace
+    self.blocks = _consolidate(self.blocks)
+                  ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\managers.py", line 2480, in _consolidate
+    merged_blocks, _ = _merge_blocks(
+                       ~~~~~~~~~~~~~^
+        list(group_blocks), dtype=dtype, can_consolidate=_can_consolidate
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\core\internals\managers.py", line 2505, in _merge_blocks
+    new_values = np.vstack([b.values for b in blocks])  # type: ignore[misc]
+  File "C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\numpy\_core\shape_base.py", line 290, in vstack
+    return _nx.concatenate(arrs, 0, dtype=dtype, casting=casting)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 509. MiB for an array with shape (3, 22248572) and data type uint64

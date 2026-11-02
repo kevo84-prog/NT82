@@ -45,9 +45,10 @@ def load_trades(files: list):
     frames = []
     for f in files:
         store = db.DBNStore.from_file(f)
-        df = store.to_df(price_type="float", pretty_ts=False, map_symbols=False)
-        df = df[(df["action"] == "T") & (df["size"] > 0) & ((df["flags"] & 32) == 0)]       # trades, not snapshots
-        frames.append(df[["ts_event", "instrument_id", "price", "size"]])
+        # chunked decode (a full MBO day is ~22 M records): keep only the trade rows of each chunk
+        for df in store.to_df(price_type="float", pretty_ts=False, map_symbols=False, count=2_000_000):
+            df = df[(df["action"] == "T") & (df["size"] > 0) & ((df["flags"] & 32) == 0)]   # trades, not snapshots
+            frames.append(df[["ts_event", "instrument_id", "price", "size"]])
     t = pd.concat(frames, ignore_index=True)
     front = int(t["instrument_id"].mode().iloc[0])
     t = t[t["instrument_id"] == front]
