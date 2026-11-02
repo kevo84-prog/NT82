@@ -1,0 +1,2 @@
+date,entry_time,side,qty,entry_price,stop,target,exit_time,exit_price,exit_reason,risk_decision,strategy,trade_id,stop_ticks,theoretical_R,gross_usd,commission_usd,net_usd,realized_net_R,planned_risk_usd,risk_breach_fill,fill_model,stop_slippage_ticks,entry_latency_ms
+2025-11-03,09:16:00.250,SHORT,1,26109.0,26156.25,26012.75,11:51:10.868,26156.5,STOP_FIRST,ACCEPT,R3,JOFT-20251103-07485,189,-1.0053,-950.0,5.74,-955.74,-1.0114,970.74,0,v3.5,1,250

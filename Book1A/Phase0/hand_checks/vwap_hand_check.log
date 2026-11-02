@@ -1,0 +1,4 @@
+**Overall: PASS**
+
+Hand calculation: pandas sum(price x size) / sum(size) and sqrt(sum(size x (price - vwap)^2) / sum(size)) over trade
+messages (action T, size > 0, not snapshot) of the front contract, ts_event in [window start, 08:10:00 CT).

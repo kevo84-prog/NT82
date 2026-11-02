@@ -1,0 +1,4 @@
+date,entry_time,side,qty,entry_price,stop,target,exit_time,exit_price,exit_reason,risk_decision,strategy,trade_id,stop_ticks,theoretical_R,gross_usd,commission_usd,net_usd,realized_net_R,planned_risk_usd,risk_breach_fill,fill_model,stop_slippage_ticks,entry_latency_ms
+2025-10-30,09:56:00.250,SHORT,2,25995.25,26013.0,25954.75,09:58:10.258,26013.25,STOP_FIRST,ACCEPT,R4,JOFT-20251030-05871,71,-1.0141,-720.0,11.48,-731.48,-1.0303,761.48,0,v3.5,1,250
+2025-11-03,08:55:00.250,SHORT,2,26135.75,26157.25,26012.75,11:57:13.557,26157.5,STOP_FIRST,ACCEPT,R4,JOFT-20251103-07429,86,-1.0116,-870.0,11.48,-881.48,-1.025,851.48,1,v3.5,1,250
+2025-11-03,12:26:00.250,SHORT,4,26143.75,26155.25,26129.75,12:32:41.720,26155.5,STOP_FIRST,ACCEPT,R4,JOFT-20251103-07751,46,-1.0217,-940.0,22.96,-962.96,-1.0467,942.96,1,v3.5,1,250

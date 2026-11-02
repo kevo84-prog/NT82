@@ -40,7 +40,11 @@ def main(argv=None):
     for ds in a.days:
         d = date.fromisoformat(ds)
         as_of = datetime.combine(d, time(8, 10), tzinfo=CT)
-        packet = json.load(open(run / "map" / f"PreopenPacket_{ds}.json"))
+        # the map names packets PreopenPacket_<instrument>_<day>.json (e.g. PreopenPacket_NQ_DEC25_2025-10-22.json)
+        hits = sorted((run / "map").glob(f"PreopenPacket_*{ds}.json"))
+        if len(hits) != 1:
+            raise SystemExit(f"expected one map packet for {ds}, found {[h.name for h in hits]}")
+        packet = json.load(open(hits[0]))
         start = V.week_start(d) - timedelta(days=7)
         rows = list(_rows(tape, start, as_of))
         bars = B.bars_from_rows(rows, start, as_of)
