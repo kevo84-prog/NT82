@@ -55,3 +55,30 @@ code writes as null. Nothing here was chosen from a result. Updated as the build
 See `P0.1_blind_run_setup.md`, section "Access events": `FROZEN_STRATEGY.md` (Phase 3 result table
 seen while reading the C1 definition), plus result numbers quoted inside the Book 1A docs and the
 design v3.10 change log.
+
+## E. Found on the PC run (Nov 2, 2026; branch book1a-phase0)
+
+Each item: what was found, what was done. Code fixes are in the commits named; no threshold was changed.
+
+| # | Finding | Action |
+|---|---|---|
+| E1 | `Book1A/specs/` exports were from Nov 1 19:29Z; the replay plan and the Phase 0 checklist were edited on Drive at 22:23Z (fill model v3.5 for all four strategies; P0.5 = v3.5 with a gap-through case). | Both re-exported (commit 6c5fdb4). The other eight spec docs were not re-checked against Drive (not asked). |
+| E2 | `replay_risk.replay` (R3 / R4) defaulted to fill model v3.4. | Default v3.5, test pins it (6c5fdb4). R1 / R2 standardized runs: `run_r1_r2 --fill v3.5`; P0.4 keeps the per-phase Book 1 model. |
+| E3 | `run_r1_r2.book1_cfg` differed from Book 1's phase1..4 configs: map_from one day late (Sep 22 vs Sep 21, 2025 17:00 CT = one map session of history less), holidays without Labor Day 2025, "," instead of "; ", map_first_utc default 14 days before the first session. The 1-minute bar files were never built. | Fixed to match the Book 1 configs key for key (all four phases checked: 0 differences); bars built from raw in the phase3 / phase4 build_inputs.py pattern (5301bea). |
+| E4 | Book 1 Phase 3 ran on a Feb 4, 2026 tape cut at 17:00 CT; the Phase 4 holdout later rebuilt that day in full (`tapes\phase3_cut\` keeps the cut file). | P0.4 phase3 runs on a hard-link tape folder with the cut file (5301bea). |
+| E5 | Tapes are Book 1's `K:\Databento_BackTesting\tapes` (built by Book 1 from the raw MBO with `mbo_tape`), not rebuilt by the runner. They are derived data, not results; P0.2 covers the raw files they come from. | Kept (rebuilding 202 tapes takes hours). Kyron to say if the Book 1A run must rebuild them. |
+| E6 | On Windows the branch's `Book1A/` and `book1a/` folders are one folder (case-insensitive file system); Python could not import `book1a` until the folder was renamed to lower case on disk. Git sees no change. | Recommendation: rename one of the two folders in the repository (e.g. `Book1A/` to `Book1A_docs/`). Not done (paths are named in the brief and the runbook). |
+| E7 | The gate 6 table lists `glbx-mdp3-20260914/15.mbo.dbn.zst` twice (continuous file and roll-day file, different sizes); `manifest.compare` joined on the file name and paired the wrong copies (2 false differences). Also the Sep-Oct 2026 parity MBO is outside `raw\` (`NQ_MBO_2026-09`, `NQ_MBO_2026-10`). | Compare joins on the relative path when names repeat; the three folders are hashed into `manifest_all.csv` (b206e45). |
+| E8 | `replay_diff` reports every file of two real runs as different: gzip header times, `built=` / `built_local` wall-clock stamps, run-folder paths, the JOFS file name and its ProcessedTimeLocal column. | `book1a.replay_diff_norm` removes exactly those and compares every file byte for byte (bbab572). Data files (ledgers, fills, attempts, retests, plans) were already identical in `replay_diff`. |
+| E9 | Book 1's `arm_replay.replay` does not return the target of a trade; the checker ledgers had `target = nan`. | Target taken from the attempt row the replay used (`AR.attempts`, same call), keyed by event and bar; the run stops if any trade has none (54ec485). |
+| E10 | `R2_retests.csv` writer used the first record's keys; later records add `entry_blocks` (Phase 4 stopped there). | Union of keys. |
+| E11 | Phase 4 P0.4 run hit a MemoryError in Book 1's chunked tape loader while other jobs ran in parallel (about 6 of 32 GB free; WSL, Windows Terminal, ChatGPT hold the rest). | Rerun alone; the failed attempt's log is kept. |
+| E12 | `vwap_hand_check` decoded a whole MBO day at once (MemoryError). | Chunked decode, same rows. |
+| E13 | `plan_hand_check` looked for `PreopenPacket_<day>.json`; the map writes `PreopenPacket_<instrument>_<day>.json`. | Glob, exactly one packet per day required. |
+| E14 | `run_r1_r2` runs the `check_a0` gate only under v3.4, so on Phases 3-4 (v3.5) its "0 problems" means "not checked". | Reported as such. The checker's trade-by-trade comparison covers Phases 3-4. |
+| E15 | P0.7-P0.9 "hand" column is filled by a person from the chart (the script never fills it). | Tables produced for Oct 22, Oct 28, Nov 4, 2025; the runner machine-checked only what the table states itself (families unique, DECISION has 2+, GEX family exactly when a gamma level is inside or within 10 points). Kyron's chart check is still needed. |
+| E16 | The Oct 22, 2025 decision zone `D_PDL_ONL_..._ONPOC_AREA` is 66.75 points wide (stop 269 ticks). | Within the rules: the 40-point caps apply to REJ / FLIP, MAP4, delta bands and DD_EDGE; the 60-point width cut was moved to research (zones-and-sides doc). Under C3 it is a RISK_REJECT (stop > 196 ticks). |
+| E17 | P0.12 "R4" sample = the R4 entry gates (S1.4 + RH1 + T8 + L1, FZ1 logged) on A0's rules-only plans; Book 1A v2.4 plans are built (P0.7) but no runbook step feeds them to S1.4 for an R4 run. | Reported; the R4 run path needs a defined step before Phase 1. |
+| E18 | P1.1 needs scipy (Book 1's `gex_calc` / `mq_levels`); the PC's only Python (3.14) has none. | Not installed (changes Kyron's Python setup); waiting for Kyron. Path if not built: ranks left out of the GEX family (U6). |
+| E19 | `K:\Databento_BackTesting\backtest_scripts\phase0_parity.py` is an older untracked copy (CME roll dates); the Drive copy equals `book1_ref`. Not used by Book 1A. | Reported (A2). Book 1 not touched. |
+| E20 | Consequence of E6: on Windows, git recorded two new modules (`gamma_ranks_pc.py`, `replay_diff_norm.py`) under `Book1A/` instead of `book1a/`, so a case-sensitive checkout would not find them in the package. | Moved in git to `book1a/`; all other new files checked (Phase 0 outputs correctly under `Book1A/Phase0/`). Same recommendation as E6. |

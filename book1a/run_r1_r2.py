@@ -185,7 +185,8 @@ def main(argv=None):
             w = csv.DictWriter(f, fieldnames=["event", "time", "reasons", "px"]); w.writeheader(); w.writerows(rep["attempts"])
         if rep.get("retests"):
             with open(out / f"{name}_retests.csv", "w", newline="") as f:
-                w = csv.DictWriter(f, fieldnames=list(rep["retests"][0])); w.writeheader(); w.writerows(rep["retests"])
+                cols = list(dict.fromkeys(k for r in rep["retests"] for k in r))   # some records add entry_blocks
+                w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(rep["retests"])
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, cwd=Path(__file__).resolve().parents[1]).strip()
     except Exception:
