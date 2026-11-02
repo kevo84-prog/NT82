@@ -77,6 +77,25 @@ class TestManifestSameNameTwice(unittest.TestCase):
             self.assertEqual((r["reference"], r["missing"], r["differing"]), (2, 0, 0))
 
 
+class TestReplayDiffNorm(unittest.TestCase):
+    def test_clock_and_path_ignored_values_not(self):
+        import gzip
+        from book1a import replay_diff_norm as N
+        with tempfile.TemporaryDirectory() as d:
+            for run, clock in (("runA", "21:58:59"), ("runB", "22:04:19")):
+                r = Path(d) / run; (r / "map").mkdir(parents=True)
+                (r / "map" / "Zones_X_2025-12-15.txt").write_text(f"# map built=2026-11-01 {clock}\nzone 100\n")
+                (r / "map" / "P.json").write_text('{"built_local":"2026-11-01 ' + clock + '","ref":1}')
+                (r / "cfg.json").write_text(f'{{"out_dir": "{r.as_posix()}"}}')
+                with gzip.open(r / "t.csv.gz", "wt") as f: f.write("a,b\n1,2\n")
+                (r / ("JOFS_NQ_" + ("20261101-215858" if run == "runA" else "20261101-220418") + ".csv")).write_text(
+                    f"RecordType,EventId,Mode,Instrument,EvidenceTimeLocal,EvidenceTimeCT,ProcessedTimeLocal\nC,1,RT,NQ,,,{clock}\n")
+            rep = Path(d) / "rep.md"
+            self.assertEqual(N.main([str(Path(d) / "runA"), str(Path(d) / "runB"), str(rep)]), 0)
+            (Path(d) / "runB" / "map" / "Zones_X_2025-12-15.txt").write_text("# map built=2026-11-01 22:04:19\nzone 101\n")
+            self.assertEqual(N.main([str(Path(d) / "runA"), str(Path(d) / "runB"), str(rep)]), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
 
