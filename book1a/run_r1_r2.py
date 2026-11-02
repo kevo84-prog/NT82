@@ -117,13 +117,24 @@ def book1_cfg(block1: Path, sessions: list, out: Path, fill_model: str, map_firs
     )
 
 
-def to_trades(strategy: str, rep: dict, fill_model: str, risk_decision: str) -> list:
+def attempt_targets(AR, log, veto=None) -> dict:
+    """(event, 'YYYY-MM-DD HH:MM:SS' of the queueing bar) -> TargetPrice of the row the replay used for that attempt.
+    Book 1's arm_replay.replay takes the target from the attempt's row (the candidate, or its CONFIRM row for an
+    AwaitConfirm entry; the RH1 retest path keeps it) but does not return it; AR.attempts is the same call."""
+    out = {}
+    for a in AR.attempts(log, veto):
+        out[(a["event"], a["t"].strftime("%Y-%m-%d %H:%M:%S"))] = float(a["row"]["TargetPrice"])
+    return out
+
+
+def to_trades(strategy: str, rep: dict, fill_model: str, risk_decision: str, targets: dict = None) -> list:
     out = []
     for t in rep["trades"]:
         side = "LONG" if t["side"] == "Long" else "SHORT"
         stop = t["entry"] - t["risk_ticks"] * L.TICK if side == "LONG" else t["entry"] + t["risk_ticks"] * L.TICK
+        target = (targets or {}).get((t["event"], f"{t['date']} {t['signal_time']}"), float("nan"))
         out.append(L.Trade(strategy, t["event"], t["date"], t["entry_time"].strftime("%H:%M:%S.%f")[:12], side, 1,
-                           float(t["entry"]), float(stop), float("nan"), t["exit_time"].strftime("%H:%M:%S.%f")[:12] if t["exit_time"] else "",
+                           float(t["entry"]), float(stop), target, t["exit_time"].strftime("%H:%M:%S.%f")[:12] if t["exit_time"] else "",
                            float(t["exit"]), {"STOP": "STOP_FIRST", "TARGET": "TARGET_FIRST", "FLATTEN": "TIME_EXIT"}.get(t["reason"], t["reason"]),
                            risk_decision, None, fill_model, 1, 250))
     return out
@@ -162,8 +173,11 @@ def main(argv=None):
     veto = lambda r: v_fz1(r) or v_l1(r) or v_t8(r)
     r2 = AR.replay(log, tape, veto=veto, exit_model="M0", fill=f2, retest=dict(bars=bars, fail_ticks=2))
     ck = out / "checker_input"; ck.mkdir(exist_ok=True)
-    t1 = to_trades("R1_A0", r1, f1, "N/A (Book 1 sizing, qty 1)")
-    t2 = to_trades("R2_C1", r2, f2, "N/A (Book 1 sizing, qty 1)")
+    t1 = to_trades("R1_A0", r1, f1, "N/A (Book 1 sizing, qty 1)", attempt_targets(AR, log))
+    t2 = to_trades("R2_C1", r2, f2, "N/A (Book 1 sizing, qty 1)", attempt_targets(AR, log, veto))
+    missing_target = [t.trade_id for t in t1 + t2 if t.target != t.target]
+    if missing_target:
+        raise SystemExit(f"no target found for {missing_target}")
     L.write_checker_ledger(ck / "R1_A0.csv", t1); L.write_checker_ledger(ck / "R2_C1.csv", t2)
     L.write_ledger(out / "R1_A0_full.csv", t1); L.write_ledger(out / "R2_C1_full.csv", t2)
     for name, rep in (("R1", r1), ("R2", r2)):
