@@ -1,3 +1,3 @@
 date,entry_time,side,qty,entry_price,stop,target,exit_time,exit_price,exit_reason,risk_decision
-2025-10-30,09:05:00.250,SHORT,1,26100.0,26183.0,nan,14:05:18.715,25963.75,TARGET_FIRST,"N/A (Book 1 sizing, qty 1)"
-2025-11-03,09:16:00.250,SHORT,1,26109.0,26156.25,nan,11:51:10.868,26156.5,STOP_FIRST,"N/A (Book 1 sizing, qty 1)"
+2025-10-30,09:05:00.250,SHORT,1,26100.0,26183.0,25963.75,14:05:18.715,25963.75,TARGET_FIRST,"N/A (Book 1 sizing, qty 1)"
+2025-11-03,09:16:00.250,SHORT,1,26109.0,26156.25,26012.75,11:51:10.868,26156.5,STOP_FIRST,"N/A (Book 1 sizing, qty 1)"

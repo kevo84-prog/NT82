@@ -34,3 +34,36 @@ Notes
 - Fill model for P0.4: default `book1` (v3.4 on Phases 1-2, v3.5 on Phases 3-4) = Book 1's published per-phase setting, kept
   on Kyron's instruction (Nov 1, session 2). The exact v3.4 / v3.5 code difference is reported in `A1_fill_model_v34_v35_diff.md`.
 - Mono must be on PATH (the harness runs `mono JeronHarness.exe` outside Windows; on Windows the exe runs directly).
+
+## As run on the PC, Nov 2, 2026 (use these; they supersede the table where they differ)
+
+Setup: the Book 1 repo got the remote `origin = https://github.com/kevo84-prog/NT82.git`; the branch has no common
+history with Book 1, so it is a **git worktree** at `K:\Databento_BackTesting\Book1A\code` (a checkout in the Book 1
+folder would remove every tracked Book 1 file from it). On Windows rename the merged `Book1A` folder to `book1a`
+on disk once (case folding, ambiguities E6). Everything below runs from `Book1A\code` with
+`PYTHONUTF8=1` and `BOOK1_ROOT=K:\Databento_BackTesting`; outputs go to `Book1A\Phase0\` inside the worktree.
+Run the heavy steps one at a time (the PC has about 6 GB free; E11).
+
+```bat
+python -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+python -m book1a.book1_ref_compare book1_ref\MANIFEST.md K:\Databento_BackTesting Book1A\Phase0\A2_book1_tag_compare.md --tag phase4-result --raw K:\Databento_BackTesting\raw
+python -m book1a.manifest build K:\Databento_BackTesting\raw Book1A\Phase0\manifest_block1.csv
+python -m book1a.manifest build K:\Databento_BackTesting\NQ_MBO_2026-09 Book1A\Phase0\manifest_nq_mbo_2026-09.csv
+python -m book1a.manifest build K:\Databento_BackTesting\NQ_MBO_2026-10 Book1A\Phase0\manifest_nq_mbo_2026-10.csv
+rem merge the three into manifest_all.csv with paths prefixed raw/, NQ_MBO_2026-09/, NQ_MBO_2026-10/, then:
+python -m book1a.manifest compare Book1A\Phase0\manifest_all.csv K:\Databento_BackTesting\data_integrity_2025-10-21_2026-10-02.csv Book1A\Phase0\P0.2_checksums.md
+python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out Book1A\Phase0\replay_diff\runA
+python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out Book1A\Phase0\replay_diff\runB
+python -m book1a.replay_diff_norm Book1A\Phase0\replay_diff\runA Book1A\Phase0\replay_diff\runB Book1A\Phase0\replay_diff\diff.md
+python -m book1a.hand_checks.vwap_hand_check K:\Databento_BackTesting\raw\block1 Book1A\Phase0\hand_checks
+for %p in (phase1 phase2 phase3 phase4) do python -m book1a.run_r1_r2 --phase %p --block1 K:\Databento_BackTesting --out Book1A\Phase0\runs\%p
+rem copy runs\<phase>\checker_input\R1_A0.csv / R2_C1.csv to checker_input\R1_A0_<phase>.csv / R2_C1_<phase>.csv
+python -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\hand_checks --days 2025-10-22 2025-10-28 2025-10-31 2025-11-04
+python -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\plans_phase1 --days <all 10 Phase 1 sessions>
+python -c "from pathlib import Path; from book1a import candidate_log as C; r=Path('Book1A/Phase0/runs/phase1'); C.build(r, r/'tape_strategy.csv.gz', Path('Book1A/Phase0/P0.11_candidates_phase1.csv'), sessions=['2025-10-22','2025-10-28','2025-11-04'])"
+rem P0.12: replay_risk.replay(log, tape, "R3", veto=FZ1|L1|T8, retest=RH1) and "R4" (veto=L1|T8), write_ledger -> P0.12\
+python -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1\R1_A0_full.csv Book1A\Phase0\lookahead
+python -m book1a.gamma_ranks_pc K:\Databento_BackTesting Book1A\Phase0      (needs scipy)
+```
+The daily-loop config no longer needs `--map-first-utc`: Book 1's 20250921 is the default (E3). Phase 3 uses the
+cut Feb 4 tape automatically (E4). Bars are built from raw on the first run of each folder.
