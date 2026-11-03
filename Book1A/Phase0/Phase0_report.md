@@ -55,7 +55,7 @@ Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches
 |---|---|
 | `A2_book1_tag_compare.md` | A2 table and the runner's follow-up on the 2 MISSING rows |
 | `manifest_all.csv`, `manifest_block1.csv`, `manifest_nq_mbo_2026-09/-10.csv`, `P0.2_checksums.md`, `P0.2_build.log` | P0.2 |
-| `replay_diff/diff.md` (normalised, DIFF EMPTY), `replay_diff/diff_raw_replay_diff.md` (short stub in git: the raw file is 1.4 GB, over GitHub's 100 MB limit; full file with its sha256 on the PC at `K:\Databento_BackTesting\Book1Aeplay_diff_full\`), `runA_console.log`, `runB_console.log` | P0.3 (run folders kept on the PC, not in git) |
+| `replay_diff/diff.md` (normalised, DIFF EMPTY), `replay_diff/diff_raw_replay_diff.md` (short stub in git: the raw file is 1.4 GB, over GitHub's 100 MB limit; full file with its sha256 on the PC at `K:\Databento_BackTesting\Book1A\replay_diff_full\`), `runA_console.log`, `runB_console.log` | P0.3 (run folders kept on the PC, not in git) |
 | `checker_input/R1_A0_phase1..4.csv`, `R2_C1_phase1..4.csv` | P0.4 hand-off |
 | `runs/phase1..4_console.log`, `runs/phase*_ledgers.log`, `runs/phase4_console_attempt1_memoryerror.log` | P0.4 run logs (run folders on the PC only) |
 | `unit_tests/unit_tests_2026-11-02.log` | 131 tests, 0 failures (P0.5, P0.10 and all others) |
