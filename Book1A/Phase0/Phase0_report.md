@@ -11,12 +11,14 @@ Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches
 
 - **Passed on real data:** P0.2 checksums, P0.3 deterministic replay (incl. the Dec 15, 2025 roll day), P0.5 v3.5
   gap-through tests (long and short), P0.6 VWAP (both roll days), P0.10, P0.11 candidate log, P0.12 ledger fields,
-  P0.13 lookahead audit (0 violations, 0 missing), P1.2.
+  P0.13 lookahead audit (0 violations, 0 missing), P1.1 gamma ranks (124 / 124 sessions; Nov 2, Book 1A venv), P1.2.
 - **Waiting for others:** **P0.4: waiting for checker** (8 ledgers in `checker_input/`, not compared to anything by
   the runner). P0.7-P0.9: tables produced on 4 Phase 1 days; the "hand" column must be filled by Kyron from the
   chart (the runner machine-checked only what the tables state themselves).
-- **Blocked:** P1.1 gamma ranks: Book 1's GEX code needs `scipy`, which the PC's Python 3.14 does not have. Installing
-  it changes Kyron's Python setup, so the runner asked first.
+- **Kyron's Nov 2 decisions, done:** (1) branch pushed to GitHub as a new branch `book1a-phase0-pc` (no force,
+  `book1a-phase0` untouched); (2) P1.1 run in a separate Book 1A Python venv (system / Book 1 Python unchanged);
+  (3) Book 1 result text moved out of the root CLAUDE.md into `BOOK1_RESULTS_PRIVATE.md`, and a rules-only
+  `Book1A\CLAUDE.md` created (section 5).
 - **Not run:** P2 (only after every P0 item passes). **Freeze tag not applied.**
 - **Code fixed on the PC (systematic differences, no threshold touched):** R3 / R4 now default to fill model v3.5;
   the R1 / R2 daily-loop config now equals Book 1's phase configs key for key (it started the map one day late) and
@@ -43,7 +45,7 @@ Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches
 | P0.12 | M0 exits and R reporting | **PASS (fields)** | ledger-v1.0, replay-risk-v1.0 | Nov 2 | `P0.12/R3_M0_phase1_ledger.csv`, `R4_M0_phase1_ledger.csv`: theoretical R, realized net R, N, planned risk, risk decision on every row, fill model v3.5. Written, not summarized. R4 sample uses the R4 entry gates on A0's plans (E17). |
 | P0.13 | Timestamp and lookahead audit | **PASS** | lookahead-v1.0, audit-run-v1.0 | Nov 2 | Phase 1, every R1 entry: 7 decisions, 117 inputs, 0 violations, 0 missing (Book 1A plans built for all 10 Phase 1 days in `plans_phase1/`). R3: 1 / 16 / 0 / 0; R4: 3 / 52 / 0 / 0. |
 | P0.14 | Freeze | NOT DONE (by instruction) | - | - | P0.4 and P0.7-P0.9 still open. |
-| P1.1 | Gamma ranks (U6) | BLOCKED (scipy) | gamma-ranks-v1.0, gamma-ranks-pc-v1.0 | Nov 2 | Script ready: Book 1 pipeline (`gex_block1.build`, `gex_calc.cme_day`, `mq_levels.strike_gex`) unchanged, ranks, consistency check vs CR / PS on every session, independent hand Black-76 ranking on 2 days. Needs `pip install scipy`. |
+| P1.1 | Gamma ranks (U6) | **PASS** | gamma-ranks-v1.0, gamma-ranks-pc-v1.1 | Nov 2 | Run in `K:\Databento_BackTesting\Book1A\.venv` (Python 3.14.7, scipy 1.18.1, numpy 2.5.3, pandas 3.0.6, databento 0.87.0; full list `P1.1_venv_requirements.txt`). Book 1 pipeline (`gex_block1.build`, `gex_calc.cme_day`, `mq_levels.strike_gex`) unchanged. 124 / 124 sessions ranked; largest positive / most negative strike = call_resistance / put_support on 124 / 124. Hand Black-76 ranking (no mq_levels code) equals the module top 5 on Nov 5, 2025 and Jan 15, 2026. The venv reproduces gex_levels_block1.csv on those 2 days: 22 / 22 values equal (front, settle, CR, PS, HVL, the three 0DTE levels, regime, options_used; net_gex equal to 15 significant digits). Only option / futures input files read. |
 | P1.2 | Calculated GEX levels | PASS (cloud session) | gex-check-v1.0 | Nov 1 | Unchanged; the file's sha256 matches (A2). |
 | P2.1-P2.9 | Diagnostics | NOT RUN | - | - | Not every P0 item has passed. |
 
@@ -58,6 +60,7 @@ Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches
 | `runs/phase1..4_console.log`, `runs/phase*_ledgers.log`, `runs/phase4_console_attempt1_memoryerror.log` | P0.4 run logs (run folders on the PC only) |
 | `unit_tests/unit_tests_2026-11-02.log` | 131 tests, 0 failures (P0.5, P0.10 and all others) |
 | `hand_checks/vwap_hand_check.md` | P0.6 |
+| `P1.1_gamma_ranks.md`, `P1.1_gamma_ranks.csv`, `P1.1_venv_requirements.txt` | P1.1 (gamma1-5 per session, checks, venv package versions) |
 | `hand_checks/hand_check_<day>.md`, `PreopenPlan_<day>_book1a.txt/.json` | P0.7-P0.9 (Oct 22, Oct 28, Oct 31, Nov 4, 2025) |
 | `plans_phase1/` | Book 1A plans and sidecars, all 10 Phase 1 days (input to P0.13) |
 | `P0.11_candidates_phase1.csv` | P0.11 |
@@ -115,6 +118,21 @@ plan quotes two in-sample R totals; while checking the `target` column the runne
 in our own Phase 2 R1 reproduction. Nothing used. Recommendation: start the next blind session in
 `K:\Databento_BackTesting\Book1A\` with its own CLAUDE.md, and keep result numbers out of the root CLAUDE.md.
 
+**Fix done Nov 2 (Kyron's decision 3).** Moved word for word from the root `CLAUDE.md` phase table into
+`K:\Databento_BackTesting\BOOK1_RESULTS_PRIVATE.md` (the runner wrote it and has not opened it since):
+- Phase 1 status cell: the one-word outcome. Now: "run (result: `BOOK1_RESULTS_PRIVATE.md`)".
+- Phase 3 status cell: which arms were promoted, the C1 composition line with its net R per session and lower bound,
+  and the frozen-strategy file path. Now: "done Oct 26, 2026; final combination C1 frozen (code `phase3-combination`;
+  results tag `phase3-results`). Results: `BOOK1_RESULTS_PRIVATE.md`".
+- Phase 4 status cell: the holdout verdict, the failing test with its day and trade size, the C1 R total, R per
+  session, lower bound, drawdown and the results file path. Now: "run once Oct 26, 2026 (code `phase4-holdout-fix2`).
+  Result: `BOOK1_RESULTS_PRIVATE.md`".
+Nothing else moved: the Phase 0 and 2 cells, the integrity rules, folder map and run instructions carry no result and
+are unchanged (no rule text edited). The root CLAUDE.md edit is not committed in the Book 1 repository (Kyron's
+call). New `K:\Databento_BackTesting\Book1A\CLAUDE.md`: rules only (layout, blinding, method), no results. Still
+exposed: the old text in Book 1's git history and the commit subjects (not rewritten). Note: a session started in
+`Book1A\` still loads the root CLAUDE.md as well; it is now result-free.
+
 ## 6. Ambiguities
 
 All in `ambiguities.md` (A1-A3, B1-B20, C1-C8 from the cloud sessions; E1-E20 from this run). The ones Kyron must
@@ -122,7 +140,6 @@ decide:
 - E5: Book 1's tapes are reused (derived from the raw MBO, not results). Rebuild for Book 1A?
 - E6 / E20: the repository has `Book1A/` and `book1a/`, which collide on Windows. Rename one?
 - E17: no runbook step yet feeds the Book 1A v2.4 plans to S1.4 for an R4 run.
-- E18: install `scipy` on the PC for P1.1?
 - E19: replace the stale `backtest_scripts\phase0_parity.py` with the Drive version?
 - P0.7 day choice: the three checklist days have no REJ / FLIP zone; Oct 31 was added.
 
@@ -133,5 +150,6 @@ decide:
 ## 8. Next
 
 1. Separate checker session: compare `checker_input/` with the Book 1 trade lists; return pass / fail and mismatches.
-2. Kyron: fill the hand columns (P0.7-P0.9), answer section 6.
+2. Kyron: fill the hand columns (P0.7-P0.9), answer section 6. The checker reads the ledgers from GitHub branch
+   `book1a-phase0-pc`.
 3. Fix any systematic mismatch in code, rerun the affected items, then P0.14 freeze. Only then Phase 1.
