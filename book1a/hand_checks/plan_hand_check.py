@@ -31,7 +31,7 @@ def main(argv=None):
     ap.add_argument("--days", nargs="*", default=DEFAULT_DAYS)
     a = ap.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from book1a import bars as B, plan_v24 as P, sessions as S, vwap as V
+    from book1a import bars as B, plan_v24 as P, sessions as S, vwap as V, weekly_dd as WD
     run, block1, out = Path(a.run), Path(a.block1), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     gex = {r["session"]: r for r in csv.DictReader(open(block1 / "gex_levels_block1.csv", newline="", encoding="utf-8-sig"))}
@@ -53,7 +53,9 @@ def main(argv=None):
                                            "PD": (datetime.combine(pd_date, time(8, 30), tzinfo=CT), datetime.combine(pd_date, time(15, 0), tzinfo=CT))})
         ts, px, sz = B.trades_from_tape(tape, V.week_start(d), as_of)
         vres = V.vwap_0810(ts, px, sz, d)
-        text, side = P.build(packet, bars, prof, vres, gex.get(ds), cal, roll_dates=[x.isoformat() for x in S.ROLL_DATES], as_of=as_of)
+        wdd, _, _ = WD.weekly(rows, V.week_start(d), as_of)     # E23: data before 08:10 CT only
+        text, side = P.build(packet, bars, prof, vres, gex.get(ds), cal, roll_dates=[x.isoformat() for x in S.ROLL_DATES], as_of=as_of,
+                             weekly_dd=wdd)
         (out / f"PreopenPlan_{ds}_book1a.txt").write_text(text, encoding="utf-8")
         (out / f"PreopenPlan_{ds}_book1a.json").write_text(json.dumps(side, indent=1, default=str), encoding="utf-8")
         L = [f"# Hand check {ds} (map v2.4 Book 1A outputs, families, context and sides)", "",

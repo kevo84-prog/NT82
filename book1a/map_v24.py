@@ -16,7 +16,8 @@ from datetime import date, datetime, time, timedelta
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 from zoneinfo import ZoneInfo
 
-VERSION = "map-v2.4-book1a-v1.1"   # v1.1: merged REJ zones keep swing_index / swing_price (E22)
+VERSION = "map-v2.4-book1a-v1.2"   # v1.1: merged REJ zones keep swing_index / swing_price (E22)
+                                   # v1.2: confirmed_ct + components on REJ / merged / FLIP zones (lookahead audit)
 CT = ZoneInfo("America/Chicago")
 TICK = 0.25
 
@@ -241,6 +242,10 @@ def rejection_zones(bars: Sequence[Bar], session_date: date, as_of: datetime, ad
         z = Zone(lo, hi, kind, formed, as_of, session_of(formed, session_date), ev, dep)
         z.extra["swing_price"] = sub[i].high if side == "HIGH" else sub[i].low
         z.extra["swing_index"] = idx[i]
+        # the swing is known once the 15th bar after it has closed (PO-1 step 1); find_swings guarantees that bar exists
+        conf = sub[i + SWING_BARS].close_ct.isoformat()
+        z.extra["confirmed_ct"] = conf
+        z.extra["components"] = [{"kind": kind, "formed_ct": formed.isoformat(), "confirmed_ct": conf}]
         zones.append(z)
     return zones
 
@@ -264,6 +269,11 @@ def merge_same_side(zones: List[Zone]) -> List[Zone]:
                 ext = {} if "swing_index" not in newer.extra else {"swing_index": newer.extra["swing_index"]}
                 if px:
                     ext["swing_price"] = max(px) if kind == "REJ_HIGH" else min(px)
+                # a merged zone is available only when its last component is confirmed (Kyron, Nov 4)
+                comps = cur.extra.get("components", []) + z.extra.get("components", [])
+                if comps:
+                    ext["components"] = comps
+                    ext["confirmed_ct"] = max((c["confirmed_ct"] for c in comps), key=datetime.fromisoformat)
                 cur = Zone(lo, hi, kind, newer.formed_ct, newer.available_at, newer.session,
                            newer.arrival_evidence, max(cur.departure_pts, z.departure_pts),
                            extra={"merged_from": cur.extra.get("merged_from", 1) + 1, **ext})
@@ -312,8 +322,10 @@ def flips(bars: Sequence[Bar], zones: List[Zone], as_of: datetime) -> List[Zone]
             if overlap / a.width >= FLIP_OVERLAP:
                 lo, hi = min(a.lo, b.lo), max(a.hi, b.hi)
                 lo, hi = _cap_to_extreme(lo, hi, "hi" if b.kind == "REJ_HIGH" else "lo")
+                comps = a.extra.get("components", []) + b.extra.get("components", []) +                     [{"kind": "ACCEPTANCE", "formed_ct": bars[acc].close_ct.isoformat(), "confirmed_ct": bars[acc].close_ct.isoformat()}]
                 z = Zone(lo, hi, "FLIP", b.formed_ct, as_of, b.session, b.arrival_evidence, b.departure_pts,
-                         extra={"flip_from": a.kind, "accepted_at_index": acc})
+                         extra={"flip_from": a.kind, "accepted_at_index": acc, "components": comps,
+                                "confirmed_ct": max((c["confirmed_ct"] for c in comps), key=datetime.fromisoformat)})
                 out.append(z)
                 used.add(id(a)); used.add(id(b))
                 break

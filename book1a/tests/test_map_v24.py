@@ -100,6 +100,30 @@ class TestSwingAndRejection(unittest.TestCase):
         out = m.merge_same_side([lo1, lo2])
         self.assertEqual((out[0].extra["swing_index"], out[0].extra["swing_price"]), (90, 98.0))
 
+    def test_merged_zone_confirmed_at_its_last_component(self):
+        """Kyron, Nov 4: a merged zone is available at the later of its components' confirmation times."""
+        c1 = {"kind": "REJ_HIGH", "formed_ct": datetime.combine(self.d, time(1, 0), tzinfo=CT).isoformat(),
+              "confirmed_ct": datetime.combine(self.d, time(1, 15), tzinfo=CT).isoformat()}
+        c2 = {"kind": "REJ_HIGH", "formed_ct": datetime.combine(self.d, time(2, 0), tzinfo=CT).isoformat(),
+              "confirmed_ct": datetime.combine(self.d, time(2, 15), tzinfo=CT).isoformat()}
+        a = Zone(100.0, 120.0, "REJ_HIGH", datetime.combine(self.d, time(1, 0), tzinfo=CT), self.as_of, "ON",
+                 extra={"swing_index": 10, "swing_price": 120.0, "confirmed_ct": c1["confirmed_ct"], "components": [c1]})
+        b = Zone(110.0, 125.0, "REJ_HIGH", datetime.combine(self.d, time(2, 0), tzinfo=CT), self.as_of, "ON",
+                 extra={"swing_index": 70, "swing_price": 125.0, "confirmed_ct": c2["confirmed_ct"], "components": [c2]})
+        for order in ([a, b], [b, a]):
+            out = m.merge_same_side(order)
+            self.assertEqual(out[0].extra["confirmed_ct"], c2["confirmed_ct"])
+            self.assertEqual(len(out[0].extra["components"]), 2)
+
+    def test_merged_confirmation_compares_times_across_dst(self):
+        """Oct 31 (-05:00) vs Nov 3 (-06:00): the later time wins, not the larger string."""
+        early = {"confirmed_ct": "2025-11-02 00:30:00-05:00", "kind": "REJ_LOW", "formed_ct": "2025-11-02 00:15:00-05:00"}
+        late = {"confirmed_ct": "2025-11-02 01:10:00-06:00", "kind": "REJ_LOW", "formed_ct": "2025-11-02 00:55:00-06:00"}
+        z1 = Zone(100.0, 110.0, "REJ_LOW", datetime.fromisoformat(early["formed_ct"]), self.as_of, "ON", extra={"components": [late]})
+        z2 = Zone(101.0, 111.0, "REJ_LOW", datetime.fromisoformat(late["formed_ct"]), self.as_of, "ON", extra={"components": [early]})
+        out = m.merge_same_side([z1, z2])
+        self.assertEqual(out[0].extra["confirmed_ct"], late["confirmed_ct"])
+
     def test_session_tags(self):
         self.assertEqual(m.session_of(datetime.combine(date(2025, 10, 21), time(20, 0), tzinfo=CT), self.d), "ON")
         self.assertEqual(m.session_of(datetime.combine(date(2025, 10, 21), time(10, 0), tzinfo=CT), self.d), "PD")

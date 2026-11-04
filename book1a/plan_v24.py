@@ -19,7 +19,8 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.1"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
+VERSION = "plan-v2.4-book1a-v1.2"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
+                                    # v1.2: weekly DD_EDGE (E23, ours: PD rule applied to weekly, book1a.weekly_dd)
 CT = ZoneInfo("America/Chicago")
 TICK = 0.25
 PAD = 5.0
@@ -62,8 +63,10 @@ def dd_inputs(ddp) -> Optional[tuple]:
 
 
 def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dict, gex_row: Optional[dict],
-          calendar_rows: Sequence[dict], roll_dates: Sequence[str] = (), as_of: Optional[datetime] = None):
-    """Returns (plan_text, sidecar dict). profiles: {"WK"|"PD"|"ON": {"volume": {row: v}, "delta": {row: d}, "poc_row": r}}."""
+          calendar_rows: Sequence[dict], roll_dates: Sequence[str] = (), as_of: Optional[datetime] = None,
+          weekly_dd: Optional[dict] = None):
+    """Returns (plan_text, sidecar dict). profiles: {"WK"|"PD"|"ON": {"volume": {row: v}, "delta": {row: d}, "poc_row": r}}.
+    weekly_dd: book1a.weekly_dd.weekly() result (E23); None = no weekly DD input (logged in the sidecar)."""
     d = date.fromisoformat(p["date"])
     as_of = as_of or datetime.combine(d, time(8, 10), tzinfo=CT)
     ref = float(p["ref_price"])
@@ -119,6 +122,15 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
     ddi = dd_inputs(p.get("double_distribution"))
     if ddi is not None:
         dd = M.dd_edge_zone(ddi[0], ddi[1], ddi[2], ref, as_of, ddi[3])
+    # E23 (Kyron, Nov 4; ours: PD rule applied to weekly): the same split on the developing weekly profile
+    from book1a import weekly_dd as WD
+    dd_wk = None
+    wdi = WD.as_plan_inputs(weekly_dd) if weekly_dd else None
+    if wdi is not None:
+        dd_wk = M.dd_edge_zone(wdi[0], wdi[1], wdi[2], ref, as_of, "WK")
+        if dd_wk is not None:
+            dd_wk.extra["rule"] = WD.LABEL
+    dds = [z for z in (dd, dd_wk) if z is not None]      # PD first, then weekly (ladder RUNNER order)
 
     # ---- candidate decision zones: packet zones + REJ/FLIP + MAP4 areas + DD edges -------------------
     all_levels = [F.Level.point(k, v) for k, v in lv.items()] + vwap_levels + gex_levels + \
@@ -133,8 +145,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         cands.append(dict(lo=z.lo, hi=z.hi, label=f"{z.kind}_{z.session}", kind=z.kind, own=["STRUCTURE"], src=None, tests={}, zone=z))
     for a in areas:
         cands.append(dict(lo=a.lo, hi=a.hi, label=a.label, kind="MAP4_AREA", own=["VOLUME"], src=None, tests={}, zone=a))
-    if dd is not None:
-        cands.append(dict(lo=dd.lo, hi=dd.hi, label=dd.label, kind="DD_EDGE", own=["STRUCTURE"], src=None, tests={}, zone=dd))
+    for z in dds:   # both DD edges belong to STRUCTURE; a merged zone counts the family once (own is a set)
+        cands.append(dict(lo=z.lo, hi=z.hi, label=z.label, kind="DD_EDGE", own=["STRUCTURE"], src=None, tests={}, zone=z))
     for c in cands:
         fr = F.count_families(c["lo"], c["hi"], all_levels, own_families=c["own"])
         c["fam"] = fr
@@ -252,7 +264,7 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
             if not fits:
                 fields[side] = "NONE"; notes.append(f"C: {c['label']} {side} NONE: 1 NQ does not fit ${R.DEFAULT.per_trade_budget_cents/100:.0f} (stop {stop_ticks} ticks)")
                 continue
-            ladder[side] = _ladder(side, c, ref, rej_sel, lv, areas, bands, wk_val, wk_vah, pd1, draw, dd, stop_ticks)
+            ladder[side] = _ladder(side, c, ref, rej_sel, lv, areas, bands, wk_val, wk_vah, pd1, draw, dds, stop_ticks)
         c.update(fields); c["ladder"] = ladder; c["stop_ticks"] = stop_ticks; c["accept_state"] = acc
         zone_rows.append(c)
     if any(zr["side"] == "ABOVE" for zr in zone_rows) and any(zr["side"] == "BELOW" for zr in zone_rows):
@@ -330,11 +342,12 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
             "targets": [dict(label=t["label"], lo=t["lo"], hi=t["hi"]) for t in targets],
             "rej_flip_zones": [z.as_row() for z in rej_sel], "map4_areas": [a.as_row() for a in areas],
             "delta_bands": [b.as_row() for b in bands], "dd_edge": dd.as_row() if dd else None,
+            "dd_edge_wk": dd_wk.as_row() if dd_wk else None, "weekly_dd": weekly_dd,
             "vwap": {k: v.as_row() for k, v in vwap_res.items() if v is not None}}
     return "\n".join(L) + "\n", side
 
 
-def _ladder(side, c, ref, rej, lv, areas, bands, wk_val, wk_vah, pd1, draw, dd, stop_ticks):
+def _ladder(side, c, ref, rej, lv, areas, bands, wk_val, wk_vah, pd1, draw, dds, stop_ticks):
     """Phase 6 P1: TP1 nearest REJ/FLIP zone else nearest value edge / POC / HVN; TP2 nearest HVN area or delta band
     beyond TP1; RUNNER the opposite edge of the value area price is trading into (weekly, then PD), else the draw,
     or the far edge of a double distribution. R uses the zone stop (width + 2 ticks) from the zone's near edge."""
@@ -359,7 +372,8 @@ def _ladder(side, c, ref, rej, lv, areas, bands, wk_val, wk_vah, pd1, draw, dd, 
         far = va[1] if up else va[0]
         if beyond(far): run = (far - PAD, far + PAD); break
     if run is None and draw is not None and beyond(draw.draw_lo if up else draw.draw_hi): run = (draw.draw_lo, draw.draw_hi)
-    if run is None and dd is not None and beyond(dd.extra["runner"]): run = (dd.extra["runner"] - PAD, dd.extra["runner"] + PAD)
+    for dd in dds:          # PD double distribution first, then the weekly one (E23)
+        if run is None and beyond(dd.extra["runner"]): run = (dd.extra["runner"] - PAD, dd.extra["runner"] + PAD)
     risk_pts = stop_ticks * TICK
     def rr(t):
         if t is None: return ""

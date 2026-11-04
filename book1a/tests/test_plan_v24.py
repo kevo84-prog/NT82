@@ -115,6 +115,28 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class TestWeeklyDD(TestPlanBuilder):
+    """E23: the weekly DD edge joins the plan; PD and weekly DD edges are both STRUCTURE and count once."""
+    def test_pd_and_weekly_dd_edges_count_structure_once(self):
+        pk = dict(self.packet)
+        pk["double_distribution"] = {"available": True, "pd_double_distribution": True, "lower_hvn": [23900.0, 23940.0],
+                                     "upper_hvn": [23965.0, 24100.0], "separator": "LVN", "separator_lo": 23945.0, "separator_hi": 23960.0}
+        wk = {"available": True, "double_distribution": True, "lower_hvn": [23905.0, 23938.0], "upper_hvn": [23970.0, 24150.0],
+              "separator": "LVN", "separator_lo": 23945.0, "separator_hi": 23965.0, "profile": "WK"}
+        text, side = P.build(pk, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), weekly_dd=wk)
+        self.assertEqual(side["dd_edge"]["label"], "DD_EDGE_PD")
+        self.assertEqual(side["dd_edge_wk"]["label"], "DD_EDGE_WK")
+        self.assertEqual(side["dd_edge_wk"]["rule"], "ours: PD rule applied to weekly")
+        self.assertEqual((side["dd_edge_wk"]["lo"], side["dd_edge_wk"]["hi"]), (23905.0, 23938.0))
+        z = [z for z in side["zones"] if "DD_EDGE_PD" in z["label"] and "DD_EDGE_WK" in z["label"]]
+        self.assertEqual(len(z), 1, [x["label"] for x in side["zones"]])
+        self.assertEqual(z[0]["families"].count("STRUCTURE"), 1)
+
+    def test_no_weekly_input_means_no_weekly_zone(self):
+        text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())
+        self.assertIsNone(side["dd_edge_wk"]); self.assertIsNone(side["weekly_dd"])
+
+
 class TestDDInputs(unittest.TestCase):
     """E21: the v2.3 packet writes pd_double_distribution / lower_hvn / upper_hvn / separator_lo / separator_hi."""
     def test_packet_form(self):
