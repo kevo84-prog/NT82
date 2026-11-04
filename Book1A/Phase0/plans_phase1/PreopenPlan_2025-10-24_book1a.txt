@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.3)
 plan_id=2025-10-24-b1a
 date=2025-10-24
 asof=08:25

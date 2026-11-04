@@ -6,8 +6,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-02T17:00:00-06:00",
    "window_end": "2025-11-05T08:10:00-06:00",
    "last_trade_ct": "2025-11-05T08:09:59.077220-06:00",
@@ -179,8 +180,9 @@
    "separator_hi": 26059.75,
    "hvn_blocks": 3,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-02T17:00:00-06:00",
    "window_end": "2025-11-06T08:10:00-06:00",
    "last_trade_ct": "2025-11-06T08:09:59.913459-06:00",
@@ -352,8 +354,9 @@
    "separator_hi": 25379.75,
    "hvn_blocks": 5,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-02T17:00:00-06:00",
    "window_end": "2025-11-07T08:10:00-06:00",
    "last_trade_ct": "2025-11-07T08:09:59.882239-06:00",
@@ -505,8 +508,9 @@
    "separator_hi": 25509.75,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-09T17:00:00-06:00",
    "window_end": "2025-11-10T08:10:00-06:00",
    "last_trade_ct": "2025-11-10T08:09:58.973838-06:00",
@@ -666,8 +670,9 @@
    "separator_hi": 25694.75,
    "hvn_blocks": 3,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-09T17:00:00-06:00",
    "window_end": "2025-11-11T08:10:00-06:00",
    "last_trade_ct": "2025-11-11T08:09:59.601265-06:00",
@@ -820,8 +825,9 @@
    "double_distribution": false,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-09T17:00:00-06:00",
    "window_end": "2025-11-12T08:10:00-06:00",
    "last_trade_ct": "2025-11-12T08:09:54.701080-06:00",
@@ -954,8 +960,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-09T17:00:00-06:00",
    "window_end": "2025-11-13T08:10:00-06:00",
    "last_trade_ct": "2025-11-13T08:09:59.711341-06:00",
@@ -1096,8 +1103,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-09T17:00:00-06:00",
    "window_end": "2025-11-14T08:10:00-06:00",
    "last_trade_ct": "2025-11-14T08:09:59.847906-06:00",
@@ -1238,8 +1246,9 @@
    "double_distribution": false,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-16T17:00:00-06:00",
    "window_end": "2025-11-20T08:10:00-06:00",
    "last_trade_ct": "2025-11-20T08:09:59.985397-06:00",
@@ -1380,8 +1389,9 @@
    "double_distribution": false,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-16T17:00:00-06:00",
    "window_end": "2025-11-21T08:10:00-06:00",
    "last_trade_ct": "2025-11-21T08:09:58.746264-06:00",
@@ -1540,8 +1550,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-23T17:00:00-06:00",
    "window_end": "2025-11-24T08:10:00-06:00",
    "last_trade_ct": "2025-11-24T08:09:59.917475-06:00",
@@ -1664,8 +1675,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-23T17:00:00-06:00",
    "window_end": "2025-11-25T08:10:00-06:00",
    "last_trade_ct": "2025-11-25T08:09:59.479896-06:00",
@@ -1817,8 +1829,9 @@
    "separator_hi": 24899.75,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-23T17:00:00-06:00",
    "window_end": "2025-11-26T08:10:00-06:00",
    "last_trade_ct": "2025-11-26T08:09:58.671387-06:00",
@@ -1983,154 +1996,25 @@
  {
   "day": "2025-11-28",
   "weekly_dd": {
-   "available": true,
-   "double_distribution": true,
-   "lower_hvn": [
-    24855.0,
-    24859.75
-   ],
-   "upper_hvn": [
-    24925.0,
-    24954.75
-   ],
-   "separator": "LVN",
-   "separator_lo": 24895.0,
-   "separator_hi": 24899.75,
-   "hvn_blocks": 3,
+   "available": false,
+   "status": "UNAVAILABLE",
+   "reason": "map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT",
    "profile": "WK",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-23T17:00:00-06:00",
    "window_end": "2025-11-28T08:10:00-06:00",
-   "last_trade_ct": "2025-11-28T08:09:54.365170-06:00",
+   "last_trade_ct": null,
    "available_at": "2025-11-28T08:10:00-06:00"
   },
   "checks": [
    [
-    "week high",
-    25399.0,
-    25399,
-    "OK"
-   ],
-   [
-    "week low",
-    24361.75,
-    24361.75,
-    "OK"
-   ],
-   [
-    "weekly VWAP",
-    24965.033,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKPOC",
-    24935.0,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKVAH",
-    25218.75,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKVAL",
-    24611.0,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKTPOC",
-    25317.5,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKTVAH",
-    25389.75,
-    null,
-    "DIFF"
-   ],
-   [
-    "WKTVAL",
-    24780.0,
-    null,
-    "DIFF"
-   ],
-   [
-    "weekly single prints",
-    [
-     [
-      24575.0,
-      24599.75
-     ],
-     [
-      25390.0,
-      25399.75
-     ]
-    ],
-    [],
-    "DIFF"
-   ],
-   [
-    "PD single prints",
-    [
-     [
-      25130.0,
-      25154.75
-     ],
-     [
-      25370.0,
-      25379.75
-     ]
-    ],
-    [
-     [
-      25130,
-      25154.75
-     ],
-     [
-      25370,
-      25379.75
-     ]
-    ],
-    "OK"
-   ],
-   [
-    "PD double distribution (port check)",
-    [
-     false,
-     null,
-     null,
-     null,
-     null,
-     null,
-     1
-    ],
-    [
-     false,
-     null,
-     null,
-     null,
-     null,
-     null,
-     1
-    ],
-    "OK"
+    "weekly profile",
+    "UNAVAILABLE",
+    "map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT",
+    "SKIP"
    ]
-  ],
-  "weekly_profile": {
-   "window": [
-    "2025-11-23T17:00:00-06:00",
-    "2025-11-28T08:10:00-06:00"
-   ],
-   "trades_volume": 1782394,
-   "last_trade_ct": "2025-11-28T08:09:54.365170-06:00",
-   "rows_5pt": {}
-  }
+  ]
  },
  {
   "day": "2025-12-01",
@@ -2139,8 +2023,9 @@
    "double_distribution": false,
    "hvn_blocks": 2,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-30T17:00:00-06:00",
    "window_end": "2025-12-01T08:10:00-06:00",
    "last_trade_ct": "2025-12-01T08:09:58.359700-06:00",
@@ -2265,8 +2150,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-30T17:00:00-06:00",
    "window_end": "2025-12-02T08:10:00-06:00",
    "last_trade_ct": "2025-12-02T08:09:59.781939-06:00",
@@ -2407,8 +2293,9 @@
    "double_distribution": false,
    "hvn_blocks": 4,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-30T17:00:00-06:00",
    "window_end": "2025-12-03T08:10:00-06:00",
    "last_trade_ct": "2025-12-03T08:09:59.961012-06:00",
@@ -2549,8 +2436,9 @@
    "double_distribution": false,
    "hvn_blocks": 1,
    "profile": "WK",
+   "status": "AVAILABLE",
    "rule": "ours: PD rule applied to weekly",
-   "version": "weekly-dd-v1.0",
+   "version": "weekly-dd-v1.1",
    "window_start": "2025-11-30T17:00:00-06:00",
    "window_end": "2025-12-04T08:10:00-06:00",
    "last_trade_ct": "2025-12-04T08:09:59.463868-06:00",

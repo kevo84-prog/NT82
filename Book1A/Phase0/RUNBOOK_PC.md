@@ -103,3 +103,12 @@ rem E24
 rem E5: Book1A\e5_tapes\run_e5.py (mbo_tape.day_tape from book1_ref on the Nov 5 and Dec 15 raw files, no cutoff), then
 rem compare `gzip -dc <tape> | sha256sum` for tapes\ and Book1A\e5_tapes\ (E5_tape_rebuild.md)
 ```
+
+## As run on the PC, Nov 4, 2026, third part (E26 / E25 code e9813f4; reports b414c98)
+Plans, R4, the three audits, E24, the weekly checks and the pack were rerun with the same commands as above (the
+previous R4 run folder moved to `runs\phase1_r4_prev_v12`, not in git). New commands (full lines in each folder's
+command.txt):
+```
+%PY% -m book1a.hand_checks.wide_zone_report --out Book1A\Phase0\wide_zones\wide_zone_report.md --day "<date>=<run>|<plans>[|<R4 run>]" ...
+%PY% -m book1a.hand_checks.hand_check_sheet --block1 K:\Databento_BackTesting --out Book1A\Phase0\hand_check_sheet\hand_check_sheet.md --day "<date>=<run>|<plans>" ...
+```

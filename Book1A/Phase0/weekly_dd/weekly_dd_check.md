@@ -1,4 +1,4 @@
-# E23 weekly profile and double-distribution check (weekly-dd-check-v1.0)
+# E23 weekly profile and double-distribution check (weekly-dd-check-v1.1)
 
 Rule: ours: PD rule applied to weekly (book1a.weekly_dd, frozen at commit 31cebdb before any real day was run).
 Rebuilt from each run's map tape, compared with the map packet. OK = equal (VWAP within 0.0001).

@@ -7,7 +7,64 @@ Controlling doc: "Book 1A – Replay plan", re-exported Nov 2 (Drive edit Nov 1 
 Checklist: "Book 1A – Phase 0 build checklist", re-exported the same way. No P&L was opened, summarized or looked at.
 Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches were read through hard links).
 
-## 0. Nov 4 decisions applied (read this first)
+## 0. Nov 4 decisions, third part (read this first)
+
+Kyron's Phase 0 decisions of Nov 4 (third set), items 1-8. Branch `book1a-phase0-pc`, local commits e9813f4 (code),
+b414c98 (reports), plus the outputs commit; not pushed. No P&L, no outcome, no threshold change. **Not frozen.**
+
+1. **E26 approved and built.** When the map leaves the developing weekly profile out (its note "DATA: weekly profile
+   left out: <reason>"), the weekly rule is skipped and the feature is **UNAVAILABLE** with the map's reason, never a
+   valid profile with no edge (weekly-dd-v1.1: no split key, no plan inputs; plan-v2.4-book1a-v1.3 notes it in
+   review_note; audit-run-v1.2 checks it; pack v1.2 prints it). Real-day check: Nov 28 is UNAVAILABLE in
+   `weekly_dd/weekly_dd_check_phase2_rest.md`. None of the 17 Book 1A plans is an E26 day: all 17 are AVAILABLE.
+2. **E27 accepted:** the Nov 19 weekly DD_EDGE of the map doc's example was not reproduced; no tuning (`ambiguities.md`).
+3. **E25 accepted with disclosure:** FLIP is covered by a synthetic test only. The first real FLIP is registered as a
+   mandatory targeted review: plan v1.3 writes `research.flip_review_required` and "E25: FLIP zone formed - mandatory
+   targeted review" in review_note whenever one forms (no gating change; unit test). No FLIP on any day so far.
+4. **Wide decision zones: frozen rules kept.** No 60-point cap, no stop change (`ambiguities.md` E28).
+5. **Wide-zone eligibility report** (`wide_zones/wide_zone_report.md`, wide-zone-report-v1.0; descriptive only, no
+   outcomes, no P&L, no alternate trades). Zone counts: 13 days, 47 decision zones, **9 wide zones** (stop 216-421
+   ticks; 1 NQ $1,095.74-$2,120.74). All 9 have both sides NONE only because of the risk check. 8 of 9 have a
+   pre-existing structural level inside (PDH / PDL / ONH / ONL / PD2-3 H-L / REJ swing; listed per zone); Nov 17 has
+   none. 1 MNQ would fit on all 9 (estimate with the NQ commission as an upper bound; Book 1A never trades MNQ).
+   Trade counts, separately, from the R4 Phase 1 run (6 of the 9 zones are on Phase 1 days): 65 candidates on those
+   zones, 0 order attempts, 0 risk rejections, 0 entries. The 3 Phase 2 zones have no R4 run.
+6. **Block 2 stop-model comparison:** registered in the replay plan; not built or run.
+7. **Rerun after E26.** All 17 plans rebuilt with plan v1.3: plan text unchanged except the version header on every
+   day; every sidecar gains `weekly_dd.status`. New hashes: `plan_hashes_2026-11-04.md` (the v1.2 table is at commit
+   0070f95). R4 rerun on all 10 Phase 1 days (S1.4 loaded the `-b1a` plan on all 10; trade list unchanged on times,
+   prices, exits, risk decisions, sizes); 2,070 R4 rows carry plan v1.3 and the right plan and sidecar sha256.
+   P0.13: R1 7 / 156, R3 1 / 21, R4 12 / 260 (decisions / inputs), 0 violations, 0 missing; plan-build checks 63 / 0
+   failed each. E24 rerun: PASS. Weekly profile check: 156 / 156 on the 13 pack days; rest of Phase 2: 202 OK, 0 DIFF,
+   2 skipped (Nov 28 UNAVAILABLE by E26; Dec 1 PD port check, PD = the Nov 28 half day). Pack v1.2 rebuilt (13 days, FLIP 0).
+8. **Hand-check sheet** for Oct 22, 29, 31 and Nov 18 only: `hand_check_sheet/hand_check_sheet.md`
+   (hand-check-sheet-v1.0). Every value names its check source: volume-profile values (POC / VAH / VAL, TPO values,
+   highs / lows, POC areas, delta bands, PD and weekly double-distribution blocks) = the NinjaTrader Volume Profile
+   tool over the stated CT window; GEX values = `gex_levels_block1.csv`, row and column named (the `_nt` column the
+   plan read); 08:10 values (price, session / weekly VWAP and +/-1 sigma, context, draw, balance, value follows,
+   overnight inventory, acceptance states, weekly DD status) = the frozen plan sidecar, key named. REJ zones point to
+   the 1-minute chart and pack section B. Hand and match columns empty.
+9. Unit tests: 164 run, 0 failures, 0 errors on commit b414c98 (`unit_tests/unit_tests_2026-11-04.log`).
+
+### What passed and what still blocks the freeze (after the third part)
+
+| # | Item | Status | Blocks the freeze? |
+|---|---|---|---|
+| 1 | P0.4: R1 Phases 1-4, R2 Phases 2 (v3.5), 3, 4 PASS; R2 Phase 1 NO_REFERENCE | done | No |
+| 2 | E21 / E22, E23, E5, E24 | done (as before) | No |
+| 3 | E26 weekly DD UNAVAILABLE rule | approved, built, tested, audited | No |
+| 4 | E27 Nov 19 not reproduced | accepted, documented | No |
+| 5 | E25 flip: synthetic test only | accepted with disclosure; first real FLIP flagged for a mandatory review | No |
+| 6 | Wide zones | frozen rules kept; descriptive report done | No |
+| 7 | R4 on plan v1.3, candidate log, risk, all lookahead audits, plan hashes | rerun, PASS | No |
+| 8 | **Kyron's chart check (hand-check sheet, 4 days; pack v1.2 for detail)** | waiting for Kyron | **Yes** |
+| 9 | Blinding controls before Phase 1 | documented, not set up | No for the freeze; **yes before Phase 1** |
+| 10 | Block 2 stop-model comparison | registered; not built (instruction) | No |
+| 11 | R4 determinism (two runs), R4 on Phases 2-4 | not run | No |
+| 12 | Push of the Nov 4 commits | local only | No (Kyron's call) |
+| 13 | P0.14 freeze tag | not applied (instruction) | - |
+
+## 0-2. Nov 4 decisions applied, second part
 
 Session 3 on the PC, second part, Nov 4, 2026, branch `book1a-phase0-pc` (local commits, not pushed). Kyron's Phase 0
 decisions of Nov 4, items 1-8. Blind runner. Book 1 not edited. No P&L opened or summarized. No threshold changed.
@@ -66,7 +123,7 @@ decisions of Nov 4, items 1-8. Blind runner. Book 1 not edited. No P&L opened or
    tree, no git in the Book 1 repo, a narrow read-only `BOOK1_ROOT` with inputs only, result files out of reach, own
    CLAUDE.md and memory, checker separate, no results in commit subjects, access log). Documented, not yet set up.
    Access event 7 logged in `P0.1_blind_run_setup.md`.
-9. Unit tests: 159 run, 0 failures, 0 errors on commit cd9e9df (`unit_tests/unit_tests_2026-11-04.log`).
+9. Unit tests: 159 run, 0 failures, 0 errors on commit cd9e9df (`unit_tests/unit_tests_2026-11-04_cd9e9df.log`).
 
 ### Parity levels (Nov 4, after the decisions)
 
@@ -212,14 +269,14 @@ edited. No P&L opened or summarized. The checker's result file was copied, not o
 | P0.4 | R1 / R2 reproduction (E5) | **PASS: R1 Phases 1-4; R2 Phases 2 (v3.5 recheck), 3 and 4. R2 Phase 1 NO_REFERENCE.** History: R2 Phase 2 FAIL on the v3.4 ledger (checker, Nov 3), PASS on the v3.5 recheck (checker, Nov 4) | run-r1-r2-v1.0, ledger-v1.0; code 54ec485 (Phases 1-2) / cbb5fdb (Phases 3-4); recheck-c1-v35-v1.0 | Nov 2 / Nov 4 | `checker_input/R1_A0_phase1..4.csv`, `R2_C1_phase1..4.csv` (checker columns; target now filled). Fill model as published: v3.4 Phases 1-2, v3.5 Phases 3-4. `check_a0` 0 problems on Phases 1-2 (on v3.5 phases the gate is not run, E14). Not compared to anything by the runner. |
 | P0.5 | Execution model v3.5 | **PASS** | test-fills-v34 + TestV35GapThrough (b206e45) | Nov 2 | Gap-through stop, long (stop 23990, first trade 23985.00 → 23984.75 / .50 / 23984.00 at 1 / 2 / 4 ticks) and short (stop 24010, first trade 24015.00 → 24015.25 / .50 / 24016.00), on both Book 1 fill paths (`fills.simulate`, `exit_replay.replay` with the v3.5 settings); no gap = v3.4. 16 fill tests, all v3.4 rules too. R3 / R4 default v3.5 (test pins it). |
 | P0.6 | 08:10 VWAP | **PASS** | vwap-v1.0, vwap-hand-check (9943922) | Nov 2 | Oct 22, Nov 5 (normal), Dec 15, 2025 and Mar 16, 2026 (roll days): session and weekly VWAP and 1σ equal the pandas hand calculation, equal trade counts. Roll days use the new contract (NQH6 id 42002475, NQM6 id 42004058, from the roll files' symbol maps): both VWAPs restart (U1). Table in section 4. |
-| P0.7 | Map v2.4 Book 1A outputs | PACK v1.1 READY for Kyron's chart check; E21, E22 approved; E23 built (weekly DD, frozen 31cebdb); E26 open | map-v2.4-book1a-v1.2, plan-v2.4-book1a-v1.2, weekly-dd-v1.0 | Nov 4 | `hand_checks/hand_check_2025-10-22/-28/-11-04.md` + Oct 31 (added: the three checklist days have no REJ / FLIP zone; Oct 31 has 4). No DD_EDGE on any Phase 1 day. Every zone carries available_at 08:10 CT. |
+| P0.7 | Map v2.4 Book 1A outputs | SHEET (4 days) and PACK v1.2 READY for Kyron's chart check; E21, E22, E23, E26 done; E25, E27 accepted | map-v2.4-book1a-v1.2, plan-v2.4-book1a-v1.3, weekly-dd-v1.1 | Nov 4 | `hand_checks/hand_check_2025-10-22/-28/-11-04.md` + Oct 31 (added: the three checklist days have no REJ / FLIP zone; Oct 31 has 4). No DD_EDGE on any Phase 1 day. Every zone carries available_at 08:10 CT. |
 | P0.8 | Source families (C1, C2) | TABLES READY; machine check PASS | families-v1.0 | Nov 2 | On the 3 days: families unique on every zone, DECISION has 2+, the GEX family is present exactly when a gamma level is inside or within 10 points (e.g. Oct 28 CR 26000 is 24.75 pts from WKVAH: no GEX family). Hand families for Kyron. |
 | P0.9 | Context and side fields | TABLES READY, hand column for Kyron | plan-fields-v1.0 | Nov 2 | All fields written for every zone before the open (market_context, draw_status, draw, balance, balance_poc, value_follows, edge / side, htf_structure, first_touch, side_conflict, ladder). |
 | P0.10 | Risk check and sizing | PASS (unit) | risk-v1.0 | Nov 2 | 131-test run (0 failures) includes the 15 risk tests (log `unit_tests/unit_tests_2026-11-02.log`). |
 | P0.11 | R4 entries | **PASS, rerun on the Book 1A plans v1.2** (Nov 4, section 0); E24 PASS | candidate-log-v1.1, run-r4-v1.0 | Nov 4 | `P0.11_candidates_phase1.csv`: 1,992 CANDIDATE / SHADOW rows on Oct 22, 28, Nov 4; every Phase 5 tag column filled ("null" when not measurable); FZ1 `LOGGED_ONLY` on every row; T8, L1, RH1 state, C3 decision, U2 note present. Blank cells only in copied S1.4 fields (gate_reasons on passing rows, target on rejected rows, shadow_of on non-shadows). |
 | P0.12 | M0 exits and R reporting | **PASS (fields); R4 rerun on the Book 1A plans** (Nov 4) | ledger-v1.0, replay-risk-v1.0, run-r4-v1.0 | Nov 4 | `P0.12/R3_M0_phase1_ledger.csv`, `R4_M0_phase1_ledger.csv`: theoretical R, realized net R, N, planned risk, risk decision on every row, fill model v3.5. Written, not summarized. R4 rerun Nov 4 on the Book 1A plans v1.2 (E17 closed). |
 | P0.13 | Timestamp and lookahead audit | **PASS** (Nov 4 rerun on plan v1.2: R1 7 / R3 1 / R4 12 decisions, 0 violations, 0 missing; merged-zone and weekly plan-build checks 63 / 0 failed) | lookahead-v1.0, audit-run-v1.1 | Nov 4 | Phase 1, every R1 entry: 7 decisions, 117 inputs, 0 violations, 0 missing (Book 1A plans built for all 10 Phase 1 days in `plans_phase1/`). R3: 1 / 16 / 0 / 0; R4: 3 / 52 / 0 / 0. |
-| P0.14 | Freeze | NOT DONE (by instruction) | - | - | Blocked by item 8 of section 0 (Kyron's chart check); items 9-11 need Kyron's word. |
+| P0.14 | Freeze | NOT DONE (by instruction) | - | - | Blocked only by Kyron's chart check (section 0, item 8). |
 | P1.1 | Gamma ranks (U6) | **PASS** | gamma-ranks-v1.0, gamma-ranks-pc-v1.1 | Nov 2 | Run in `K:\Databento_BackTesting\Book1A\.venv` (Python 3.14.7, scipy 1.18.1, numpy 2.5.3, pandas 3.0.6, databento 0.87.0; full list `P1.1_venv_requirements.txt`). Book 1 pipeline (`gex_block1.build`, `gex_calc.cme_day`, `mq_levels.strike_gex`) unchanged. 124 / 124 sessions ranked; largest positive / most negative strike = call_resistance / put_support on 124 / 124. Hand Black-76 ranking (no mq_levels code) equals the module top 5 on Nov 5, 2025 and Jan 15, 2026. The venv reproduces gex_levels_block1.csv on those 2 days: 22 / 22 values equal (front, settle, CR, PS, HVL, the three 0DTE levels, regime, options_used; net_gex equal to 15 significant digits). Only option / futures input files read. |
 | P1.2 | Calculated GEX levels | PASS (cloud session) | gex-check-v1.0 | Nov 1 | Unchanged; the file's sha256 matches (A2). |
 | P2.1-P2.9 | Diagnostics | NOT RUN | - | - | Not every P0 item has passed. |

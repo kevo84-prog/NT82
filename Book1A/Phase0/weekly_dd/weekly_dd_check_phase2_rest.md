@@ -1,9 +1,9 @@
-# E23 weekly profile and double-distribution check (weekly-dd-check-v1.0)
+# E23 weekly profile and double-distribution check (weekly-dd-check-v1.1)
 
 Rule: ours: PD rule applied to weekly (book1a.weekly_dd, frozen at commit 31cebdb before any real day was run).
 Rebuilt from each run's map tape, compared with the map packet. OK = equal (VWAP within 0.0001).
 
-Summary: 206 OK, 8 DIFF, 1 skipped, over 18 days.
+Summary: 202 OK, 0 DIFF, 2 skipped, over 18 days.
 
 | day | check | ours | map | status |
 |---|---|---|---|---|
@@ -163,18 +163,7 @@ Summary: 206 OK, 8 DIFF, 1 skipped, over 18 days.
 | 2025-11-26 | weekly single prints | [(24575.0, 24599.75), (25230.0, 25239.75)] | [(24575, 24599.75), (25230, 25239.75)] | OK |
 | 2025-11-26 | PD single prints | [(24600.0, 24654.75), (24915.0, 24934.75), (25065.0, 25139.75)] | [(24600, 24654.75), (24915, 24934.75), (25065, 25139.75)] | OK |
 | 2025-11-26 | PD double distribution (port check) | (True, [24840.0, 24864.75], [24990.0, 25044.75], 'LVN', 24880.0, 24939.75, 3) | (True, [24840, 24864.75], [24990, 25044.75], 'LVN', 24880, 24939.75, 3) | OK |
-| 2025-11-28 | week high | 25399.0 | 25399 | OK |
-| 2025-11-28 | week low | 24361.75 | 24361.75 | OK |
-| 2025-11-28 | weekly VWAP | 24965.033 | None | DIFF |
-| 2025-11-28 | WKPOC | 24935.0 | None | DIFF |
-| 2025-11-28 | WKVAH | 25218.75 | None | DIFF |
-| 2025-11-28 | WKVAL | 24611.0 | None | DIFF |
-| 2025-11-28 | WKTPOC | 25317.5 | None | DIFF |
-| 2025-11-28 | WKTVAH | 25389.75 | None | DIFF |
-| 2025-11-28 | WKTVAL | 24780.0 | None | DIFF |
-| 2025-11-28 | weekly single prints | [(24575.0, 24599.75), (25390.0, 25399.75)] | [] | DIFF |
-| 2025-11-28 | PD single prints | [(25130.0, 25154.75), (25370.0, 25379.75)] | [(25130, 25154.75), (25370, 25379.75)] | OK |
-| 2025-11-28 | PD double distribution (port check) | (False, None, None, None, None, None, 1) | (False, None, None, None, None, None, 1) | OK |
+| 2025-11-28 | weekly profile | UNAVAILABLE | map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT | SKIP |
 | 2025-12-01 | week high | 25546.0 | 25546 | OK |
 | 2025-12-01 | week low | 25193.25 | 25193.25 | OK |
 | 2025-12-01 | weekly VWAP | 25306.3768 | 25306.3768 | OK |
@@ -240,7 +229,7 @@ Summary: 206 OK, 8 DIFF, 1 skipped, over 18 days.
 | 2025-11-24 | no | | | | 1 | 2025-11-24T08:09:59.917475-06:00 |
 | 2025-11-25 | no | | | | 1 | 2025-11-25T08:09:59.479896-06:00 |
 | 2025-11-26 | yes | 24855.0 - 24859.75 | LVN 24895.0 - 24899.75 | 24925.0 - 24954.75 | 2 | 2025-11-26T08:09:58.671387-06:00 |
-| 2025-11-28 | yes | 24855.0 - 24859.75 | LVN 24895.0 - 24899.75 | 24925.0 - 24954.75 | 3 | 2025-11-28T08:09:54.365170-06:00 |
+| 2025-11-28 | UNAVAILABLE (map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT) | | | | | |
 | 2025-12-01 | no | | | | 2 | 2025-12-01T08:09:58.359700-06:00 |
 | 2025-12-02 | no | | | | 1 | 2025-12-02T08:09:59.781939-06:00 |
 | 2025-12-03 | no | | | | 4 | 2025-12-03T08:09:59.961012-06:00 |

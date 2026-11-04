@@ -1,22 +1,22 @@
-# P0.7-P0.9 hand-check pack (hand-check-pack-v1.1)
+# P0.7-P0.9 hand-check pack (hand-check-pack-v1.2)
 
 Every value below is frozen at 08:10 CT and comes from data before 08:10 CT. Times are CT, 1-minute bars stamped by their close (NinjaTrader bar time). Prices are NQ front month as on the chart. No trades, outcomes or P&L. Fill the hand column from the chart, not from the plan.
 
 | day | plan | decision zones | REJ zones before selection | REJ in plan | FLIP | wide stop (> 196 ticks) | DD_EDGE (PD; weekly) |
 |---|---|---|---|---|---|---|---|
-| 2025-10-22 | plan-v2.4-book1a-v1.2 | 3 | 0 (0 after merge) | 0 | 0 | D_PDL_ONL_WKTVAL_ONVAL_ONTVA 269 | PD no; WK no |
-| 2025-10-23 | plan-v2.4-book1a-v1.2 | 4 | 1 (1 after merge) | 1 | 0 | none | PD no; WK no |
-| 2025-10-24 | plan-v2.4-book1a-v1.2 | 2 | 1 (1 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-10-27 | plan-v2.4-book1a-v1.2 | 3 | 0 (0 after merge) | 0 | 0 | none | PD no; WK 25720.0-25734.75 |
-| 2025-10-28 | plan-v2.4-book1a-v1.2 | 2 | 0 (0 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-10-29 | plan-v2.4-book1a-v1.2 | 4 | 0 (0 after merge) | 0 | 0 | D_ONTVAL_PDH_ONVAL_ONPOC_ONP 232 | PD 26039.75-26079.75; WK 25925.0-25934.75 |
-| 2025-10-30 | plan-v2.4-book1a-v1.2 | 4 | 5 (4 after merge) | 3 | 0 | D_ONTVAL_ONPOC_PDTVAL_PDVAL_ 312 | PD no; WK no |
-| 2025-10-31 | plan-v2.4-book1a-v1.2 | 5 | 9 (7 after merge) | 4 | 0 | D_WKTVAL_PD3L_PD3VAL_PD3TVAL 421; REJ_HIGH_PD_D_PD3VAH_ONTVAL_ 378; WKPOC_AREA_D_WKVAH_ONH_PD2PO 218 | PD no; WK no |
-| 2025-11-03 | plan-v2.4-book1a-v1.2 | 4 | 1 (1 after merge) | 1 | 0 | none | PD 26005.0-26014.75; WK no |
-| 2025-11-04 | plan-v2.4-book1a-v1.2 | 2 | 2 (2 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-11-17 | plan-v2.4-book1a-v1.2 | 4 | 0 (0 after merge) | 0 | 0 | PDPOC_AREA_D_PDPOC_PDTPOC_PW 216 | PD no; WK no |
-| 2025-11-18 | plan-v2.4-book1a-v1.2 | 5 | 2 (2 after merge) | 2 | 0 | none | PD 24865.0-24874.75; WK 24970.0-24989.75 |
-| 2025-11-19 | plan-v2.4-book1a-v1.2 | 5 | 4 (4 after merge) | 3 | 0 | D_PDTPOC_WKTPOC_WKPOC_AREA_D 362; T_PDTVAH_PDVAH_REJ_HIGH_PD_D 231 | PD no; WK no |
+| 2025-10-22 | plan-v2.4-book1a-v1.3 | 3 | 0 (0 after merge) | 0 | 0 | D_PDL_ONL_WKTVAL_ONVAL_ONTVA 269 | PD no; WK no |
+| 2025-10-23 | plan-v2.4-book1a-v1.3 | 4 | 1 (1 after merge) | 1 | 0 | none | PD no; WK no |
+| 2025-10-24 | plan-v2.4-book1a-v1.3 | 2 | 1 (1 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-10-27 | plan-v2.4-book1a-v1.3 | 3 | 0 (0 after merge) | 0 | 0 | none | PD no; WK 25720.0-25734.75 |
+| 2025-10-28 | plan-v2.4-book1a-v1.3 | 2 | 0 (0 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-10-29 | plan-v2.4-book1a-v1.3 | 4 | 0 (0 after merge) | 0 | 0 | D_ONTVAL_PDH_ONVAL_ONPOC_ONP 232 | PD 26039.75-26079.75; WK 25925.0-25934.75 |
+| 2025-10-30 | plan-v2.4-book1a-v1.3 | 4 | 5 (4 after merge) | 3 | 0 | D_ONTVAL_ONPOC_PDTVAL_PDVAL_ 312 | PD no; WK no |
+| 2025-10-31 | plan-v2.4-book1a-v1.3 | 5 | 9 (7 after merge) | 4 | 0 | D_WKTVAL_PD3L_PD3VAL_PD3TVAL 421; REJ_HIGH_PD_D_PD3VAH_ONTVAL_ 378; WKPOC_AREA_D_WKVAH_ONH_PD2PO 218 | PD no; WK no |
+| 2025-11-03 | plan-v2.4-book1a-v1.3 | 4 | 1 (1 after merge) | 1 | 0 | none | PD 26005.0-26014.75; WK no |
+| 2025-11-04 | plan-v2.4-book1a-v1.3 | 2 | 2 (2 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-11-17 | plan-v2.4-book1a-v1.3 | 4 | 0 (0 after merge) | 0 | 0 | PDPOC_AREA_D_PDPOC_PDTPOC_PW 216 | PD no; WK no |
+| 2025-11-18 | plan-v2.4-book1a-v1.3 | 5 | 2 (2 after merge) | 2 | 0 | none | PD 24865.0-24874.75; WK 24970.0-24989.75 |
+| 2025-11-19 | plan-v2.4-book1a-v1.3 | 5 | 4 (4 after merge) | 3 | 0 | D_PDTPOC_WKTPOC_WKPOC_AREA_D 362; T_PDTVAH_PDVAH_REJ_HIGH_PD_D 231 | PD no; WK no |
 
 ## A. Decision zones (P0.7, P0.8)
 
@@ -378,16 +378,16 @@ In the plan: not a decision zone (class TARGET; see research decision_zones_beyo
 
 Kyron, Nov 4: the map's PD double-distribution rule and thresholds, unchanged, on the developing weekly profile (Sunday 17:00 CT reset, trades before 08:10 CT). Frozen in code (commit 31cebdb) before it was run on any day. PD and weekly DD edges are both STRUCTURE and count once in a zone. The weekly profile was rebuilt independently and matched the map's weekly high, low, VWAP, POC / VAH / VAL (volume and TPO) and weekly single prints on all these days (`weekly_dd/weekly_dd_check.md`).
 
-**2025-10-22 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 19 17:00 to Wed Oct 22 08:10 CT (last trade used 2025-10-22T08:09:59.476763-05:00); split = no; HVN blocks 1; price at 08:10 25258.75
+**2025-10-22 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 19 17:00 to Wed Oct 22 08:10 CT (last trade used 2025-10-22T08:09:59.476763-05:00); split = no; HVN blocks 1; price at 08:10 25258.75
 
 
-**2025-10-23 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 19 17:00 to Thu Oct 23 08:10 CT (last trade used 2025-10-23T08:09:59.897821-05:00); split = no; HVN blocks 1; price at 08:10 24954.0
+**2025-10-23 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 19 17:00 to Thu Oct 23 08:10 CT (last trade used 2025-10-23T08:09:59.897821-05:00); split = no; HVN blocks 1; price at 08:10 24954.0
 
 
-**2025-10-24 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 19 17:00 to Fri Oct 24 08:10 CT (last trade used 2025-10-24T08:09:59.098544-05:00); split = no; HVN blocks 2; price at 08:10 25475.0
+**2025-10-24 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 19 17:00 to Fri Oct 24 08:10 CT (last trade used 2025-10-24T08:09:59.098544-05:00); split = no; HVN blocks 2; price at 08:10 25475.0
 
 
-**2025-10-27 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 26 17:00 to Mon Oct 27 08:10 CT (last trade used 2025-10-27T08:09:50.922221-05:00); split = yes; HVN blocks 2; price at 08:10 25838.0
+**2025-10-27 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 26 17:00 to Mon Oct 27 08:10 CT (last trade used 2025-10-27T08:09:50.922221-05:00); split = yes; HVN blocks 2; price at 08:10 25838.0
 
 Lower HVN 25720.0 - 25734.75; separator (LVN) 25745.0 - 25754.75; upper HVN 25825.0 - 25844.75.
 DD_EDGE_WK zone 25720.0 - 25734.75 (14.75 pts, cap 40); runner 25720.0; frozen 2025-10-27T08:10:00-05:00.
@@ -428,10 +428,10 @@ Weekly volume, 5-point rows; smoothed = (row below + row + row above) / 3; peak 
 
 In the plan: decision zone D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK
 
-**2025-10-28 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 26 17:00 to Tue Oct 28 08:10 CT (last trade used 2025-10-28T08:09:59.829965-05:00); split = no; HVN blocks 4; price at 08:10 26051.25
+**2025-10-28 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 26 17:00 to Tue Oct 28 08:10 CT (last trade used 2025-10-28T08:09:59.829965-05:00); split = no; HVN blocks 4; price at 08:10 26051.25
 
 
-**2025-10-29 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 26 17:00 to Wed Oct 29 08:10 CT (last trade used 2025-10-29T08:09:58.269853-05:00); split = yes; HVN blocks 7; price at 08:10 26271.0
+**2025-10-29 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 26 17:00 to Wed Oct 29 08:10 CT (last trade used 2025-10-29T08:09:58.269853-05:00); split = yes; HVN blocks 7; price at 08:10 26271.0
 
 Lower HVN 25925.0 - 25934.75; separator (LVN) 25950.0 - 25954.75; upper HVN 25965.0 - 25974.75.
 DD_EDGE_WK zone 25925.0 - 25934.75 (9.75 pts, cap 40); runner 25925.0; frozen 2025-10-29T08:10:00-05:00.
@@ -457,22 +457,22 @@ Weekly volume, 5-point rows; smoothed = (row below + row + row above) / 3; peak 
 
 In the plan: merged into T_PD2POC_WKPOC_AREA_DD_EDGE_WK, beyond the 2-per-side cap (not written)
 
-**2025-10-30 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 26 17:00 to Thu Oct 30 08:10 CT (last trade used 2025-10-30T08:09:58.462857-05:00); split = no; HVN blocks 2; price at 08:10 26101.75
+**2025-10-30 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 26 17:00 to Thu Oct 30 08:10 CT (last trade used 2025-10-30T08:09:58.462857-05:00); split = no; HVN blocks 2; price at 08:10 26101.75
 
 
-**2025-10-31 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Oct 26 17:00 to Fri Oct 31 08:10 CT (last trade used 2025-10-31T08:09:59.662455-05:00); split = no; HVN blocks 4; price at 08:10 26198.75
+**2025-10-31 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Oct 26 17:00 to Fri Oct 31 08:10 CT (last trade used 2025-10-31T08:09:59.662455-05:00); split = no; HVN blocks 4; price at 08:10 26198.75
 
 
-**2025-11-03 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Nov 02 17:00 to Mon Nov 03 08:10 CT (last trade used 2025-11-03T08:09:59.636488-06:00); split = no; HVN blocks 2; price at 08:10 26213.0
+**2025-11-03 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Nov 02 17:00 to Mon Nov 03 08:10 CT (last trade used 2025-11-03T08:09:59.636488-06:00); split = no; HVN blocks 2; price at 08:10 26213.0
 
 
-**2025-11-04 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Nov 02 17:00 to Tue Nov 04 08:10 CT (last trade used 2025-11-04T08:09:56.420580-06:00); split = no; HVN blocks 1; price at 08:10 25696.25
+**2025-11-04 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Nov 02 17:00 to Tue Nov 04 08:10 CT (last trade used 2025-11-04T08:09:56.420580-06:00); split = no; HVN blocks 1; price at 08:10 25696.25
 
 
-**2025-11-17 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Nov 16 17:00 to Mon Nov 17 08:10 CT (last trade used 2025-11-17T08:09:59.084675-06:00); split = no; HVN blocks 2; price at 08:10 25044.75
+**2025-11-17 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Nov 16 17:00 to Mon Nov 17 08:10 CT (last trade used 2025-11-17T08:09:59.084675-06:00); split = no; HVN blocks 2; price at 08:10 25044.75
 
 
-**2025-11-18 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Nov 16 17:00 to Tue Nov 18 08:10 CT (last trade used 2025-11-18T08:09:58.374681-06:00); split = yes; HVN blocks 5; price at 08:10 24746.5
+**2025-11-18 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Nov 16 17:00 to Tue Nov 18 08:10 CT (last trade used 2025-11-18T08:09:58.374681-06:00); split = yes; HVN blocks 5; price at 08:10 24746.5
 
 Lower HVN 24865.0 - 24874.75; separator (LVN) 24925.0 - 24954.75; upper HVN 24970.0 - 24989.75.
 DD_EDGE_WK zone 24970.0 - 24989.75 (19.75 pts, cap 40); runner 24989.75; frozen 2025-11-18T08:10:00-06:00.
@@ -513,6 +513,6 @@ Weekly volume, 5-point rows; smoothed = (row below + row + row above) / 3; peak 
 
 In the plan: merged into D_PDVAL_PDTVAL_ONH_REJ_LOW_PD_DD_EDGE_WK, beyond the 2-per-side cap (not written)
 
-**2025-11-19 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.0): profile Sun Nov 16 17:00 to Wed Nov 19 08:10 CT (last trade used 2025-11-19T08:09:59.647644-06:00); split = no; HVN blocks 3; price at 08:10 24630.75
+**2025-11-19 weekly** (ours: PD rule applied to weekly, weekly-dd-v1.1): profile Sun Nov 16 17:00 to Wed Nov 19 08:10 CT (last trade used 2025-11-19T08:09:59.647644-06:00); split = no; HVN blocks 3; price at 08:10 24630.75
 
 
