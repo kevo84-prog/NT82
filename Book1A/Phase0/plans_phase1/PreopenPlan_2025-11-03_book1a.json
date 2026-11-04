@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.0)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
   "plan_id=2025-11-03-b1a",
   "date=2025-11-03",
   "asof=08:25",
@@ -100,7 +100,7 @@
   "would_drop_1adr": [],
   "would_cut_60pt": [],
   "decision_zones_beyond_cap": [
-   "D_PWKTVAL_PDVAL_PDSET_ONL_PDTPOC_ONTVAL_P1"
+   "D_PWKTVAL_PDVAL_PDSET_ONL_PDTPOC_ONTVAL_P1_DD_EDGE_PD"
   ],
   "check_b": "pass",
   "check_f_would_set": [
@@ -635,7 +635,23 @@
    "role": "TARGET"
   }
  ],
- "dd_edge": null,
+ "dd_edge": {
+  "lo": 26005.0,
+  "hi": 26014.75,
+  "kind": "DD_EDGE",
+  "session": "",
+  "formed_ct": null,
+  "available_at": "2025-11-03T08:10:00-06:00",
+  "arrival_evidence": "",
+  "departure_pts": 0.0,
+  "tags": "DD_EDGE",
+  "stack": "",
+  "class": "TARGET",
+  "label": "DD_EDGE_PD",
+  "runner": 26005.0,
+  "separator_lo": 26035.0,
+  "separator_hi": 26059.75
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-11-03",

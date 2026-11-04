@@ -17,6 +17,7 @@
 | DELTA T_DELTA_BUY_ON | 26110.0 | 26125.0 | | | BUY ON | | role=TARGET | | 2025-11-03T08:10:00-06:00 | | |
 | DELTA T_DELTA_BUY_ON | 26160.0 | 26170.0 | | | BUY ON | | role=TARGET | | 2025-11-03T08:10:00-06:00 | | |
 | DELTA T_DELTA_BUY_ON | 26180.0 | 26190.0 | | | BUY ON | | role=TARGET | | 2025-11-03T08:10:00-06:00 | | |
+| DD_EDGE | 26005.0 | 26014.75 | | | runner 26005.0 | | | | 2025-11-03T08:10:00-06:00 | | |
 
 ## P0.8 families and levels on each decision zone
 

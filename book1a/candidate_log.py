@@ -12,13 +12,13 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Sequence
 
 from book1a import risk as R
 from book1a.book1_import import jeron_engine  # noqa: F401  (adds book1_ref to sys.path)
 from jeron_engine import arm_replay as AR, arms as A
 
-VERSION = "candidate-log-v1.0"
+VERSION = "candidate-log-v1.1"   # v1.1: optional extra columns per row (R4 plan identity)
 TICK = 0.25
 NY_START = 8 * 60 + 30
 
@@ -42,7 +42,10 @@ def _null(v) -> str:
     return "null" if v in (None, "") else str(v)
 
 
-def build(run_dir, tape_path, out_csv, sessions: Optional[List[str]] = None, ny_only: bool = True) -> int:
+def build(run_dir, tape_path, out_csv, sessions: Optional[List[str]] = None, ny_only: bool = True,
+          row_extra: Optional[Callable[[dict], dict]] = None, extra_columns: Sequence[str] = ()) -> int:
+    """row_extra(S1.4 row) -> extra columns for that row (R4: the Book 1A plan version, sha256 and zone fields);
+    it may raise to stop the build."""
     log = AR.Log(run_dir)
     bars = A.MinuteBars(tape_path)
     t8 = A.t8(log, bars)
@@ -104,8 +107,9 @@ def build(run_dir, tape_path, out_csv, sessions: Optional[List[str]] = None, ny_
             "fz1_would_veto_applied": "LOGGED_ONLY", "single_print_gate": "S1.4_LARGE_PRINT (U2: Quantower rebuild logged only)",
             "risk_decision": dec, "risk_contracts": _null(n), "risk_estimate_usd": _null(None if est is None else round(est, 2)),
             "stop_ticks": _null(stop_ticks), **tags, "tag_status": "measurable=" + ",".join(measurable),
+            **(row_extra(r) if row_extra else {}),
         })
     with open(out_csv, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=COLUMNS, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=COLUMNS + list(extra_columns), extrasaction="ignore")
         w.writeheader(); w.writerows(rows_out)
     return len(rows_out)

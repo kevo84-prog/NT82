@@ -16,7 +16,7 @@ from datetime import date, datetime, time, timedelta
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 from zoneinfo import ZoneInfo
 
-VERSION = "map-v2.4-book1a-v1.0"
+VERSION = "map-v2.4-book1a-v1.1"   # v1.1: merged REJ zones keep swing_index / swing_price (E22)
 CT = ZoneInfo("America/Chicago")
 TICK = 0.25
 
@@ -257,9 +257,16 @@ def merge_same_side(zones: List[Zone]) -> List[Zone]:
                 lo, hi = min(cur.lo, z.lo), max(cur.hi, z.hi)
                 lo, hi = _cap_to_extreme(lo, hi, "hi" if kind == "REJ_HIGH" else "lo")
                 newer = z if z.formed_ct > cur.formed_ct else cur
+                # E22: the merged zone keeps the newer swing's index (it exists from then; PO-1 step 4 acceptance
+                # is looked for after it) and the more extreme swing price; v1.0 dropped both, so flips() looked
+                # for acceptance from the first bar of the history and a merged zone could never be the opposite REJ.
+                px = [x.extra["swing_price"] for x in (cur, z) if "swing_price" in x.extra]
+                ext = {} if "swing_index" not in newer.extra else {"swing_index": newer.extra["swing_index"]}
+                if px:
+                    ext["swing_price"] = max(px) if kind == "REJ_HIGH" else min(px)
                 cur = Zone(lo, hi, kind, newer.formed_ct, newer.available_at, newer.session,
                            newer.arrival_evidence, max(cur.departure_pts, z.departure_pts),
-                           extra={"merged_from": cur.extra.get("merged_from", 1) + 1})
+                           extra={"merged_from": cur.extra.get("merged_from", 1) + 1, **ext})
             else:
                 if cur is not None:
                     out.append(cur)

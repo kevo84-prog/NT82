@@ -1,13 +1,13 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.0)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
   "plan_id=2025-10-29-b1a",
   "date=2025-10-29",
   "asof=08:25",
   "packet_asof=08:10",
   "context=None",
   "context_note=Book 1A context rule; htf_val=23655.0 htf_vah=25394.75 wk_val_state=INSIDE wk_vah_state=INSIDE",
-  "zone=26035.00-26057.50|PDPOC_AREA_D_PDPOC_WKPOC_PDTPOC|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=26035.00-26079.75|PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=26149.50-26179.75|D_PDVAH_PDSET_ONL_PDTVAH|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=26220.00-26277.50|D_ONTVAL_PDH_ONVAL_ONPOC_ONPOC_AREA_T_ONTPOC|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=26286.75-26314.75|D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
@@ -48,9 +48,10 @@
   "vwap_vs_price=23.95",
   "wkval_state=accept=INSIDE|failed_reclaim=0",
   "wkvah_state=accept=INSIDE|failed_reclaim=0",
-  "zone_meta=PDPOC_AREA_D_PDPOC_WKPOC_PDTPOC|families=2|DELTA,VOLUME|levels=7|PDPOC,PDTPOC,WKPOC,T_DELTA_BUY_WK,T_DELTA_SELL_PD,T_DELTA_BUY_PD,PDPOC_AREA|first_touch=YES|tests=1|edge_control=None|accept=None|stop_ticks=92",
-  "ladder=PDPOC_AREA_D_PDPOC_WKPOC_PDTPOC|long|TP1=26149.50-26159.50|TP2=26227.50-26267.50|RUN=26298.25-26308.25|R_TP1=4.00|R_TP2=7.39|R_RUN=10.47",
-  "ladder=PDPOC_AREA_D_PDPOC_WKPOC_PDTPOC|short|TP1=26010.00-26020.00|TP2=25975.00-25985.00|RUN=25902.50-25912.50|R_TP1=0.65|R_TP2=2.17|R_RUN=5.33",
+  "zone_meta=PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|families=3|STRUCTURE,DELTA,VOLUME|levels=8|PDPOC,PDTPOC,WKPOC,T_DELTA_BUY_WK,T_DELTA_SELL_PD,T_DELTA_BUY_PD,T_DELTA_BUY_PD,PDPOC_AREA|first_touch=YES|tests=1|edge_control=None|accept=None|stop_ticks=181",
+  "side_conflict=PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|short|context=ANY,dd_edge=INITIATION",
+  "ladder=PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|long|TP1=26149.50-26159.50|TP2=26227.50-26267.50|RUN=26298.25-26308.25|R_TP1=1.54|R_TP2=3.27|R_RUN=4.83",
+  "ladder=PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|short|TP1=26010.00-26020.00|TP2=25975.00-25985.00|RUN=25902.50-25912.50|R_TP1=0.33|R_TP2=1.10|R_RUN=2.71",
   "zone_meta=D_PDVAH_PDSET_ONL_PDTVAH|families=4|AUCTION_VALUE,STRUCTURE,GEX,VWAP|levels=5|PDVAH,ONL,WKVWAP_SD1_UP,PS,PS_0DTE|first_touch=YES|tests=1|edge_control=None|accept=None|stop_ticks=123",
   "ladder=D_PDVAH_PDSET_ONL_PDTVAH|long|TP1=26220.00-26230.00|TP2=26285.00-26295.00|RUN=26298.25-26308.25|R_TP1=1.31|R_TP2=3.42|R_RUN=3.85",
   "ladder=D_PDVAH_PDSET_ONL_PDTVAH|short|TP1=26047.50-26057.50|TP2=26030.00-26040.00|RUN=25902.50-25912.50|R_TP1=2.99|R_TP2=3.56|R_RUN=7.71",
@@ -101,12 +102,13 @@
  },
  "zones": [
   {
-   "label": "PDPOC_AREA_D_PDPOC_WKPOC_PDTPOC",
+   "label": "PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC",
    "lo": 26035.0,
-   "hi": 26057.5,
+   "hi": 26079.75,
    "long": "ANY",
-   "short": "ANY",
+   "short": "INITIATION",
    "families": [
+    "STRUCTURE",
     "DELTA",
     "VOLUME"
    ],
@@ -117,6 +119,7 @@
     "T_DELTA_BUY_WK",
     "T_DELTA_SELL_PD",
     "T_DELTA_BUY_PD",
+    "T_DELTA_BUY_PD",
     "PDPOC_AREA"
    ],
    "ladder": {
@@ -124,20 +127,20 @@
      "TP1": "26149.50-26159.50",
      "TP2": "26227.50-26267.50",
      "RUN": "26298.25-26308.25",
-     "R_TP1": "4.00",
-     "R_TP2": "7.39",
-     "R_RUN": "10.47"
+     "R_TP1": "1.54",
+     "R_TP2": "3.27",
+     "R_RUN": "4.83"
     },
     "short": {
      "TP1": "26010.00-26020.00",
      "TP2": "25975.00-25985.00",
      "RUN": "25902.50-25912.50",
-     "R_TP1": "0.65",
-     "R_TP2": "2.17",
-     "R_RUN": "5.33"
+     "R_TP1": "0.33",
+     "R_TP2": "1.10",
+     "R_RUN": "2.71"
     }
    },
-   "stop_ticks": 92,
+   "stop_ticks": 181,
    "available_at": "2025-10-29T08:10:00-05:00"
   },
   {
@@ -601,7 +604,23 @@
    "role": "TAG_ONLY"
   }
  ],
- "dd_edge": null,
+ "dd_edge": {
+  "lo": 26039.75,
+  "hi": 26079.75,
+  "kind": "DD_EDGE",
+  "session": "",
+  "formed_ct": null,
+  "available_at": "2025-10-29T08:10:00-05:00",
+  "arrival_evidence": "",
+  "departure_pts": 0.0,
+  "tags": "DD_EDGE",
+  "stack": "",
+  "class": "TARGET",
+  "label": "DD_EDGE_PD",
+  "runner": 26035.0,
+  "separator_lo": 26090.0,
+  "separator_hi": 26109.75
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-10-29",

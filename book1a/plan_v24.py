@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.0"
+VERSION = "plan-v2.4-book1a-v1.1"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
 CT = ZoneInfo("America/Chicago")
 TICK = 0.25
 PAD = 5.0
@@ -43,6 +43,22 @@ def _find(lv: Dict[str, float], *parts: str) -> Optional[float]:
 
 def _ctx_label(c: str) -> str:
     return {"BULLISH": "Bullish", "BEARISH": "Bearish", "BALANCED": "Balanced"}.get(c, "None")
+
+
+def dd_inputs(ddp) -> Optional[tuple]:
+    """(dist_a, separator, dist_b, profile) from the packet's double_distribution, or None.
+    JeronPreopenMap v2.3 writes the PD cash profile's split as pd_double_distribution=true with lower_hvn=[lo,hi],
+    upper_hvn=[lo,hi], separator_lo, separator_hi (E21: v1.0 looked only for dist_a / separator / dist_b, which
+    the packet never writes, so DD_EDGE never formed). The generic dist_a / separator / dist_b form is still read."""
+    if not isinstance(ddp, dict):
+        return None
+    if all(k in ddp for k in ("dist_a", "separator", "dist_b")) and isinstance(ddp["separator"], (list, tuple)):
+        return tuple(ddp["dist_a"]), tuple(ddp["separator"]), tuple(ddp["dist_b"]), ddp.get("profile", "WK")
+    if str(ddp.get("pd_double_distribution")).lower() == "true" and all(k in ddp for k in ("lower_hvn", "upper_hvn", "separator_lo", "separator_hi")):
+        lo_d, up_d = ddp["lower_hvn"], ddp["upper_hvn"]
+        return ((float(lo_d[0]), float(lo_d[1])), (float(ddp["separator_lo"]), float(ddp["separator_hi"])),
+                (float(up_d[0]), float(up_d[1])), "PD")
+    return None
 
 
 def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dict, gex_row: Optional[dict],
@@ -100,9 +116,9 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         if pr and pr.get("volume") and pr.get("poc_row") is not None:
             areas.append(M.map4_area(pr["volume"], pr["poc_row"], as_of, f"{prof}POC_AREA"))
     dd = None
-    ddp = p.get("double_distribution") or {}
-    if isinstance(ddp, dict) and all(k in ddp for k in ("dist_a", "separator", "dist_b")):
-        dd = M.dd_edge_zone(tuple(ddp["dist_a"]), tuple(ddp["separator"]), tuple(ddp["dist_b"]), ref, as_of, ddp.get("profile", "WK"))
+    ddi = dd_inputs(p.get("double_distribution"))
+    if ddi is not None:
+        dd = M.dd_edge_zone(ddi[0], ddi[1], ddi[2], ref, as_of, ddi[3])
 
     # ---- candidate decision zones: packet zones + REJ/FLIP + MAP4 areas + DD edges -------------------
     all_levels = [F.Level.point(k, v) for k, v in lv.items()] + vwap_levels + gex_levels + \

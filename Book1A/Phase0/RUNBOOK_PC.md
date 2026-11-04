@@ -67,3 +67,27 @@ python -m book1a.gamma_ranks_pc K:\Databento_BackTesting Book1A\Phase0      (nee
 ```
 The daily-loop config no longer needs `--map-first-utc`: Book 1's 20250921 is the default (E3). Phase 3 uses the
 cut Feb 4 tape automatically (E4). Bars are built from raw on the first run of each folder.
+
+## As run on the PC, Nov 4, 2026 (branch book1a-phase0-pc; Book 1A venv)
+
+```bat
+set PYTHONUTF8=1
+set BOOK1_ROOT=K:\Databento_BackTesting
+set PY=..\.venv\Scripts\python.exe
+rem 1. C1 Phase 2 recheck with fill model v3.5 (reads runs\phase2 read-only)
+%PY% -m book1a.recheck_c1_v35 --block1 K:\Databento_BackTesting --run Book1A\Phase0\runs\phase2 --out Book1A\Phase0\runs\phase2_c1_v35
+rem copy runs\phase2_c1_v35\checker_input\R2_C1_phase2_v35.csv to K:\Book1A_checker\checker_input\ and checker_input\; append its sha256 to checker_input_sha256.txt
+rem 2. copy K:\Book1A_checker\checker_output\P0.4_result.md to Book1A\Phase0\checker_output\ (do not open)
+rem 3. Book 1A plans (plan-v2.4-book1a-v1.1), then R4 on them
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\plans_phase1 --days <all 10 Phase 1 sessions>
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\hand_checks --days 2025-10-22 2025-10-28 2025-10-31 2025-11-04
+%PY% -m book1a.run_r4 --block1 K:\Databento_BackTesting --a0-run Book1A\Phase0\runs\phase1 --plans Book1A\Phase0\plans_phase1 --phase phase1 --out Book1A\Phase0\runs\phase1_r4
+rem copy runs\phase1_r4\R4_candidates.csv -> P0.11_candidates_phase1.csv; R4_M0_ledger.csv -> P0.12\R4_M0_phase1_ledger.csv (+ plans\plan_manifest.json, run_manifest.json, strategy_args.json)
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1_r4 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1_r4\R4_M0_ledger.csv Book1A\Phase0\lookahead_R4
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1\R1_A0_full.csv Book1A\Phase0\lookahead
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\P0.12\R3_M0_phase1_ledger.csv Book1A\Phase0\lookahead_R3
+rem 4. hand-check pack: Nov 17-19 plans from the Phase 2 run, then the pack (full command in hand_check_pack\command.txt)
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase2 K:\Databento_BackTesting Book1A\Phase0\hand_check_pack\plans --days 2025-11-17 2025-11-18 2025-11-19
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+```
+R4 stops with R4PlanError if any session lacks its Book 1A plan; it never reads an A0 plan.

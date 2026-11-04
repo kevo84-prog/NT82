@@ -85,6 +85,21 @@ class TestSwingAndRejection(unittest.TestCase):
         out = m.merge_same_side([a2, b2])
         self.assertEqual((out[0].lo, out[0].hi), (105.0, 145.0))
 
+    def test_merge_keeps_newer_swing_index(self):
+        """E22: the merged zone keeps the newer swing's index and the more extreme swing price."""
+        a = Zone(100.0, 120.0, "REJ_HIGH", datetime.combine(self.d, time(1, 0), tzinfo=CT), self.as_of, "ON",
+                 extra={"swing_index": 10, "swing_price": 120.0})
+        b = Zone(110.0, 125.0, "REJ_HIGH", datetime.combine(self.d, time(2, 0), tzinfo=CT), self.as_of, "ON",
+                 extra={"swing_index": 70, "swing_price": 125.0})
+        out = m.merge_same_side([a, b])
+        self.assertEqual((out[0].extra["swing_index"], out[0].extra["swing_price"], out[0].extra["merged_from"]), (70, 125.0, 2))
+        lo1 = Zone(100.0, 110.0, "REJ_LOW", datetime.combine(self.d, time(3, 0), tzinfo=CT), self.as_of, "ON",
+                   extra={"swing_index": 90, "swing_price": 100.0})
+        lo2 = Zone(98.0, 108.0, "REJ_LOW", datetime.combine(self.d, time(1, 0), tzinfo=CT), self.as_of, "ON",
+                   extra={"swing_index": 20, "swing_price": 98.0})
+        out = m.merge_same_side([lo1, lo2])
+        self.assertEqual((out[0].extra["swing_index"], out[0].extra["swing_price"]), (90, 98.0))
+
     def test_session_tags(self):
         self.assertEqual(m.session_of(datetime.combine(date(2025, 10, 21), time(20, 0), tzinfo=CT), self.d), "ON")
         self.assertEqual(m.session_of(datetime.combine(date(2025, 10, 21), time(10, 0), tzinfo=CT), self.d), "PD")

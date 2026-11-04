@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.0)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
   "plan_id=2025-10-30-b1a",
   "date=2025-10-30",
   "asof=08:25",
@@ -434,7 +434,9 @@
    "stack": "PDVAH|PDPOC|ONVAH|ONTVAH|WKPOC",
    "class": "TARGET",
    "label": "",
-   "merged_from": 2
+   "merged_from": 2,
+   "swing_index": 11446,
+   "swing_price": 26306.5
   },
   {
    "lo": 26049.25,

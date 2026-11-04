@@ -113,3 +113,21 @@ class TestPlanBuilder(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDDInputs(unittest.TestCase):
+    """E21: the v2.3 packet writes pd_double_distribution / lower_hvn / upper_hvn / separator_lo / separator_hi."""
+    def test_packet_form(self):
+        from book1a import plan_v24 as P
+        ddp = {"available": True, "pd_double_distribution": True, "lower_hvn": [26035, 26079.75], "upper_hvn": [26180, 26189.75],
+               "separator": "LVN", "separator_lo": 26090, "separator_hi": 26109.75, "hvn_blocks": 2}
+        self.assertEqual(P.dd_inputs(ddp), ((26035.0, 26079.75), (26090.0, 26109.75), (26180.0, 26189.75), "PD"))
+
+    def test_no_split_or_flag_only(self):
+        from book1a import plan_v24 as P
+        self.assertIsNone(P.dd_inputs({"available": True, "pd_double_distribution": False, "hvn_blocks": 1}))
+        self.assertIsNone(P.dd_inputs(None))
+
+    def test_generic_form(self):
+        from book1a import plan_v24 as P
+        self.assertEqual(P.dd_inputs({"dist_a": [1, 2], "separator": [2, 3], "dist_b": [3, 4], "profile": "WK"})[3], "WK")
