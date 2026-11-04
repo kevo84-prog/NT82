@@ -91,3 +91,15 @@ rem 4. hand-check pack: Nov 17-19 plans from the Phase 2 run, then the pack (ful
 %PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
 ```
 R4 stops with R4PlanError if any session lacks its Book 1A plan; it never reads an A0 plan.
+
+## As run on the PC, Nov 4, 2026, second part (Kyron's Phase 0 decisions; code 31cebdb rule, cd9e9df checks)
+Same `%PY%` and environment. The plan, R4, audit and pack commands above were rerun unchanged (the old R4 run folder
+was moved to `runs\phase1_r4_prev_e17`, not in git). New commands:
+```
+rem E23 independent weekly-profile check (13 pack days; the rest of Phase 2 the same way into weekly_dd_check_phase2_rest.md)
+%PY% -m book1a.hand_checks.weekly_dd_check --out Book1A\Phase0\weekly_dd\weekly_dd_check.md --day 2025-10-22=Book1A\Phase0\runs\phase1 ... --day 2025-11-19=Book1A\Phase0\runs\phase2
+rem E24
+%PY% -m book1a.hand_checks.e24_reward_risk_check Book1A\Phase0\runs\phase1_r4 Book1A\Phase0\E24\E24_reward_risk_check.md
+rem E5: Book1A\e5_tapes\run_e5.py (mbo_tape.day_tape from book1_ref on the Nov 5 and Dec 15 raw files, no cutoff), then
+rem compare `gzip -dc <tape> | sha256sum` for tapes\ and Book1A\e5_tapes\ (E5_tape_rebuild.md)
+```

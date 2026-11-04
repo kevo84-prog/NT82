@@ -1,13 +1,13 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-10-27-b1a",
   "date=2025-10-27",
   "asof=08:25",
   "packet_asof=08:10",
   "context=None",
   "context_note=Book 1A context rule; htf_val=23640.0 htf_vah=25394.75 wk_val_state=INSIDE wk_vah_state=ACCEPTED_ABOVE",
-  "zone=25695.00-25732.50|D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=25695.00-25734.75|D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=25799.75-25822.25|D_ONTVAH_WKTVAH_ONVAH_WKVAH|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=25830.00-25840.00|WKPOC_AREA_ONPOC_AREA|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
   "zone=23635.00-23645.00|T_HTFVAL|TARGET",
@@ -45,10 +45,10 @@
   "vwap_vs_price=56.85",
   "wkval_state=accept=INSIDE|failed_reclaim=0",
   "wkvah_state=accept=ABOVE|failed_reclaim=1",
-  "zone_meta=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3|families=5|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,VWAP|levels=12|ONPOC,ONVAL,ONTPOC,ONTVAL,ONL,VWAPL1,WKPOC,WKVAL,VWAP_SD1_DN,WKVWAP_SD1_DN,T_DELTA_BUY_WK,T_DELTA_BUY_ON|first_touch=YES|tests=1|edge_control=BUYERS|accept=INSIDE|stop_ticks=152",
-  "side_conflict=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3|short|context=ANY,edge_control=INITIATION",
-  "ladder=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3|long|TP1=25799.75-25809.75|TP2=25830.00-25840.00|RUN=25812.25-25822.25|R_TP1=1.77|R_TP2=2.57|R_RUN=2.10",
-  "ladder=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3|short|TP1=25552.50-25562.50|TP2=|RUN=25498.25-25508.25|R_TP1=3.49|R_TP2=|R_RUN=4.91",
+  "zone_meta=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|families=5|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,VWAP|levels=12|ONPOC,ONVAL,ONTPOC,ONTVAL,ONL,VWAPL1,WKPOC,WKVAL,VWAP_SD1_DN,WKVWAP_SD1_DN,T_DELTA_BUY_WK,T_DELTA_BUY_ON|first_touch=YES|tests=1|edge_control=BUYERS|accept=INSIDE|stop_ticks=161",
+  "side_conflict=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|short|context=ANY,dd_edge=INITIATION,edge_control=INITIATION",
+  "ladder=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|long|TP1=25799.75-25809.75|TP2=25830.00-25840.00|RUN=25812.25-25822.25|R_TP1=1.61|R_TP2=2.37|R_RUN=1.93",
+  "ladder=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|short|TP1=25552.50-25562.50|TP2=|RUN=25498.25-25508.25|R_TP1=3.29|R_TP2=|R_RUN=4.64",
   "zone_meta=D_ONTVAH_WKTVAH_ONVAH_WKVAH|families=3|AUCTION_VALUE,DELTA,VWAP|levels=8|ONVAH,ONTVAH,VWAPU1,WKVAH,VWAP_SD1_UP,WKVWAP_SD1_UP,T_DELTA_BUY_WK,T_DELTA_BUY_ON|first_touch=YES|tests=2|edge_control=BUYERS|accept=ACCEPTED_ABOVE|stop_ticks=92",
   "side_conflict=D_ONTVAH_WKTVAH_ONVAH_WKVAH|short|context=ANY,accepted_edge=INITIATION,edge_control=INITIATION",
   "ladder=D_ONTVAH_WKTVAH_ONVAH_WKVAH|long|TP1=|TP2=|RUN=|R_TP1=|R_TP2=|R_RUN=",
@@ -96,9 +96,9 @@
  },
  "zones": [
   {
-   "label": "D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3",
+   "label": "D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK",
    "lo": 25695.0,
-   "hi": 25732.5,
+   "hi": 25734.75,
    "long": "ANY",
    "short": "INITIATION",
    "families": [
@@ -127,20 +127,20 @@
      "TP1": "25799.75-25809.75",
      "TP2": "25830.00-25840.00",
      "RUN": "25812.25-25822.25",
-     "R_TP1": "1.77",
-     "R_TP2": "2.57",
-     "R_RUN": "2.10"
+     "R_TP1": "1.61",
+     "R_TP2": "2.37",
+     "R_RUN": "1.93"
     },
     "short": {
      "TP1": "25552.50-25562.50",
      "TP2": "",
      "RUN": "25498.25-25508.25",
-     "R_TP1": "3.49",
+     "R_TP1": "3.29",
      "R_TP2": "",
-     "R_RUN": "4.91"
+     "R_RUN": "4.64"
     }
    },
-   "stop_ticks": 152,
+   "stop_ticks": 161,
    "available_at": "2025-10-27T08:10:00-05:00"
   },
   {
@@ -470,6 +470,47 @@
   }
  ],
  "dd_edge": null,
+ "dd_edge_wk": {
+  "lo": 25720.0,
+  "hi": 25734.75,
+  "kind": "DD_EDGE",
+  "session": "",
+  "formed_ct": null,
+  "available_at": "2025-10-27T08:10:00-05:00",
+  "arrival_evidence": "",
+  "departure_pts": 0.0,
+  "tags": "DD_EDGE",
+  "stack": "",
+  "class": "TARGET",
+  "label": "DD_EDGE_WK",
+  "runner": 25720.0,
+  "separator_lo": 25745.0,
+  "separator_hi": 25754.75,
+  "rule": "ours: PD rule applied to weekly"
+ },
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": true,
+  "lower_hvn": [
+   25720.0,
+   25734.75
+  ],
+  "upper_hvn": [
+   25825.0,
+   25844.75
+  ],
+  "separator": "LVN",
+  "separator_lo": 25745.0,
+  "separator_hi": 25754.75,
+  "hvn_blocks": 2,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-10-26T17:00:00-05:00",
+  "window_end": "2025-10-27T08:10:00-05:00",
+  "last_trade_ct": "2025-10-27T08:09:50.922221-05:00",
+  "available_at": "2025-10-27T08:10:00-05:00"
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-10-27",

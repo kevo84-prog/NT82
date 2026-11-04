@@ -1,92 +1,92 @@
 {
  "2025-10-22": {
   "date": "2025-10-22",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-22-b1a",
-  "plan_sha256": "53920b4ac0b60207b40a684bdb96ddbacf1c12ebcb93dca9fb929f094c652199",
-  "plan_sidecar_sha256": "ece159008501a7df61946230e39f834d1b018b2da35e9cd42a69672d4ff20106",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-22_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-22_book1a.json"
+  "plan_sha256": "343074f781e6d018ff5d0ed926ce84406a1c5357d97f4f77959063ca43956c01",
+  "plan_sidecar_sha256": "839caaf2c20bcbad0efa3cb2933c65dcb0292175ea4cd8c68a5f1f5e5ca0232e",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-22_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-22_book1a.json"
  },
  "2025-10-23": {
   "date": "2025-10-23",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-23-b1a",
-  "plan_sha256": "8fcd5017ef307358a948db6782581c0aac8d06c31b36cef810632905316425c8",
-  "plan_sidecar_sha256": "b930a8be561c588bc68f030a77a919030d238ea9f8d9a76af41f0233a57e201c",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-23_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-23_book1a.json"
+  "plan_sha256": "013ffcac0fca8fb64f967a45ce12d168e6848cd5cde326afb0a51c8fec6b77b4",
+  "plan_sidecar_sha256": "3452dec089a3c00242b4434f6b200fc8c0b1a3bedf65f7bc803191dc565b4a0d",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-23_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-23_book1a.json"
  },
  "2025-10-24": {
   "date": "2025-10-24",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-24-b1a",
-  "plan_sha256": "3b8a822f732ffe949d6bc0b2a3b3bb47f59069b6fc762e7680b194f9ba53bd92",
-  "plan_sidecar_sha256": "b0afe219de71673921e1702d349fa769cf67d00fecf5efd7a053aa71428eb8a0",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-24_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-24_book1a.json"
+  "plan_sha256": "b5365b5c53ed950c010965add70a9f824e1569212a5dbc21c5d99d9bdac3c973",
+  "plan_sidecar_sha256": "db5ca672efa4737e3d585986a88195c7b770a56e885a20478c808dde5881502b",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-24_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-24_book1a.json"
  },
  "2025-10-27": {
   "date": "2025-10-27",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-27-b1a",
-  "plan_sha256": "19e2a0d82dbd2b3aa6e6383d0133703aeaa8f9025f6237c13a9f66123946a772",
-  "plan_sidecar_sha256": "cc90d4e598025f048810f3cd37571001103cd8d0d9a29ab7f1a245813d334375",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-27_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-27_book1a.json"
+  "plan_sha256": "493dc74ddadef117e8aa0208dc00464e11f1cac7fd3f2cad11b22cf741b118ce",
+  "plan_sidecar_sha256": "b7dd011fd91643b6b81651165f6fd5845a50d1fe9b7d4d8a02c0c1a057a73f0b",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-27_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-27_book1a.json"
  },
  "2025-10-28": {
   "date": "2025-10-28",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-28-b1a",
-  "plan_sha256": "a3ff9e2c0005dfd7bfc5adf2a82117b854aa11bc6497539cd38641a19c18ecec",
-  "plan_sidecar_sha256": "fe97ba4027cfacd857c806dd910a71176a4dba3011298fdfc9d4c0178d5066af",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-28_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-28_book1a.json"
+  "plan_sha256": "abb86950ddf6031d89096a125651625ba5d8eaa4aaa114dd15f5b83f9349beae",
+  "plan_sidecar_sha256": "b6c5b69d727038b91e6f8a8838c70c561b8014a0afaeb1383f936b70cca9048c",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-28_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-28_book1a.json"
  },
  "2025-10-29": {
   "date": "2025-10-29",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-29-b1a",
-  "plan_sha256": "bfe646322dcca781b6876164425d694562100fe3f88eec02912becf134a6f361",
-  "plan_sidecar_sha256": "e279f9197724991b9376886f12d2e800833b1a016708178a2c492a9cc3d68928",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-29_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-29_book1a.json"
+  "plan_sha256": "42ad6bbecb3bce37261b5c0f58b2cc23e63ae58faafa17c1b59789c0c2d52ddd",
+  "plan_sidecar_sha256": "42d0ab8b651a3a8330c7bdb5dbe8dd99abe8eea4fdced60cd1742411668e71f6",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-29_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-29_book1a.json"
  },
  "2025-10-30": {
   "date": "2025-10-30",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-30-b1a",
-  "plan_sha256": "678023b01835f7ba6d83c5608d71daef9d7eeff46806dd13bb89db00bb87bb90",
-  "plan_sidecar_sha256": "15f1f3d23ddca9ab89736c8f8cb4be80e832b0f760dc59dbcca48766c2d88269",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-30_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-30_book1a.json"
+  "plan_sha256": "659856a82ab50157a22c3dc59a37e34b02c6d7d18fa70a02e361d5e2f12e7a56",
+  "plan_sidecar_sha256": "0d519453b420eb4c738da23721abcd212896eea56ac6832a8bc6a9bc8fb6673d",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-30_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-30_book1a.json"
  },
  "2025-10-31": {
   "date": "2025-10-31",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-10-31-b1a",
-  "plan_sha256": "3092fab89cdfbe1882a28b7f25a61f9e011b985c0e8d46e0a74a6d65cbbd0082",
-  "plan_sidecar_sha256": "6c4c7f834b6e82977ce32e083a5ce75e276df8a2f1544aff9a9b3794e45657f5",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-31_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-10-31_book1a.json"
+  "plan_sha256": "9f97774a7dd5af10bf7d68852a897f1588e41fe653488adaaf191fb9404fd116",
+  "plan_sidecar_sha256": "e701f3f58eaa277594b004cbe74733d96972c3c20ec9bb556b87d5cb00d1ab0b",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-31_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-10-31_book1a.json"
  },
  "2025-11-03": {
   "date": "2025-11-03",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-11-03-b1a",
-  "plan_sha256": "3c34b9c667e963bdfbaca9bff621ba3afb87fef751dc06186e6bb817572889d9",
-  "plan_sidecar_sha256": "6329552d586d475536381e6ac6b50812ba3c10c1371be04b21ed8800f2ccaf84",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-11-03_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-11-03_book1a.json"
+  "plan_sha256": "d616c7bda2cd375223478e1aee8634cd1c85a9ac4b642497d7bbf1a8b07cfcdb",
+  "plan_sidecar_sha256": "77406ff9bac805d99723df1b0f1d62e1d57bf2b018dd34242db6e4794a738361",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-11-03_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-11-03_book1a.json"
  },
  "2025-11-04": {
   "date": "2025-11-04",
-  "plan_version": "plan-v2.4-book1a-v1.1",
+  "plan_version": "plan-v2.4-book1a-v1.2",
   "plan_id": "2025-11-04-b1a",
-  "plan_sha256": "dfb2e8414db6b81375f564153ff09cb8a65c174ba40523483857742f343019e5",
-  "plan_sidecar_sha256": "2bfb79f63b4aaebe3b397c9b2eddc92f68370c29edc0cc9403f2c04b2c0b32ff",
-  "text_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-11-04_book1a.txt",
-  "sidecar_path": "book1a\\Phase0\\plans_phase1\\PreopenPlan_2025-11-04_book1a.json"
+  "plan_sha256": "687c8466189ace70b0f969ee18434e810dc1974f74d3c466cd9159366a846e1a",
+  "plan_sidecar_sha256": "3658c5c6473c7c26fd2e55a073e3c4fbc48e49867ff4de343fa75780b538a45e",
+  "text_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-11-04_book1a.txt",
+  "sidecar_path": "Book1A\\Phase0\\plans_phase1\\PreopenPlan_2025-11-04_book1a.json"
  }
 }

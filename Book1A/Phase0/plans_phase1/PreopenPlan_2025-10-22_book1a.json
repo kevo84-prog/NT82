@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-10-22-b1a",
   "date=2025-10-22",
   "asof=08:25",
@@ -511,6 +511,19 @@
   }
  ],
  "dd_edge": null,
+ "dd_edge_wk": null,
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": false,
+  "hvn_blocks": 1,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-10-19T17:00:00-05:00",
+  "window_end": "2025-10-22T08:10:00-05:00",
+  "last_trade_ct": "2025-10-22T08:09:59.476763-05:00",
+  "available_at": "2025-10-22T08:10:00-05:00"
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-10-22",

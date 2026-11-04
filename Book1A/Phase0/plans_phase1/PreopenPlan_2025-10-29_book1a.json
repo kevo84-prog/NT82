@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-10-29-b1a",
   "date=2025-10-29",
   "asof=08:25",
@@ -91,7 +91,7 @@
   "would_cut_60pt": [],
   "decision_zones_beyond_cap": [
    "D_WKTVAL_PD2TPOC_WKVAL",
-   "T_PD2POC_WKPOC_AREA",
+   "T_PD2POC_WKPOC_AREA_DD_EDGE_WK",
    "D_WKTPOC_PD2VAH_PD2H",
    "T_PDL_PDVAL_PDTVAL"
   ],
@@ -620,6 +620,47 @@
   "runner": 26035.0,
   "separator_lo": 26090.0,
   "separator_hi": 26109.75
+ },
+ "dd_edge_wk": {
+  "lo": 25925.0,
+  "hi": 25934.75,
+  "kind": "DD_EDGE",
+  "session": "",
+  "formed_ct": null,
+  "available_at": "2025-10-29T08:10:00-05:00",
+  "arrival_evidence": "",
+  "departure_pts": 0.0,
+  "tags": "DD_EDGE",
+  "stack": "",
+  "class": "TARGET",
+  "label": "DD_EDGE_WK",
+  "runner": 25925.0,
+  "separator_lo": 25950.0,
+  "separator_hi": 25954.75,
+  "rule": "ours: PD rule applied to weekly"
+ },
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": true,
+  "lower_hvn": [
+   25925.0,
+   25934.75
+  ],
+  "upper_hvn": [
+   25965.0,
+   25974.75
+  ],
+  "separator": "LVN",
+  "separator_lo": 25950.0,
+  "separator_hi": 25954.75,
+  "hvn_blocks": 7,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-10-26T17:00:00-05:00",
+  "window_end": "2025-10-29T08:10:00-05:00",
+  "last_trade_ct": "2025-10-29T08:09:58.269853-05:00",
+  "available_at": "2025-10-29T08:10:00-05:00"
  },
  "vwap": {
   "SESSION": {

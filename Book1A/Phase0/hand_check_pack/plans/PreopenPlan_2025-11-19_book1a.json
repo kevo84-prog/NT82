@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-11-19-b1a",
   "date=2025-11-19",
   "asof=08:25",
@@ -404,7 +404,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 24832.0,
-   "swing_index": 9220
+   "swing_index": 9220,
+   "confirmed_ct": "2025-11-18T08:49:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-11-18T08:34:00-06:00",
+     "confirmed_ct": "2025-11-18T08:49:00-06:00"
+    }
+   ]
   },
   {
    "lo": 25010.75,
@@ -420,7 +428,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 25050.75,
-   "swing_index": 8094
+   "swing_index": 8094,
+   "confirmed_ct": "2025-11-17T13:04:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-11-17T12:49:00-06:00",
+     "confirmed_ct": "2025-11-17T13:04:00-06:00"
+    }
+   ]
   },
   {
    "lo": 24376.25,
@@ -436,7 +452,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 24376.25,
-   "swing_index": 9310
+   "swing_index": 9310,
+   "confirmed_ct": "2025-11-18T10:19:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_LOW",
+     "formed_ct": "2025-11-18T10:04:00-06:00",
+     "confirmed_ct": "2025-11-18T10:19:00-06:00"
+    }
+   ]
   }
  ],
  "map4_areas": [
@@ -618,6 +642,19 @@
   }
  ],
  "dd_edge": null,
+ "dd_edge_wk": null,
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": false,
+  "hvn_blocks": 3,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-11-16T17:00:00-06:00",
+  "window_end": "2025-11-19T08:10:00-06:00",
+  "last_trade_ct": "2025-11-19T08:09:59.647644-06:00",
+  "available_at": "2025-11-19T08:10:00-06:00"
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-11-19",

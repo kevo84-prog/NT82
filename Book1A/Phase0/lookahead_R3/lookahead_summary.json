@@ -1,7 +1,11 @@
 {
  "decisions": 1,
- "inputs": 16,
+ "inputs": 21,
  "violations": 0,
  "missing": 0,
+ "plan_build_checks": {
+  "checks": 63,
+  "failed": 0
+ },
  "passed": true
 }

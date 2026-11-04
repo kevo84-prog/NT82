@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)
 plan_id=2025-11-18-b1a
 date=2025-11-18
 asof=08:25
@@ -65,7 +65,7 @@ ladder=D_ONVAH_WKVAL_ONTVAH|short|TP1=24822.50-24832.50|TP2=24775.00-24790.00|RU
 research_check_b=pass
 research_check_f=none
 research_1adr_would_drop=none
-research_60pt_would_cut=D_PDVAL_PDTVAL_ONH_REJ_LOW_PD
+research_60pt_would_cut=D_PDVAL_PDTVAL_ONH_REJ_LOW_PD_DD_EDGE_WK
 gex_model=MQ_REPLICA
 gex_source=EOD_PRIOR
 mq_cr=26000.00

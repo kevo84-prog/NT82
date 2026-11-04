@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-10-30-b1a",
   "date=2025-10-30",
   "asof=08:25",
@@ -419,7 +419,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 26228.0,
-   "swing_index": 10923
+   "swing_index": 10923,
+   "confirmed_ct": "2025-10-29T14:11:00-05:00",
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-10-29T13:56:00-05:00",
+     "confirmed_ct": "2025-10-29T14:11:00-05:00"
+    }
+   ]
   },
   {
    "lo": 26266.5,
@@ -436,7 +444,20 @@
    "label": "",
    "merged_from": 2,
    "swing_index": 11446,
-   "swing_price": 26306.5
+   "swing_price": 26306.5,
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-10-29T13:35:00-05:00",
+     "confirmed_ct": "2025-10-29T13:50:00-05:00"
+    },
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-10-29T23:38:00-05:00",
+     "confirmed_ct": "2025-10-29T23:53:00-05:00"
+    }
+   ],
+   "confirmed_ct": "2025-10-29T23:53:00-05:00"
   },
   {
    "lo": 26049.25,
@@ -452,7 +473,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 26049.25,
-   "swing_index": 10909
+   "swing_index": 10909,
+   "confirmed_ct": "2025-10-29T13:57:00-05:00",
+   "components": [
+    {
+     "kind": "REJ_LOW",
+     "formed_ct": "2025-10-29T13:42:00-05:00",
+     "confirmed_ct": "2025-10-29T13:57:00-05:00"
+    }
+   ]
   }
  ],
  "map4_areas": [
@@ -706,6 +735,19 @@
   }
  ],
  "dd_edge": null,
+ "dd_edge_wk": null,
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": false,
+  "hvn_blocks": 2,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-10-26T17:00:00-05:00",
+  "window_end": "2025-10-30T08:10:00-05:00",
+  "last_trade_ct": "2025-10-30T08:09:58.462857-05:00",
+  "available_at": "2025-10-30T08:10:00-05:00"
+ },
  "vwap": {
   "SESSION": {
    "session_date": "2025-10-30",

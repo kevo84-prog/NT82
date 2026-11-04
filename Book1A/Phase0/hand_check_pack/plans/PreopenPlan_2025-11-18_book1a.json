@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.1)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.2)",
   "plan_id=2025-11-18-b1a",
   "date=2025-11-18",
   "asof=08:25",
@@ -67,7 +67,7 @@
   "research_check_b=pass",
   "research_check_f=none",
   "research_1adr_would_drop=none",
-  "research_60pt_would_cut=D_PDVAL_PDTVAL_ONH_REJ_LOW_PD",
+  "research_60pt_would_cut=D_PDVAL_PDTVAL_ONH_REJ_LOW_PD_DD_EDGE_WK",
   "gex_model=MQ_REPLICA",
   "gex_source=EOD_PRIOR",
   "mq_cr=26000.00",
@@ -91,11 +91,11 @@
   "rej_zones_before_selection": 2,
   "would_drop_1adr": [],
   "would_cut_60pt": [
-   "D_PDVAL_PDTVAL_ONH_REJ_LOW_PD"
+   "D_PDVAL_PDTVAL_ONH_REJ_LOW_PD_DD_EDGE_WK"
   ],
   "decision_zones_beyond_cap": [
    "DD_EDGE_PD",
-   "D_PDVAL_PDTVAL_ONH_REJ_LOW_PD",
+   "D_PDVAL_PDTVAL_ONH_REJ_LOW_PD_DD_EDGE_WK",
    "WKPOC_AREA_PDPOC_AREA_D_PD2POC_PDPOC_WKPOC_PD2TPOC_PWKTVAL_P",
    "D_WKTPOC_PDVAH_PDH",
    "D_WKVAH_PD3VAH_PD2VAH_WKTVAH_PD2H_PD2TVAH_P1"
@@ -414,7 +414,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 24955.0,
-   "swing_index": 7836
+   "swing_index": 7836,
+   "confirmed_ct": "2025-11-17T08:46:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_LOW",
+     "formed_ct": "2025-11-17T08:31:00-06:00",
+     "confirmed_ct": "2025-11-17T08:46:00-06:00"
+    }
+   ]
   },
   {
    "lo": 25010.75,
@@ -430,7 +438,15 @@
    "class": "TARGET",
    "label": "",
    "swing_price": 25050.75,
-   "swing_index": 8094
+   "swing_index": 8094,
+   "confirmed_ct": "2025-11-17T13:04:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-11-17T12:49:00-06:00",
+     "confirmed_ct": "2025-11-17T13:04:00-06:00"
+    }
+   ]
   }
  ],
  "map4_areas": [
@@ -645,6 +661,47 @@
   "runner": 24874.75,
   "separator_lo": 24810.0,
   "separator_hi": 24829.75
+ },
+ "dd_edge_wk": {
+  "lo": 24970.0,
+  "hi": 24989.75,
+  "kind": "DD_EDGE",
+  "session": "",
+  "formed_ct": null,
+  "available_at": "2025-11-18T08:10:00-06:00",
+  "arrival_evidence": "",
+  "departure_pts": 0.0,
+  "tags": "DD_EDGE",
+  "stack": "",
+  "class": "TARGET",
+  "label": "DD_EDGE_WK",
+  "runner": 24989.75,
+  "separator_lo": 24925.0,
+  "separator_hi": 24954.75,
+  "rule": "ours: PD rule applied to weekly"
+ },
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": true,
+  "lower_hvn": [
+   24865.0,
+   24874.75
+  ],
+  "upper_hvn": [
+   24970.0,
+   24989.75
+  ],
+  "separator": "LVN",
+  "separator_lo": 24925.0,
+  "separator_hi": 24954.75,
+  "hvn_blocks": 5,
+  "profile": "WK",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.0",
+  "window_start": "2025-11-16T17:00:00-06:00",
+  "window_end": "2025-11-18T08:10:00-06:00",
+  "last_trade_ct": "2025-11-18T08:09:58.374681-06:00",
+  "available_at": "2025-11-18T08:10:00-06:00"
  },
  "vwap": {
   "SESSION": {

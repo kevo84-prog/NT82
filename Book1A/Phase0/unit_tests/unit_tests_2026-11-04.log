@@ -1,7 +1,7 @@
-Book 1A Phase 0 unit tests  2026-11-04T16:48:15+00:00  commit e137fa5  package book1a-phase0-v0.1
-module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.1, plan_fields=plan-fields-v1.0, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
+Book 1A Phase 0 unit tests  2026-11-04T22:30:02+00:00  commit cd9e9df  package book1a-phase0-v0.1
+module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.2, plan_fields=plan-fields-v1.0, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
 python 3.14.7
-tests run 143, failures 0, errors 0, result PASS
+tests run 159, failures 0, errors 0, result PASS
 test_bar_end_rule_and_volumes (book1a.tests.test_bars.TestBars.test_bar_end_rule_and_volumes) ... ok
 test_large_trade (book1a.tests.test_bars.TestBars.test_large_trade) ... ok
 test_stacked_buy_imbalance (book1a.tests.test_bars.TestBars.test_stacked_buy_imbalance) ... ok
@@ -66,6 +66,10 @@ test_two_per_side_nearest_first_and_traded_through_dropped (book1a.tests.test_ma
 test_merge_keeps_newer_swing_index (book1a.tests.test_map_v24.TestSwingAndRejection.test_merge_keeps_newer_swing_index)
 E22: the merged zone keeps the newer swing's index and the more extreme swing price. ... ok
 test_merge_within_5_points (book1a.tests.test_map_v24.TestSwingAndRejection.test_merge_within_5_points) ... ok
+test_merged_confirmation_compares_times_across_dst (book1a.tests.test_map_v24.TestSwingAndRejection.test_merged_confirmation_compares_times_across_dst)
+Oct 31 (-05:00) vs Nov 3 (-06:00): the later time wins, not the larger string. ... ok
+test_merged_zone_confirmed_at_its_last_component (book1a.tests.test_map_v24.TestSwingAndRejection.test_merged_zone_confirmed_at_its_last_component)
+Kyron, Nov 4: a merged zone is available at the later of its components' confirmation times. ... ok
 test_min_width_padding (book1a.tests.test_map_v24.TestSwingAndRejection.test_min_width_padding) ... ok
 test_no_zone_without_arrival_aggression (book1a.tests.test_map_v24.TestSwingAndRejection.test_no_zone_without_arrival_aggression) ... ok
 test_no_zone_without_fast_departure (book1a.tests.test_map_v24.TestSwingAndRejection.test_no_zone_without_fast_departure) ... ok
@@ -103,6 +107,13 @@ test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestPlanBuilder.test_plan
 test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestPlanBuilder.test_rejection_zone_appears_with_structure_family) ... ok
 test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestPlanBuilder.test_roll_day_and_half_day_log_only) ... ok
 test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestPlanBuilder.test_s14_reads_only_book1_keys) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestWeeklyDD.test_check_f_logged_not_applied) ... ok
+test_no_weekly_input_means_no_weekly_zone (book1a.tests.test_plan_v24.TestWeeklyDD.test_no_weekly_input_means_no_weekly_zone) ... ok
+test_pd_and_weekly_dd_edges_count_structure_once (book1a.tests.test_plan_v24.TestWeeklyDD.test_pd_and_weekly_dd_edges_count_structure_once) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestWeeklyDD.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestWeeklyDD.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestWeeklyDD.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestWeeklyDD.test_s14_reads_only_book1_keys) ... ok
 test_r3_r4_default_fill_is_v35 (book1a.tests.test_replay_risk.TestReplayRisk.test_r3_r4_default_fill_is_v35) ... ok
 test_sizing_reject_and_ledger (book1a.tests.test_replay_risk.TestReplayRisk.test_sizing_reject_and_ledger) ... ok
 test_two_loss_halt_and_daily_budget (book1a.tests.test_replay_risk.TestReplayRisk.test_two_loss_halt_and_daily_budget) ... ok
@@ -146,8 +157,15 @@ test_dst_change_nov_2_2025 (book1a.tests.test_vwap.TestWindows.test_dst_change_n
 test_monday_session_starts_sunday (book1a.tests.test_vwap.TestWindows.test_monday_session_starts_sunday) ... ok
 test_session_start_is_prev_day_1700 (book1a.tests.test_vwap.TestWindows.test_session_start_is_prev_day_1700) ... ok
 test_week_start_is_sunday_1700 (book1a.tests.test_vwap.TestWindows.test_week_start_is_sunday_1700) ... ok
+test_fewer_than_five_rows (book1a.tests.test_weekly_dd.TestRule.test_fewer_than_five_rows) ... ok
+test_one_block_is_not_a_split (book1a.tests.test_weekly_dd.TestRule.test_one_block_is_not_a_split) ... ok
+test_plan_inputs_and_family (book1a.tests.test_weekly_dd.TestRule.test_plan_inputs_and_family) ... ok
+test_settings_are_the_map_settings (book1a.tests.test_weekly_dd.TestRule.test_settings_are_the_map_settings) ... ok
+test_single_print_separator (book1a.tests.test_weekly_dd.TestRule.test_single_print_separator) ... ok
+test_two_blocks_with_lvn (book1a.tests.test_weekly_dd.TestRule.test_two_blocks_with_lvn) ... ok
+test_weekly_window_and_tpo_periods (book1a.tests.test_weekly_dd.TestRule.test_weekly_window_and_tpo_periods) ... ok
 
 ----------------------------------------------------------------------
-Ran 143 tests in 1.282s
+Ran 159 tests in 1.354s
 
 OK
