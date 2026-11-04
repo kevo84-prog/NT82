@@ -13,7 +13,10 @@ profiles rebuilt from the map tape up to 08:10 CT (the same inputs plan_v24.buil
     which opposite REJ; a FLIP row when one forms;
   - wide-stop zones: width, stop ticks (width + 2) and the C3 risk estimate for 1 NQ against the $1,000 budget;
   - DD_EDGE (PO-11): the packet's PD double distribution (both HVN blocks, the separator), price at 08:10, and the
-    PD profile rows (5-point, volume) across the split.
+    PD profile rows (5-point, volume) across the split;
+  - v1.1 (Nov 4): the weekly DD_EDGE (E23, ours: PD rule applied to weekly): the weekly profile window, both HVN blocks,
+    the separator, the 5-point weekly rows with the 3-row smoothed value against the 70% / 30% thresholds; merged REJ
+    zones with each component's confirmation time (the zone is available at the latest one).
 No trade, candidate outcome or P&L is read or written. The "hand" column is left empty for Kyron.
 """
 from __future__ import annotations
@@ -30,7 +33,7 @@ from book1a import bars as B, map_v24 as M, risk as RK, sessions as S, vwap as V
 from book1a.hand_checks.plan_hand_check import _rows
 
 CT = ZoneInfo("America/Chicago")
-VERSION = "hand-check-pack-v1.0"
+VERSION = "hand-check-pack-v1.1"
 
 
 def hm(t) -> str:
@@ -81,7 +84,8 @@ def load_day(block1: Path, run: Path, plans: Path, ds: str, gex: dict):
     rows = list(_rows(run / "tape_map.csv.gz", start, as_of))
     bars = B.bars_from_rows(rows, start, as_of)
     pd = prior_sessions(d)[0]
-    prof = B.profiles_from_rows(rows, {"PD": (datetime.combine(pd, time(8, 30), tzinfo=CT), datetime.combine(pd, time(15, 0), tzinfo=CT))})
+    prof = B.profiles_from_rows(rows, {"PD": (datetime.combine(pd, time(8, 30), tzinfo=CT), datetime.combine(pd, time(15, 0), tzinfo=CT)),
+                                       "WK": (V.week_start(d), as_of)})
     return dict(d=d, ds=ds, as_of=as_of, packet=packet, side=side, bars=bars, prof=prof, gex=gex.get(ds) or {},
                 adr=float((packet.get("ranges") or {}).get("adr_full") or 0) or 400.0, plans=plans)
 
@@ -112,9 +116,10 @@ def decision_table(day, zone) -> list:
     for r in day["side"].get("rej_flip_zones", []):
         if f"{r['kind']}_{r['session']}" in lab and r["lo"] <= zone["hi"] and r["hi"] >= zone["lo"]:
             out.append(f"| {r['kind']}_{r['session']} (STRUCTURE) | {r['lo']} - {r['hi']} | overlaps | swing bar close {hm(datetime.fromisoformat(r['formed_ct']))}, see section B | | |")
-    dd = day["side"].get("dd_edge")
-    if dd and "DD_EDGE" in lab:
-        out.append(f"| {dd['label']} (STRUCTURE) | {dd['lo']} - {dd['hi']} | overlaps | PD double distribution, see section E | | |")
+    for key, what in (("dd_edge", "PD double distribution"), ("dd_edge_wk", "weekly double distribution (ours: PD rule applied to weekly)")):
+        dd = day["side"].get(key)
+        if dd and dd["label"] in lab:
+            out.append(f"| {dd['label']} (STRUCTURE) | {dd['lo']} - {dd['hi']} | overlaps | {what}, see section E | | |")
     for name in dict.fromkeys(zone["levels"]):
         if name in bands:
             b = bands[name]
@@ -145,8 +150,9 @@ def extents(day, zone) -> list:
     for r in day["side"].get("rej_flip_zones", []):
         if f"{r['kind']}_{r['session']}" in zone["label"] and r["lo"] <= zone["hi"] and r["hi"] >= zone["lo"]:
             out.append((f"{r['kind']}_{r['session']}", r["lo"], r["hi"]))
-    dd = day["side"].get("dd_edge")
-    if dd and "DD_EDGE" in zone["label"]: out.append((dd["label"], dd["lo"], dd["hi"]))
+    for key in ("dd_edge", "dd_edge_wk"):
+        dd = day["side"].get(key)
+        if dd and dd["label"] in zone["label"]: out.append((dd["label"], dd["lo"], dd["hi"]))
     return out
 
 
@@ -189,6 +195,12 @@ def rej_tables(day) -> tuple:
         is_flip = any((min(z.hi, o.hi) - max(z.lo, o.lo)) / z.width >= M.FLIP_OVERLAP for o in cands)
         flip_rows.append(f"| {z.kind} {z.lo}-{z.hi} | {hm(z.formed_ct)} | {'yes, 3rd close ' + hm(bars[acc].close_ct) if acc is not None else 'no'} | {'; '.join(ov) or 'none'} | {'FLIP' if is_flip else 'no'} |")
     flipped = [z for z in M.flips(bars, merged, as_of) if z.kind == "FLIP"]
+    for z in merged:
+        if z.extra.get("merged_from", 1) > 1:
+            comps = "; ".join(f"{c['kind']} swing {hm(datetime.fromisoformat(c['formed_ct']))} confirmed {hm(datetime.fromisoformat(c['confirmed_ct']))}"
+                              for c in z.extra.get("components", []))
+            rej_rows.append(f"| merged | {z.kind} | {z.session} | {comps} | | | | | | | {z.lo} - {z.hi}; available at the latest confirmation "
+                            f"{hm(datetime.fromisoformat(z.extra['confirmed_ct']))} | | |")
     return raw, merged, flipped, rej_rows, flip_rows
 
 
@@ -216,6 +228,54 @@ def dd_table(day) -> list:
     return out
 
 
+def dd_wk_table(day) -> list:
+    """E23: the weekly split with the rows to check on a weekly volume profile (Sunday 17:00 CT to 08:10 CT)."""
+    from book1a import weekly_dd as W
+    w, dz = day["side"].get("weekly_dd") or {}, day["side"].get("dd_edge_wk")
+    ref = float(day["packet"]["ref_price"])
+    ws = V.week_start(day["d"])
+    out = [f"**{day['ds']} weekly** (ours: PD rule applied to weekly, {w.get('version')}): profile {hm(ws)} to {hm(day['as_of'])} CT "
+           f"(last trade used {w.get('last_trade_ct')}); split = {'yes' if w.get('double_distribution') else 'no'}; HVN blocks {w.get('hvn_blocks')}; "
+           f"price at 08:10 {ref}", ""]
+    if not w.get("double_distribution"):
+        return out
+    out += [f"Lower HVN {w['lower_hvn'][0]} - {w['lower_hvn'][1]}; separator ({w['separator']}) {w['separator_lo']} - {w['separator_hi']}; "
+            f"upper HVN {w['upper_hvn'][0]} - {w['upper_hvn'][1]}."]
+    if dz:
+        out.append(f"DD_EDGE_WK zone {dz['lo']} - {dz['hi']} ({dz['hi'] - dz['lo']:.2f} pts, cap 40); runner {dz['runner']}; frozen {dz['available_at']}.")
+    else:
+        out.append("No DD_EDGE_WK zone: price at 08:10 is inside the separator.")
+    vol = day["prof"]["WK"]["volume"]
+    rows = {int(round(k / 5.0)): v for k, v in vol.items()}
+    mn, mx = min(rows), max(rows)
+    raw = [rows.get(r, 0) for r in range(mn, mx + 1)]
+    sm = [((raw[i - 1] if i else 0) + raw[i] + (raw[i + 1] if i < len(raw) - 1 else 0)) / 3.0 for i in range(len(raw))]
+    peak = max(sm)
+    lo_b, up_b = w["lower_hvn"], w["upper_hvn"]
+    out += ["", f"Weekly volume, 5-point rows; smoothed = (row below + row + row above) / 3; peak smoothed {peak:,.0f}; "
+            f"HVN >= {W.HVN_PCT}% = {peak * W.HVN_PCT / 100:,.0f}; LVN <= {W.LVN_PCT}% = {peak * W.LVN_PCT / 100:,.0f}.", "",
+            "| row lo | volume | smoothed | % of peak | block | hand | match |", "|---|---|---|---|---|---|---|"]
+    for i, r in enumerate(range(mn, mx + 1)):
+        px = r * 5.0
+        if not (lo_b[0] - 10 <= px <= up_b[1] + 10):
+            continue
+        blk = "lower HVN" if lo_b[0] <= px <= lo_b[1] else ("upper HVN" if up_b[0] <= px <= up_b[1] else
+              ("separator" if w["separator_lo"] <= px <= w["separator_hi"] else ""))
+        out.append(f"| {px} | {raw[i]} | {sm[i]:,.0f} | {sm[i] / peak:.0%} | {blk} | | |")
+    used = [z["label"] for z in day["side"]["zones"] if "DD_EDGE_WK" in z["label"]]
+    beyond = [x for x in day["side"].get("research", {}).get("decision_zones_beyond_cap", []) if "DD_EDGE_WK" in x]
+    if used:
+        where = "decision zone " + ", ".join(used)
+    elif beyond:
+        where = "merged into " + ", ".join(beyond) + ", beyond the 2-per-side cap (not written)"
+    elif dz:
+        where = "not a decision zone (fewer than 2 families: TARGET)"
+    else:
+        where = "no zone"
+    out += ["", "In the plan: " + where]
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--block1", required=True); ap.add_argument("--out", required=True)
@@ -233,7 +293,7 @@ def main(argv=None):
          "Every value below is frozen at 08:10 CT and comes from data before 08:10 CT. Times are CT, 1-minute bars stamped by "
          "their close (NinjaTrader bar time). Prices are NQ front month as on the chart. No trades, outcomes or P&L. "
          "Fill the hand column from the chart, not from the plan.", "",
-         "| day | plan | decision zones | REJ zones before selection | REJ in plan | FLIP | wide stop (> 196 ticks) | DD_EDGE |", "|---|---|---|---|---|---|---|---|"]
+         "| day | plan | decision zones | REJ zones before selection | REJ in plan | FLIP | wide stop (> 196 ticks) | DD_EDGE (PD; weekly) |", "|---|---|---|---|---|---|---|---|"]
     rej_cache = {}
     for dy in days:
         raw, merged, flipped, rr, fr = rej_tables(dy)
@@ -242,7 +302,8 @@ def main(argv=None):
         wide = [f"{z['label'][:28]} {z['stop_ticks']}" for z in s["zones"] if z["stop_ticks"] > 196]
         L.append(f"| {dy['ds']} | {(dy['plans'] / ('PreopenPlan_' + dy['ds'] + '_book1a.txt')).read_text(encoding='utf-8').splitlines()[0].split()[-1].rstrip(')')} | {len(s['zones'])} | "
                  f"{len(raw)} ({len(merged)} after merge) | {len(s['rej_flip_zones'])} | {len(flipped)} | {'; '.join(wide) or 'none'} | "
-                 f"{'yes ' + str(s['dd_edge']['lo']) + '-' + str(s['dd_edge']['hi']) if s.get('dd_edge') else 'no'} |")
+                 f"PD {str(s['dd_edge']['lo']) + '-' + str(s['dd_edge']['hi']) if s.get('dd_edge') else 'no'}; "
+                 f"WK {str(s['dd_edge_wk']['lo']) + '-' + str(s['dd_edge_wk']['hi']) if s.get('dd_edge_wk') else ('split, no zone' if (s.get('weekly_dd') or {}).get('double_distribution') else 'no')} |")
     # A. decision zones
     L += ["", "## A. Decision zones (P0.7, P0.8)", "", "Rebuild each zone from its levels: every level must be inside the zone, or a GEX level within "
           "10 points of an edge (C2). Families count once each; DECISION needs 2+.", ""]
@@ -272,8 +333,9 @@ def main(argv=None):
         if merged:
             L += [f"**{dy['ds']}**", ""] + fr + [""]
     if nflip == 0:
-        L += [f"No FLIP zone forms on any of these {len(days)} days. Check by hand that no row above should be a FLIP; the FLIP rule "
-              "itself is unit-tested only (test_map_v24) until a real day has one.", ""]
+        L += [f"No FLIP zone forms on any of these {len(days)} days, so **no historical flip has been checked**. Check by hand that no "
+              "row above should be a FLIP. The FLIP rule's evidence is mechanical only: a synthetic unit test (test_map_v24) shows the "
+              "code joins an accepted-through REJ and a later opposite REJ; it is not evidence from a real chart.", ""]
     # D. wide stops
     L += ["## D. Wide-stop zones (C3 risk check, U3)", "", "stop ticks = zone width in ticks + 2; estimated risk for 1 NQ = (stop ticks + 2) x $5 + $5.74; "
           "above $1,000 the side is NONE (RISK_REJECT, never shrunk).", "",
@@ -288,10 +350,18 @@ def main(argv=None):
                 L.append(f"| {dy['ds']} | {z['label']} | {z['lo']} | {z['hi']} | {z['hi'] - z['lo']:.2f} | {z['stop_ticks']} | ${est:,.2f} | "
                          f"long={z['long']} short={z['short']} | low end: {lo_n[0]} {lo_n[1]}; high end: {hi_n[0]} {hi_n[2]} (a single price gets the 5-pt pad) | | |")
     # E. DD_EDGE
-    L += ["", "## E. DD_EDGE (P0.7, PO-11)", ""]
+    L += ["", "## E. DD_EDGE (P0.7, PO-11)", "", "### E1. PD double distribution (the map's rule)", ""]
     for dy in days:
         if dy["side"].get("dd_edge") or (dy["packet"].get("double_distribution") or {}).get("pd_double_distribution"):
             L += dd_table(dy) + [""]
+    L += ["### E2. Weekly double distribution (E23; ours: PD rule applied to weekly)", "",
+          "Kyron, Nov 4: the map's PD double-distribution rule and thresholds, unchanged, on the developing weekly profile "
+          "(Sunday 17:00 CT reset, trades before 08:10 CT). Frozen in code (commit 31cebdb) before it was run on any day. "
+          "PD and weekly DD edges are both STRUCTURE and count once in a zone. The weekly profile was rebuilt independently and "
+          "matched the map's weekly high, low, VWAP, POC / VAH / VAL (volume and TPO) and weekly single prints on all these days "
+          "(`weekly_dd/weekly_dd_check.md`).", ""]
+    for dy in days:
+        L += dd_wk_table(dy) + [""]
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"wrote {a.out}: {len(days)} days, FLIP {nflip}")
