@@ -19,8 +19,9 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.2"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
+VERSION = "plan-v2.4-book1a-v1.3"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
                                     # v1.2: weekly DD_EDGE (E23, ours: PD rule applied to weekly, book1a.weekly_dd)
+                                    # v1.3: weekly DD UNAVAILABLE noted (E26); FLIP review flag (E25)
 CT = ZoneInfo("America/Chicago")
 TICK = 0.25
 PAD = 5.0
@@ -109,6 +110,9 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
     rej = M.rejection_zones(bars, d, as_of, adr)
     rej = M.merge_same_side(rej)
     rej = M.flips(bars, rej, as_of)
+    if any(z.kind == "FLIP" for z in rej):     # E25 (Kyron, Nov 4): the first real FLIP gets a mandatory targeted review
+        research["flip_review_required"] = [f"{z.lo}-{z.hi}" for z in rej if z.kind == "FLIP"]
+        notes.append("E25: FLIP zone formed - mandatory targeted review (FLIP is covered by a synthetic test only)")
     stack_levels = {k: v for k, v in lv.items() if F.family_of(k) in ("AUCTION_VALUE", "VOLUME")}
     M.tag_zones(rej, session_vwap, bands, stack_levels)
     rej_sel = M.select_zones(rej, ref, adr, bars, as_of)
@@ -130,6 +134,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         dd_wk = M.dd_edge_zone(wdi[0], wdi[1], wdi[2], ref, as_of, "WK")
         if dd_wk is not None:
             dd_wk.extra["rule"] = WD.LABEL
+    if weekly_dd and weekly_dd.get("status") == "UNAVAILABLE":
+        notes.append(f"E26: weekly double distribution UNAVAILABLE ({weekly_dd.get('reason')})")
     dds = [z for z in (dd, dd_wk) if z is not None]      # PD first, then weekly (ladder RUNNER order)
 
     # ---- candidate decision zones: packet zones + REJ/FLIP + MAP4 areas + DD edges -------------------

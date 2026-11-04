@@ -121,7 +121,7 @@ class TestWeeklyDD(TestPlanBuilder):
         pk = dict(self.packet)
         pk["double_distribution"] = {"available": True, "pd_double_distribution": True, "lower_hvn": [23900.0, 23940.0],
                                      "upper_hvn": [23965.0, 24100.0], "separator": "LVN", "separator_lo": 23945.0, "separator_hi": 23960.0}
-        wk = {"available": True, "double_distribution": True, "lower_hvn": [23905.0, 23938.0], "upper_hvn": [23970.0, 24150.0],
+        wk = {"available": True, "status": "AVAILABLE", "double_distribution": True, "lower_hvn": [23905.0, 23938.0], "upper_hvn": [23970.0, 24150.0],
               "separator": "LVN", "separator_lo": 23945.0, "separator_hi": 23965.0, "profile": "WK"}
         text, side = P.build(pk, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), weekly_dd=wk)
         self.assertEqual(side["dd_edge"]["label"], "DD_EDGE_PD")
@@ -131,6 +131,25 @@ class TestWeeklyDD(TestPlanBuilder):
         z = [z for z in side["zones"] if "DD_EDGE_PD" in z["label"] and "DD_EDGE_WK" in z["label"]]
         self.assertEqual(len(z), 1, [x["label"] for x in side["zones"]])
         self.assertEqual(z[0]["families"].count("STRUCTURE"), 1)
+
+    def test_real_flip_raises_the_mandatory_review_flag(self):
+        """E25 (Kyron, Nov 4): the first real FLIP must be reviewed; the plan says so (no gating change)."""
+        from unittest import mock
+        from book1a import map_v24 as M
+        flip = M.Zone(24040.0, 24060.0, "FLIP", self.as_of, self.as_of, "ON")
+        with mock.patch.object(M, "flips", side_effect=lambda bars, zones, as_of: list(zones) + [flip]):
+            text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())
+        self.assertEqual(side["research"]["flip_review_required"], ["24040.0-24060.0"])
+        self.assertIn("E25: FLIP zone formed - mandatory targeted review", text)
+        text2, side2 = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())
+        self.assertNotIn("flip_review_required", side2["research"])
+
+    def test_unavailable_weekly_is_noted_and_gives_no_zone(self):
+        wk = {"available": False, "status": "UNAVAILABLE", "reason": "map left the weekly profile out: data gap x", "profile": "WK"}
+        text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), weekly_dd=wk)
+        self.assertIsNone(side["dd_edge_wk"])
+        self.assertEqual(side["weekly_dd"]["status"], "UNAVAILABLE")
+        self.assertIn("E26: weekly double distribution UNAVAILABLE", text)
 
     def test_no_weekly_input_means_no_weekly_zone(self):
         text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())

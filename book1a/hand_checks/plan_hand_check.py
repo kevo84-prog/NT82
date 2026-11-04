@@ -53,7 +53,7 @@ def main(argv=None):
                                            "PD": (datetime.combine(pd_date, time(8, 30), tzinfo=CT), datetime.combine(pd_date, time(15, 0), tzinfo=CT))})
         ts, px, sz = B.trades_from_tape(tape, V.week_start(d), as_of)
         vres = V.vwap_0810(ts, px, sz, d)
-        wdd, _, _ = WD.weekly(rows, V.week_start(d), as_of)     # E23: data before 08:10 CT only
+        wdd, _, _ = WD.weekly(rows, V.week_start(d), as_of, packet=packet)     # E23: data before 08:10 CT only; E26
         text, side = P.build(packet, bars, prof, vres, gex.get(ds), cal, roll_dates=[x.isoformat() for x in S.ROLL_DATES], as_of=as_of,
                              weekly_dd=wdd)
         (out / f"PreopenPlan_{ds}_book1a.txt").write_text(text, encoding="utf-8")

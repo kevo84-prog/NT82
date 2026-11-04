@@ -60,7 +60,7 @@ class TestRule(unittest.TestCase):
         self.assertLess(datetime.fromisoformat(res["last_trade_ct"]), as_of)
 
     def test_plan_inputs_and_family(self):
-        res = {"double_distribution": True, "lower_hvn": [100.0, 120.0], "upper_hvn": [150.0, 170.0], "separator_lo": 125.0, "separator_hi": 140.0}
+        res = {"status": "AVAILABLE", "double_distribution": True, "lower_hvn": [100.0, 120.0], "upper_hvn": [150.0, 170.0], "separator_lo": 125.0, "separator_hi": 140.0}
         self.assertEqual(W.as_plan_inputs(res), ((100.0, 120.0), (125.0, 140.0), (150.0, 170.0), "WK"))
         self.assertIsNone(W.as_plan_inputs({"double_distribution": False}))
         # both DD edges are STRUCTURE and count once in a merged zone
@@ -69,6 +69,34 @@ class TestRule(unittest.TestCase):
         fr = F.count_families(100.0, 120.0, [F.Level.point("DD_EDGE_PD", 105.0), F.Level.point("DD_EDGE_WK", 110.0)],
                               own_families=sorted(set(["STRUCTURE", "STRUCTURE"])))
         self.assertEqual(fr.families, ["STRUCTURE"])
+
+
+class TestUnavailable(unittest.TestCase):
+    """E26 (Kyron, Nov 4): the map left the weekly profile out -> UNAVAILABLE, never a valid profile with no edge."""
+    PK = {"data": {"notes": ["CALENDAR: half day today", "DATA: weekly profile left out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT"]}}
+
+    def test_map_exclusion_reason(self):
+        self.assertEqual(W.map_weekly_exclusion(self.PK), "data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT")
+        self.assertIsNone(W.map_weekly_exclusion({"data": {"notes": ["DATA: overnight/VWAP window left out: data gap x"]}}))
+        self.assertIsNone(W.map_weekly_exclusion(None))
+
+    def test_unavailable_is_not_a_no_edge_profile(self):
+        ws = datetime.combine(date(2025, 11, 23), time(17, 0), tzinfo=CT)
+        as_of = datetime.combine(date(2025, 11, 28), time(8, 10), tzinfo=CT)
+        vol_rows = [(ws + timedelta(minutes=m), 500.0 + (m % 40), 10) for m in range(0, 3000)]
+        res, prof, sps = W.weekly(vol_rows, ws, as_of, packet=self.PK)
+        self.assertEqual(res["status"], "UNAVAILABLE")
+        self.assertNotIn("double_distribution", res)
+        self.assertIn("data gap", res["reason"])
+        self.assertIsNone(prof); self.assertEqual(sps, [])
+        self.assertIsNone(W.as_plan_inputs(res))
+        ok, _, _ = W.weekly(vol_rows, ws, as_of, packet={"data": {"notes": []}})
+        self.assertEqual(ok["status"], "AVAILABLE")
+        self.assertIn("double_distribution", ok)
+
+    def test_plan_inputs_need_available(self):
+        res = {"status": "UNAVAILABLE", "double_distribution": True, "lower_hvn": [1, 2], "upper_hvn": [5, 6], "separator_lo": 3, "separator_hi": 4}
+        self.assertIsNone(W.as_plan_inputs(res))
 
 
 if __name__ == "__main__":

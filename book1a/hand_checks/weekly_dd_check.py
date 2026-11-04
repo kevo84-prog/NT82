@@ -22,7 +22,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 CT = ZoneInfo("America/Chicago")
-VERSION = "weekly-dd-check-v1.0"
+VERSION = "weekly-dd-check-v1.1"   # v1.1: E26 UNAVAILABLE days shown, map comparison skipped
 
 
 def va_from_rows(src, row_ticks, pct=70, tick=0.25):
@@ -86,8 +86,11 @@ def check_day(ds: str, run: Path):
     pd_s, pd_e = datetime.combine(pd_date, time(8, 30), tzinfo=CT), datetime.combine(pd_date, time(15, 0), tzinfo=CT)
     start = min(ws, pd_s)
     rows = list(_rows(run / "tape_map.csv.gz", start, as_of))
-    wres, wp, wsp = W.weekly(rows, ws, as_of)
+    wres, wp, wsp = W.weekly(rows, ws, as_of, packet=pk)
     out = {"day": ds, "weekly_dd": wres, "checks": []}
+    if wres.get("status") == "UNAVAILABLE":       # E26: the map left the weekly profile out; nothing to compare
+        out["checks"].append(("weekly profile", "UNAVAILABLE", wres["reason"], "SKIP"))
+        return out
 
     def chk(name, ours, map_, tol=0.0):
         ok = (ours is None and map_ is None) or (ours is not None and map_ is not None and abs(float(ours) - float(map_)) <= tol)
@@ -148,7 +151,9 @@ def main(argv=None):
           "| day | split | lower HVN | separator | upper HVN | HVN blocks | last trade used |", "|---|---|---|---|---|---|---|"]
     for r in res:
         w = r["weekly_dd"]
-        if w.get("double_distribution"):
+        if w.get("status") == "UNAVAILABLE":
+            L.append(f"| {r['day']} | UNAVAILABLE ({w['reason']}) | | | | | |")
+        elif w.get("double_distribution"):
             L.append(f"| {r['day']} | yes | {w['lower_hvn'][0]} - {w['lower_hvn'][1]} | {w['separator']} {w['separator_lo']} - {w['separator_hi']} | "
                      f"{w['upper_hvn'][0]} - {w['upper_hvn'][1]} | {w['hvn_blocks']} | {w['last_trade_ct']} |")
         else:

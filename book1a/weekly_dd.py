@@ -17,6 +17,11 @@ The map's rule, ported line for line (JeronPreopenMap.cs DoubleDistJson, HvnLvnA
     sp.lo > gap_hi) is the double distribution;
   - area lo = first row * 5 points, area hi = (last row + 1) * 5 points - 1 tick.
 The PD version reads the PD cash profile and the PD TPO single prints; this one reads the developing week.
+
+E26 (Kyron, Nov 4): when the map leaves the developing weekly profile out (its packet note "DATA: weekly profile left
+out: <reason>", e.g. a data gap; the map's Covered() check with SkipPartialProfiles on), the weekly rule is skipped and
+the feature is marked status=UNAVAILABLE with the map's reason. UNAVAILABLE is never a valid profile with no edge: it
+carries no double_distribution key and gives no plan inputs. Every other result has status=AVAILABLE.
 """
 from __future__ import annotations
 
@@ -25,7 +30,7 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Dict, Iterable, List, Optional, Tuple
 
-VERSION = "weekly-dd-v1.0"
+VERSION = "weekly-dd-v1.1"   # v1.1: UNAVAILABLE when the map leaves the weekly profile out (E26, Kyron Nov 4)
 LABEL = "ours: PD rule applied to weekly"
 TICK = 0.25
 HVN_TICKS_PER_ROW = 20      # JeronPreopenMap HvnTicksPerRow
@@ -175,19 +180,40 @@ def double_distribution(vol_by_tick: Dict[int, int], sp_areas: List[dict], sourc
     return {"available": True, "double_distribution": False, "hvn_blocks": len(hvn), "profile": source}
 
 
-def weekly(rows: Iterable[tuple], week_start: datetime, as_of: datetime) -> Tuple[dict, Profile, List[dict]]:
-    """The weekly double distribution at the as-of: (result in packet form + rule label, profile, weekly single prints)."""
+def map_weekly_exclusion(packet: Optional[dict]) -> Optional[str]:
+    """The map's reason for leaving the developing weekly profile out, or None when it built it (E26)."""
+    if not packet:
+        return None
+    notes = ((packet.get("data") or {}).get("notes") or []) + (packet.get("notes") or [])
+    for n in notes:
+        if isinstance(n, str) and n.startswith("DATA: weekly profile left out"):
+            return n.split(":", 2)[-1].strip() if n.count(":") >= 2 else n
+    return None
+
+
+def unavailable(reason: str, week_start: datetime, as_of: datetime) -> dict:
+    return {"available": False, "status": "UNAVAILABLE", "reason": "map left the weekly profile out: " + reason, "profile": "WK",
+            "rule": LABEL, "version": VERSION, "window_start": week_start.isoformat(), "window_end": as_of.isoformat(),
+            "last_trade_ct": None, "available_at": as_of.isoformat()}
+
+
+def weekly(rows: Iterable[tuple], week_start: datetime, as_of: datetime, packet: Optional[dict] = None) -> Tuple[dict, Optional[Profile], List[dict]]:
+    """The weekly double distribution at the as-of: (result in packet form + rule label, profile, weekly single prints).
+    packet: the day's map packet; when the map left the weekly profile out, the result is UNAVAILABLE (E26)."""
+    why = map_weekly_exclusion(packet)
+    if why is not None:
+        return unavailable(why, week_start, as_of), None, []
     p = build_profile(rows, week_start, as_of)
     sps = single_prints(dict(p.tpo), "TPO_WK")
     res = double_distribution(dict(p.vol), sps, "WK")
-    res.update({"rule": LABEL, "version": VERSION, "window_start": week_start.isoformat(), "window_end": as_of.isoformat(),
+    res.update({"status": "AVAILABLE" if res.get("available") else "UNAVAILABLE", "rule": LABEL, "version": VERSION, "window_start": week_start.isoformat(), "window_end": as_of.isoformat(),
                 "last_trade_ct": p.last_ct.isoformat() if p.last_ct else None, "available_at": as_of.isoformat()})
     return res, p, sps
 
 
 def as_plan_inputs(res: dict) -> Optional[tuple]:
     """(dist_a, separator, dist_b, profile) for map_v24.dd_edge_zone, or None when there is no weekly split."""
-    if not res or not res.get("double_distribution"):
+    if not res or res.get("status") != "AVAILABLE" or not res.get("double_distribution"):
         return None
     return ((res["lower_hvn"][0], res["lower_hvn"][1]), (res["separator_lo"], res["separator_hi"]),
             (res["upper_hvn"][0], res["upper_hvn"][1]), "WK")

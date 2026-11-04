@@ -33,7 +33,7 @@ from book1a import bars as B, map_v24 as M, risk as RK, sessions as S, vwap as V
 from book1a.hand_checks.plan_hand_check import _rows
 
 CT = ZoneInfo("America/Chicago")
-VERSION = "hand-check-pack-v1.1"
+VERSION = "hand-check-pack-v1.2"   # v1.2: weekly DD UNAVAILABLE shown as such (E26)
 
 
 def hm(t) -> str:
@@ -234,6 +234,8 @@ def dd_wk_table(day) -> list:
     w, dz = day["side"].get("weekly_dd") or {}, day["side"].get("dd_edge_wk")
     ref = float(day["packet"]["ref_price"])
     ws = V.week_start(day["d"])
+    if w.get("status") == "UNAVAILABLE":
+        return [f"**{day['ds']} weekly**: UNAVAILABLE ({w.get('reason')}). Not a profile with no edge: the rule was not run.", ""]
     out = [f"**{day['ds']} weekly** (ours: PD rule applied to weekly, {w.get('version')}): profile {hm(ws)} to {hm(day['as_of'])} CT "
            f"(last trade used {w.get('last_trade_ct')}); split = {'yes' if w.get('double_distribution') else 'no'}; HVN blocks {w.get('hvn_blocks')}; "
            f"price at 08:10 {ref}", ""]
@@ -303,7 +305,7 @@ def main(argv=None):
         L.append(f"| {dy['ds']} | {(dy['plans'] / ('PreopenPlan_' + dy['ds'] + '_book1a.txt')).read_text(encoding='utf-8').splitlines()[0].split()[-1].rstrip(')')} | {len(s['zones'])} | "
                  f"{len(raw)} ({len(merged)} after merge) | {len(s['rej_flip_zones'])} | {len(flipped)} | {'; '.join(wide) or 'none'} | "
                  f"PD {str(s['dd_edge']['lo']) + '-' + str(s['dd_edge']['hi']) if s.get('dd_edge') else 'no'}; "
-                 f"WK {str(s['dd_edge_wk']['lo']) + '-' + str(s['dd_edge_wk']['hi']) if s.get('dd_edge_wk') else ('split, no zone' if (s.get('weekly_dd') or {}).get('double_distribution') else 'no')} |")
+                 f"WK {str(s['dd_edge_wk']['lo']) + '-' + str(s['dd_edge_wk']['hi']) if s.get('dd_edge_wk') else ('UNAVAILABLE' if (s.get('weekly_dd') or {}).get('status') == 'UNAVAILABLE' else ('split, no zone' if (s.get('weekly_dd') or {}).get('double_distribution') else 'no'))} |")
     # A. decision zones
     L += ["", "## A. Decision zones (P0.7, P0.8)", "", "Rebuild each zone from its levels: every level must be inside the zone, or a GEX level within "
           "10 points of an edge (C2). Families count once each; DECISION needs 2+.", ""]

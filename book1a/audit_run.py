@@ -31,7 +31,7 @@ from zoneinfo import ZoneInfo
 
 from book1a.lookahead import CT, LookaheadAudit, gex_available_at, l2_second_available_at, map_available_at, swing_available_at
 
-VERSION = "audit-run-v1.1"
+VERSION = "audit-run-v1.2"   # v1.2: weekly DD UNAVAILABLE days checked (E26)
 
 
 def decision_ts(row: dict) -> datetime:
@@ -112,7 +112,10 @@ def plan_build_checks(plans_dir: Path, out_csv: Path) -> dict:
                 t = datetime.fromisoformat(c["confirmed_ct"])
                 chk(day, f"{name} component {c['kind']} {c['formed_ct']} confirmed <= as-of", t <= as_of, f"{c['confirmed_ct']} vs {sc['as_of']}")
         wdd = sc.get("weekly_dd")
-        if wdd is not None and wdd.get("window_start"):
+        if wdd is not None and wdd.get("status") == "UNAVAILABLE":
+            chk(day, "weekly DD UNAVAILABLE: no split, no edge, a reason", "double_distribution" not in wdd and not sc.get("dd_edge_wk")
+                and bool(wdd.get("reason")), str(wdd.get("reason")))
+        elif wdd is not None and wdd.get("window_start"):
             ws = V.week_start(date.fromisoformat(day))
             chk(day, "weekly profile starts Sunday 17:00 CT", datetime.fromisoformat(wdd["window_start"]) == ws, f"{wdd['window_start']} vs {ws.isoformat()}")
             chk(day, "weekly profile ends at the as-of", datetime.fromisoformat(wdd["window_end"]) == as_of, wdd["window_end"])
