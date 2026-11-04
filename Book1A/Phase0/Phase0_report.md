@@ -49,7 +49,7 @@ edited. No P&L opened or summarized. The checker's result file was copied, not o
    and price, the 15-bar check, arrival-evidence bar, departure bar, body bars), C FLIP check for every REJ zone
    (none forms), D every wide-stop zone (9) with the C3 numbers, E DD_EDGE (Oct 29, Nov 3, Nov 18) with the PD
    profile rows. Each row names the chart time and price, or the profile / delta row, to check. No trades or P&L.
-6. Unit tests: `unit_tests/unit_tests_2026-11-04.log`, run after the last code change.
+6. Unit tests: 143 run, 0 failures, 0 errors on commit e137fa5 (`unit_tests/unit_tests_2026-11-04.log`).
 
 ### Parity levels
 
