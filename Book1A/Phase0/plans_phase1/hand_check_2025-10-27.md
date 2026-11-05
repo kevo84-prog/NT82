@@ -25,9 +25,9 @@
 
 | field | value | hand | match |
 |---|---|---|---|
-| market_context | NONE | | |
-| draw |  | | |
-| draw_status | NONE | | |
+| market_context | BULLISH | | |
+| draw | 25995.00-26005.00|CR | | |
+| draw_status | ACTIVE | | |
 | balance |  | | |
 | balance_poc |  | | |
 | value_follows | WITH_PRICE | | |
@@ -41,8 +41,8 @@
 
 | zone | long | short | first_touch | side_conflict | ladder |
 |---|---|---|---|---|---|
-| D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK | ANY | INITIATION | YES | side_conflict=D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK|short|context=ANY,dd_edge=INITIATION,edge_control=INITIATION | {"long": {"TP1": "25799.75-25809.75", "TP2": "25830.00-25840.00", "RUN": "25812.25-25822.25", "R_TP1": "1.61", "R_TP2": "2.37", "R_RUN": "1.93"}, "short": {"TP1": "25552.50-25562.50", "TP2": "", "RUN": "25498.25-25508.25", "R_TP1": "3.29", "R_TP2": "", "R_RUN": "4.64"}} |
-| D_ONTVAH_WKTVAH_ONVAH_WKVAH | ANY | INITIATION | YES | side_conflict=D_ONTVAH_WKTVAH_ONVAH_WKVAH|short|context=ANY,accepted_edge=INITIATION,edge_control=INITIATION | {"long": {"TP1": "", "TP2": "", "RUN": "", "R_TP1": "", "R_TP2": "", "R_RUN": ""}, "short": {"TP1": "25722.50-25732.50", "TP2": "25550.00-25560.00", "RUN": "25700.00-25710.00", "R_TP1": "2.92", "R_TP2": "10.42", "R_RUN": "3.90"}} |
-| WKPOC_AREA_ONPOC_AREA | ANY | ANY | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "", "R_TP1": "", "R_TP2": "", "R_RUN": ""}, "short": {"TP1": "25812.25-25822.25", "TP2": "25795.00-25805.00", "RUN": "25700.00-25710.00", "R_TP1": "0.74", "R_TP2": "2.38", "R_RUN": "11.43"}} |
+| D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK | ANY | INITIATION | YES |  | {"long": {"TP1": "25799.75-25809.75", "TP2": "25830.00-25840.00", "RUN": "25812.25-25822.25", "R_TP1": "1.61", "R_TP2": "2.37", "R_RUN": "1.93"}, "short": {"TP1": "25552.50-25562.50", "TP2": "", "RUN": "25498.25-25508.25", "R_TP1": "3.29", "R_TP2": "", "R_RUN": "4.64"}} |
+| D_ONTVAH_WKTVAH_ONVAH_WKVAH | ANY | INITIATION | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "25995.00-26005.00", "R_TP1": "", "R_TP2": "", "R_RUN": "7.51"}, "short": {"TP1": "25722.50-25732.50", "TP2": "25550.00-25560.00", "RUN": "25700.00-25710.00", "R_TP1": "2.92", "R_TP2": "10.42", "R_RUN": "3.90"}} |
+| WKPOC_AREA_ONPOC_AREA | ANY | INITIATION | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "25995.00-26005.00", "R_TP1": "", "R_TP2": "", "R_RUN": "14.76"}, "short": {"TP1": "25812.25-25822.25", "TP2": "25795.00-25805.00", "RUN": "25700.00-25710.00", "R_TP1": "0.74", "R_TP2": "2.38", "R_RUN": "11.43"}} |
 
-review=APPROVED; fails=[]; notes=[]
+review=LOG_ONLY; fails=[]; notes=['E: a with-context zone lies beyond the invalidation edge']

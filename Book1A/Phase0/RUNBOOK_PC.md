@@ -112,3 +112,15 @@ command.txt):
 %PY% -m book1a.hand_checks.wide_zone_report --out Book1A\Phase0\wide_zones\wide_zone_report.md --day "<date>=<run>|<plans>[|<R4 run>]" ...
 %PY% -m book1a.hand_checks.hand_check_sheet --block1 K:\Databento_BackTesting --out Book1A\Phase0\hand_check_sheet\hand_check_sheet.md --day "<date>=<run>|<plans>" ...
 ```
+
+## As run on the PC, Nov 5, 2026 (htf_acceptance; rule and tests commit 0e0210d before any real day)
+Spec re-exported first (`Book1A/specs/Book1A_2_context.md`). Then, with the same `%PY%` and environment: the three
+plan_hand_check commands (plans_phase1, hand_checks, hand_check_pack\plans), R4 (previous run folder moved to
+`runs\phase1_r4_prev_v13`, not in git) and its copies into P0.11 / P0.12, the three audit_run commands, E24, the pack
+(`hand_check_pack\command.txt`), the sheet (`hand_check_sheet\command.txt`), the draw report
+(`hand_check_sheet\draw_status_command.txt`), and:
+```
+rem before committing the rebuilt plans: sha256 of the old plan files -> plan_hashes_2026-11-05_before.txt, then
+%PY% book1a\hand_checks\plan_hashes_nov5.py . Book1A\Phase0\plan_hashes_2026-11-05.md Book1A\Phase0\plan_hashes_2026-11-05_before.txt
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+```

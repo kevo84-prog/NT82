@@ -16,6 +16,8 @@ on_inventory and draw_status with the chart window to check each in (Kyron check
 tolerance rule; the weekly double distribution criteria values (all HVN blocks, the low-volume and single-print
 separator rows, the row table). The sheet rebuilds each day's plan with the frozen code and stops unless the rebuilt
 plan text equals the frozen plan file byte for byte, so the evidence is the evidence of the frozen plan.
+v1.2 (Kyron, Nov 5, 2026): htf_acceptance evidence (first close beyond the HTF edge, close share, volume share, window)
+and the context_base -> market_context precedence.
 No trades, outcomes or P&L. The hand and match columns are left empty.
 """
 from __future__ import annotations
@@ -28,7 +30,7 @@ from collections import defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
-VERSION = "hand-check-sheet-v1.1"
+VERSION = "hand-check-sheet-v1.2"
 GEX_COLS = {"CR": "call_resistance", "PS": "put_support", "HVL": "hvl", "CR_0DTE": "call_resistance_0dte",
             "PS_0DTE": "put_support_0dte", "HVL_0DTE": "hvl_0dte"}
 
@@ -55,6 +57,43 @@ def _yn(b):
     return "Y" if b else "N"
 
 
+PRECEDENCE_TEXT = ("BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); "
+                   "BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; "
+                   "NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept")
+
+
+def htf_acceptance_evidence(ev, bars_win, htf_win):
+    """Nov 5, 2026: PO-9 acceptance, unchanged, at the HTF composite VAL and VAH (bars closed by 08:10 CT only)."""
+    from book1a import plan_fields as PF
+    L = [f"**htf_acceptance = {ev['htf_acceptance']}.** Rule (Context doc, Nov 5, 2026; {PF.HTF_ACCEPTANCE_LABEL}): the PO-9 "
+         "acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since "
+         "the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), "
+         ">= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before "
+         "08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = "
+         "ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. "
+         f"Precedence: {PRECEDENCE_TEXT}.", "",
+         "| edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | "
+         "window (CT) | hand | match |", "|---|---|---|---|---|---|---|---|---|---|"]
+    for a in ev.get("htf_accept") or []:
+        side = "below" if a["name"].endswith("VAL") else "above"
+        if a["first_close_ct"]:
+            fc = f"{a['first_close_ct'][:16].replace('T', ' ')} ({a['first_close']})"
+            if a["excursion_starts_at_window_start"]:
+                fc += "; every bar in the window closed beyond it, so the run starts at or before the window start"
+        else:
+            fc = "none (price at 08:10 not " + side + " the edge)" if a["state"] == "INSIDE" else "none"
+        mins = "" if a["minutes"] is None else f"{a['minutes']} (need >= 60)"
+        cs = "" if a["close_share"] is None else f"{a['close_share'] * 100:.1f}% (need >= 80%)"
+        vs = "" if a["volume_share"] is None else f"{a['volume_share'] * 100:.1f}% (need >= 20%)"
+        L.append(f"| {a['name']} ({side}) | {a['level']} | {a['state']} | {fc} | {mins} | {cs} | {vs} | "
+                 f"{bars_win}; level from the {htf_win} | | |")
+    if not ev.get("htf_accept"):
+        L.append("| HTF VAL / VAH | missing | not computed | | | | | | | |")
+    L += ["", f"**Precedence result:** context_base {ev['context_base']} + htf_acceptance {ev['htf_acceptance']} = market_context "
+          f"**{ev['market_context']}**.", ""]
+    return L
+
+
 def context_evidence(d, ds, ev, pk, hm, V, prior_sessions):
     """Tables of the input numbers behind market_context, balance, value_follows, on_inventory and draw_status."""
     pdd, pd2d = prior_sessions(d)[0], prior_sessions(d)[1]
@@ -71,10 +110,12 @@ def context_evidence(d, ds, ev, pk, hm, V, prior_sessions):
     L = ["### Context evidence: the inputs behind each label (check the inputs on the chart, not the label)", ""]
 
     # market_context
-    L += [f"**market_context = {ev['market_context']}.** Rule (plan_fields.market_context): BULLISH = price >= HTF VAL, the low "
+    L += [f"**market_context = {ev['market_context']}** (context_base = {ev['context_base']}, htf_acceptance = "
+          f"{ev['htf_acceptance']}). Step 1, context_base (plan_fields.context_base): BULLISH = price >= HTF VAL, the low "
           f"of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the "
           f"mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance "
-          f"composite overlaps; else NONE.", ""] + T()
+          f"composite overlaps; else NONE_CONFLICT if a directional read passed but the weekly acceptance blocked it (or both "
+          f"reads passed), else NONE_NO_EVIDENCE. Step 2, the Nov 5 precedence with htf_acceptance (below).", ""] + T()
     L += [f"| price at 08:10 | {price} | close of the bar stamped 08:10 (1-minute chart) | | |",
           f"| HTF VAL | {ev['htf_val']} | NT VP over the {htf_win} | | |",
           f"| HTF VAH | {ev['htf_vah']} | same HTF composite profile | | |",
@@ -85,7 +126,9 @@ def context_evidence(d, ds, ev, pk, hm, V, prior_sessions):
           f"| failed or lost HTF VAH (price <= {ev['htf_vah']} and high >= {ev['htf_vah']}) | {_yn(ev['failed_or_lost_vah'])} | from the rows above | | |",
           f"| weekly VAL / VAH | {ev['wk_val']} / {ev['wk_vah']} | NT VP over the {wk_win} | | |",
           f"| weekly VAL state / VAH state | {ev['wk_val_state']} / {ev['wk_vah_state']} | PO-9 acceptance on 1-minute closes vs the weekly VAL / VAH: INSIDE = price at 08:10 inside the weekly value (or on the inside of that edge); TESTING = price beyond the edge, not yet accepted; ACCEPTED_* = the minutes since the first close beyond it, the share of closes beyond and the share of volume beyond meet the frozen PO-9 thresholds (>= 60 minutes, >= 80% of closes, >= 20% of volume) (details in the plan lines `wkval_state=` / `wkvah_state=`) | | |",
-          f"| balance composite overlaps | {_yn((ev['balance_composite'] or {}).get('overlapping'))} | see balance below | | |", ""]
+          f"| balance composite overlaps | {_yn((ev['balance_composite'] or {}).get('overlapping'))} | see balance below | | |",
+          f"| context_base | {ev['context_base']} | from the rows above | | |", ""]
+    L += htf_acceptance_evidence(ev, bars_win, htf_win)
 
     # balance
     bc = ev["balance_composite"] or {}
@@ -313,10 +356,10 @@ def main(argv=None):
             for key, band in (("vwap", "the VWAP line"), ("sd1_up", "the +1 sigma band"), ("sd1_dn", "the -1 sigma band")):
                 if key in v:
                     L.append(f"| {k.lower()} {key} | {v[key]:.2f} | {band}: {vwap_setting(k, d, V)} | | |")
-        for k in ("market_context", "draw_status", "draw", "balance", "balance_poc", "value_follows", "on_inventory", "on_vs_settle"):
+        for k in ("market_context", "context_base", "htf_acceptance", "draw_status", "draw", "balance", "balance_poc", "value_follows", "on_inventory", "on_vs_settle"):
             if k in kv:
                 L.append(f"| {k} | {kv[k]} | the inputs in the context evidence below (sidecar `plan` line `{k}=`) | | |")
-        for k in ("htf_structure", "gex_regime", "wkval_state", "wkvah_state"):
+        for k in ("htf_structure", "gex_regime", "wkval_state", "wkvah_state", "htfval_state", "htfvah_state"):
             if k in kv:
                 L.append(f"| {k} | {kv[k]} | sidecar `plan` line `{k}=` | | |")
         w = sc.get("weekly_dd") or {}

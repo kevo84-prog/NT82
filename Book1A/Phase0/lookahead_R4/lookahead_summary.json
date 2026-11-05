@@ -1,6 +1,6 @@
 {
- "decisions": 12,
- "inputs": 260,
+ "decisions": 6,
+ "inputs": 124,
  "violations": 0,
  "missing": 0,
  "plan_build_checks": {

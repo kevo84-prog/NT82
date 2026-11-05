@@ -1,7 +1,7 @@
-Book 1A Phase 0 unit tests  2026-11-05T00:48:13+00:00  commit 22e1c78  package book1a-phase0-v0.1
-module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.2, plan_fields=plan-fields-v1.0, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
+Book 1A Phase 0 unit tests  2026-11-05T02:57:23+00:00  commit 0e0210d  package book1a-phase0-v0.1
+module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.2, plan_fields=plan-fields-v1.1, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
 python 3.14.7
-tests run 175, failures 0, errors 0, result PASS
+tests run 212, failures 0, errors 0, result PASS
 test_bar_end_rule_and_volumes (book1a.tests.test_bars.TestBars.test_bar_end_rule_and_volumes) ... ok
 test_large_trade (book1a.tests.test_bars.TestBars.test_large_trade) ... ok
 test_stacked_buy_imbalance (book1a.tests.test_bars.TestBars.test_stacked_buy_imbalance) ... ok
@@ -33,6 +33,43 @@ test_same_timestamp_stop_and_target_is_stop (book1a.tests.test_fills_v34.TestTie
 test_long_gap_through (book1a.tests.test_fills_v34.TestV35GapThrough.test_long_gap_through) ... ok
 test_no_gap_v35_equals_v34 (book1a.tests.test_fills_v34.TestV35GapThrough.test_no_gap_v35_equals_v34) ... ok
 test_short_gap_through (book1a.tests.test_fills_v34.TestV35GapThrough.test_short_gap_through) ... ok
+test_bearish_read_but_weekly_accepted_above_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_bearish_read_but_weekly_accepted_above_is_conflict) ... ok
+test_both_reads_pass_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_both_reads_pass_is_conflict) ... ok
+test_bullish_read_but_weekly_accepted_below_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_bullish_read_but_weekly_accepted_below_is_conflict) ... ok
+test_conflict_with_balance_is_balanced (book1a.tests.test_htf_acceptance.TestContextBase.test_conflict_with_balance_is_balanced) ... ok
+test_no_directional_test_passed (book1a.tests.test_htf_acceptance.TestContextBase.test_no_directional_test_passed) ... ok
+test_same_as_oct31_rule_when_no_acceptance (book1a.tests.test_htf_acceptance.TestContextBase.test_same_as_oct31_rule_when_no_acceptance) ... ok
+test_59_minutes_by_0810_is_testing_even_with_later_bars (book1a.tests.test_htf_acceptance.TestCutoff0810.test_59_minutes_by_0810_is_testing_even_with_later_bars) ... ok
+test_60_minutes_by_0810_accepts (book1a.tests.test_htf_acceptance.TestCutoff0810.test_60_minutes_by_0810_accepts) ... ok
+test_bar_closing_after_0810_is_ignored (book1a.tests.test_htf_acceptance.TestCutoff0810.test_bar_closing_after_0810_is_ignored) ... ok
+test_bar_stamped_0810_is_used (book1a.tests.test_htf_acceptance.TestCutoff0810.test_bar_stamped_0810_is_used) ... ok
+test_thresholds_unchanged (book1a.tests.test_htf_acceptance.TestCutoff0810.test_thresholds_unchanged) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestPlanBuilder.test_check_f_logged_not_applied) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestPlanBuilder.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestPlanBuilder.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestPlanBuilder.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestPlanBuilder.test_s14_reads_only_book1_keys) ... ok
+test_bars_after_0810_do_not_change_the_plan (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_bars_after_0810_do_not_change_the_plan) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_check_f_logged_not_applied) ... ok
+test_htf_inside_gives_none_acceptance (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_htf_inside_gives_none_acceptance) ... ok
+test_no_evidence_plus_above_is_bullish (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_no_evidence_plus_above_is_bullish) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_s14_reads_only_book1_keys) ... ok
+test_balanced_stays_balanced (book1a.tests.test_htf_acceptance.TestPrecedence.test_balanced_stays_balanced) ... ok
+test_bearish_above_is_none_conflict (book1a.tests.test_htf_acceptance.TestPrecedence.test_bearish_above_is_none_conflict) ... ok
+test_bearish_below_is_bearish (book1a.tests.test_htf_acceptance.TestPrecedence.test_bearish_below_is_bearish) ... ok
+test_bullish_above_is_bullish (book1a.tests.test_htf_acceptance.TestPrecedence.test_bullish_above_is_bullish) ... ok
+test_bullish_below_is_none_conflict (book1a.tests.test_htf_acceptance.TestPrecedence.test_bullish_below_is_none_conflict) ... ok
+test_conflict_stays_none (book1a.tests.test_htf_acceptance.TestPrecedence.test_conflict_stays_none) ... ok
+test_no_acceptance_keeps_label (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_acceptance_keeps_label) ... ok
+test_no_evidence_above_is_bullish (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_evidence_above_is_bullish) ... ok
+test_no_evidence_below_is_bearish (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_evidence_below_is_bearish) ... ok
+test_output_is_one_of_four_s14_values (book1a.tests.test_htf_acceptance.TestPrecedence.test_output_is_one_of_four_s14_values) ... ok
+test_states_to_acceptance (book1a.tests.test_htf_acceptance.TestPrecedence.test_states_to_acceptance) ... ok
+test_table_covers_every_pair (book1a.tests.test_htf_acceptance.TestPrecedence.test_table_covers_every_pair) ... ok
+test_unknown_values_raise (book1a.tests.test_htf_acceptance.TestPrecedence.test_unknown_values_raise) ... ok
 test_checker_and_full_ledger (book1a.tests.test_ledger.TestFiles.test_checker_and_full_ledger) ... ok
 test_long_stop_with_1_tick_slip (book1a.tests.test_ledger.TestR.test_long_stop_with_1_tick_slip) ... ok
 test_long_target_one_contract (book1a.tests.test_ledger.TestR.test_long_target_one_contract) ... ok
@@ -185,6 +222,6 @@ test_plan_inputs_need_available (book1a.tests.test_weekly_dd.TestUnavailable.tes
 test_unavailable_is_not_a_no_edge_profile (book1a.tests.test_weekly_dd.TestUnavailable.test_unavailable_is_not_a_no_edge_profile) ... ok
 
 ----------------------------------------------------------------------
-Ran 175 tests in 1.398s
+Ran 212 tests in 1.633s
 
 OK

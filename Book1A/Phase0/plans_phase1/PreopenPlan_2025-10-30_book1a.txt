@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.3)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)
 plan_id=2025-10-30-b1a
 date=2025-10-30
 asof=08:25
@@ -43,6 +43,11 @@ news=not used (backtest)
 # --- Book 1A fields (logged by S1.4, not read) ---
 market_context=BALANCED
 draw_status=NONE
+context_base=BALANCED
+htf_acceptance=ABOVE
+# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+htfval_state=accept=INSIDE|failed_reclaim=0
+htfvah_state=accept=ABOVE|failed_reclaim=0
 value_follows=WITH_PRICE
 on_inventory=NET_SHORT
 on_vs_settle=-160.75

@@ -12,7 +12,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-VERSION = "draw-none-report-v1.0"
+VERSION = "draw-none-report-v1.1"   # v1.1: context_base, htf_acceptance and its evidence (Nov 5, 2026)
 
 
 def why_context(ev) -> str:
@@ -26,14 +26,34 @@ def why_context(ev) -> str:
     if not ev["failed_or_lost_vah"]:
         parts.append(f"HTF VAH not failed / lost (bars high {ev['bars_high']} {'<' if ev['bars_high'] < vah else '>='} {vah}"
                      f"{'' if p <= vah else ', price above it'})")
+    read_bull = p >= val and ev["held_or_reclaimed_val"]
+    read_bear = p <= vah and ev["failed_or_lost_vah"]
     if ev["wk_val_state"] == "ACCEPTED_BELOW":
-        parts.append("weekly VAL ACCEPTED_BELOW blocks BULLISH")
+        parts.append("weekly VAL ACCEPTED_BELOW" + (" blocks BULLISH" if read_bull else " (no bullish read to block)"))
     if ev["wk_vah_state"] == "ACCEPTED_ABOVE":
-        parts.append("weekly VAH ACCEPTED_ABOVE blocks BEARISH")
+        parts.append("weekly VAH ACCEPTED_ABOVE" + (" blocks BEARISH" if read_bear else " (no bearish read to block)"))
     bc = ev["balance_composite"] or {}
     parts.append("balance composite overlaps" if bc.get("overlapping") else
                  f"no balance (PD-ON overlap {bc.get('overlap_pct_pd_on')}%)")
+    parts.append(f"context_base {ev['context_base']}")
     return "; ".join(parts)
+
+
+def acc_evidence(ev) -> str:
+    out = []
+    for a in ev.get("htf_accept") or []:
+        if a["state"] == "INSIDE":
+            out.append(f"{a['name']} {a['level']}: INSIDE (price not beyond)")
+            continue
+        fc = a["first_close_ct"][:16].replace("T", " ") if a["first_close_ct"] else "none"
+        if a["excursion_starts_at_window_start"]:
+            fc += " (window start)"
+        out.append(f"{a['name']} {a['level']}: {a['state']}, first close beyond {fc} CT, {a['minutes']} min, "
+                   f"closes {a['close_share'] * 100:.1f}%, volume {a['volume_share'] * 100:.1f}%")
+    w = ev.get("htf_accept") or []
+    if w:
+        out.append(f"window {w[0]['window_from'][:16].replace('T', ' ')} - {w[0]['window_to'][:16].replace('T', ' ')} CT")
+    return "; ".join(out) or "HTF value missing"
 
 
 def main(argv=None):
@@ -62,7 +82,9 @@ def main(argv=None):
         else:
             why = (f"no candidate: context {ev['market_context']} has no direction" if ev["market_context"] not in ("BULLISH", "BEARISH")
                    else "no candidate level in the context direction")
-        rows.append((ds, date.fromisoformat(ds).strftime("%a"), ev["market_context"], kv["draw_status"], kv.get("draw", ""), why, why_context(ev)))
+        assert kv["market_context"] == ev["market_context"] and kv["htf_acceptance"] == ev["htf_acceptance"], ds
+        rows.append((ds, date.fromisoformat(ds).strftime("%a"), ev["market_context"], kv["draw_status"], kv.get("draw", ""), why,
+                     why_context(ev), ev["context_base"], ev["htf_acceptance"], acc_evidence(ev)))
     n_none = sum(1 for r in rows if r[3] == "NONE")
     L = [f"# draw_status by day: NONE days and why ({VERSION})", "",
          "Context spec (Kyron, Nov 4, 2026): draw_status = ACTIVE | REACHED | INVALIDATED | NONE. NONE = no draw candidate "
@@ -73,8 +95,13 @@ def main(argv=None):
          f"{n_none} NONE, {len(rows) - n_none} not NONE. No outcomes, no P&L.", "",
          "The draw rule looks for a level only in a BULLISH (above price) or BEARISH (below price) context, so every BALANCED "
          "or NONE context day has draw_status NONE.", "",
-         "| day | | market_context | draw_status | draw | why | context inputs |", "|---|---|---|---|---|---|---|"]
-    L += [f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} | {r[5]} | {r[6]} |" for r in rows]
+         "Nov 5, 2026 (pre-freeze specification change, Kyron): context_base is the label before the HTF acceptance step; "
+         "htf_acceptance is the PO-9 acceptance, unchanged, at the HTF composite VAH / VAL on bars closed by 08:10 CT; "
+         "market_context = the precedence of the two (Context doc).", "",
+         "| day | | context_base | htf_acceptance | market_context | draw_status | draw | why | context inputs | htf_acceptance evidence |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
+    esc = lambda x: str(x).replace("|", r"\|")     # the draw value carries "|<name>"; keep the table columns intact
+    L += ["| " + " | ".join(esc(r[i]) for i in (0, 1, 7, 8, 2, 3, 4, 5, 6, 9)) + " |" for r in rows]
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"wrote {a.out}: {len(rows)} days, {n_none} NONE")

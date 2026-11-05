@@ -4,19 +4,19 @@ Every value below is frozen at 08:10 CT and comes from data before 08:10 CT. Tim
 
 | day | plan | decision zones | REJ zones before selection | REJ in plan | FLIP | wide stop (> 196 ticks) | DD_EDGE (PD; weekly) |
 |---|---|---|---|---|---|---|---|
-| 2025-10-22 | plan-v2.4-book1a-v1.3 | 3 | 0 (0 after merge) | 0 | 0 | D_PDL_ONL_WKTVAL_ONVAL_ONTVA 269 | PD no; WK no |
-| 2025-10-23 | plan-v2.4-book1a-v1.3 | 4 | 1 (1 after merge) | 1 | 0 | none | PD no; WK no |
-| 2025-10-24 | plan-v2.4-book1a-v1.3 | 2 | 1 (1 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-10-27 | plan-v2.4-book1a-v1.3 | 3 | 0 (0 after merge) | 0 | 0 | none | PD no; WK 25720.0-25734.75 |
-| 2025-10-28 | plan-v2.4-book1a-v1.3 | 2 | 0 (0 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-10-29 | plan-v2.4-book1a-v1.3 | 4 | 0 (0 after merge) | 0 | 0 | D_ONTVAL_PDH_ONVAL_ONPOC_ONP 232 | PD 26039.75-26079.75; WK 25925.0-25934.75 |
-| 2025-10-30 | plan-v2.4-book1a-v1.3 | 4 | 5 (4 after merge) | 3 | 0 | D_ONTVAL_ONPOC_PDTVAL_PDVAL_ 312 | PD no; WK no |
-| 2025-10-31 | plan-v2.4-book1a-v1.3 | 5 | 9 (7 after merge) | 4 | 0 | D_WKTVAL_PD3L_PD3VAL_PD3TVAL 421; REJ_HIGH_PD_D_PD3VAH_ONTVAL_ 378; WKPOC_AREA_D_WKVAH_ONH_PD2PO 218 | PD no; WK no |
-| 2025-11-03 | plan-v2.4-book1a-v1.3 | 4 | 1 (1 after merge) | 1 | 0 | none | PD 26005.0-26014.75; WK no |
-| 2025-11-04 | plan-v2.4-book1a-v1.3 | 2 | 2 (2 after merge) | 0 | 0 | none | PD no; WK no |
-| 2025-11-17 | plan-v2.4-book1a-v1.3 | 4 | 0 (0 after merge) | 0 | 0 | PDPOC_AREA_D_PDPOC_PDTPOC_PW 216 | PD no; WK no |
-| 2025-11-18 | plan-v2.4-book1a-v1.3 | 5 | 2 (2 after merge) | 2 | 0 | none | PD 24865.0-24874.75; WK 24970.0-24989.75 |
-| 2025-11-19 | plan-v2.4-book1a-v1.3 | 5 | 4 (4 after merge) | 3 | 0 | D_PDTPOC_WKTPOC_WKPOC_AREA_D 362; T_PDTVAH_PDVAH_REJ_HIGH_PD_D 231 | PD no; WK no |
+| 2025-10-22 | plan-v2.4-book1a-v1.4 | 3 | 0 (0 after merge) | 0 | 0 | D_PDL_ONL_WKTVAL_ONVAL_ONTVA 269 | PD no; WK no |
+| 2025-10-23 | plan-v2.4-book1a-v1.4 | 4 | 1 (1 after merge) | 1 | 0 | none | PD no; WK no |
+| 2025-10-24 | plan-v2.4-book1a-v1.4 | 2 | 1 (1 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-10-27 | plan-v2.4-book1a-v1.4 | 3 | 0 (0 after merge) | 0 | 0 | none | PD no; WK 25720.0-25734.75 |
+| 2025-10-28 | plan-v2.4-book1a-v1.4 | 2 | 0 (0 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-10-29 | plan-v2.4-book1a-v1.4 | 4 | 0 (0 after merge) | 0 | 0 | D_ONTVAL_PDH_ONVAL_ONPOC_ONP 232 | PD 26039.75-26079.75; WK 25925.0-25934.75 |
+| 2025-10-30 | plan-v2.4-book1a-v1.4 | 4 | 5 (4 after merge) | 3 | 0 | D_ONTVAL_ONPOC_PDTVAL_PDVAL_ 312 | PD no; WK no |
+| 2025-10-31 | plan-v2.4-book1a-v1.4 | 5 | 9 (7 after merge) | 4 | 0 | D_WKTVAL_PD3L_PD3VAL_PD3TVAL 421; REJ_HIGH_PD_D_PD3VAH_ONTVAL_ 378; WKPOC_AREA_D_WKVAH_ONH_PD2PO 218 | PD no; WK no |
+| 2025-11-03 | plan-v2.4-book1a-v1.4 | 4 | 1 (1 after merge) | 1 | 0 | none | PD 26005.0-26014.75; WK no |
+| 2025-11-04 | plan-v2.4-book1a-v1.4 | 2 | 2 (2 after merge) | 0 | 0 | none | PD no; WK no |
+| 2025-11-17 | plan-v2.4-book1a-v1.4 | 4 | 0 (0 after merge) | 0 | 0 | PDPOC_AREA_D_PDPOC_PDTPOC_PW 216 | PD no; WK no |
+| 2025-11-18 | plan-v2.4-book1a-v1.4 | 5 | 2 (2 after merge) | 2 | 0 | none | PD 24865.0-24874.75; WK 24970.0-24989.75 |
+| 2025-11-19 | plan-v2.4-book1a-v1.4 | 5 | 4 (4 after merge) | 3 | 0 | D_PDTPOC_WKTPOC_WKPOC_AREA_D 362; T_PDTVAH_PDVAH_REJ_HIGH_PD_D 231 | PD no; WK no |
 
 ## A. Decision zones (P0.7, P0.8)
 

@@ -7,7 +7,39 @@ Controlling doc: "Book 1A – Replay plan", re-exported Nov 2 (Drive edit Nov 1 
 Checklist: "Book 1A – Phase 0 build checklist", re-exported the same way. No P&L was opened, summarized or looked at.
 Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches were read through hard links).
 
-## 0. Nov 4, hand-check sheet update before the chart check (read this first)
+## 0. Nov 5, htf_acceptance: pre-freeze Context specification change (read this first)
+
+Kyron's decision of Nov 5: Option B, a pre-freeze specification change to the Book 1A Context rule (not a bug fix). Branch `book1a-phase0-pc`, local commits only, not pushed, not frozen.
+
+1. **Spec re-exported first.** `Book1A/specs/Book1A_2_context.md` from the Drive doc (modifiedTime 2026-11-05T01:57:22Z), with the new "Acceptance outside composite value" and "Precedence" bullets.
+2. **Rule and tests committed before any real day** (commit 0e0210d). `plan_fields` v1.1: `context_base` (BULLISH / BEARISH / BALANCED / NONE_NO_EVIDENCE / NONE_CONFLICT) and `apply_htf_acceptance` (the precedence, exactly). `plan_v24` v1.4: the PO-9 `acceptance_state`, unchanged (>= 60 min, >= 80% closes, >= 20% volume), at the HTF composite VAL and VAH on bars closed by 08:10 CT. New plan lines: `context_base=`, `htf_acceptance=`, `htfval_state=`, `htfvah_state=` and the label comment "ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58". `market_context` to S1.4 stays BULLISH / BEARISH / BALANCED / NONE.
+3. **Tests:** every precedence row (15 pairs), the None split, the Oct 31 rule unchanged when there is no acceptance, the 08:10 cutoff (60 vs 59 minutes; a bar closing 08:11 ignored; the bar stamped 08:10 used; bars after 08:10 do not change the plan), PO-9 thresholds pinned. Full suite: 212 run, 0 failures (`unit_tests/unit_tests_2026-11-05.log`).
+4. **Context evidence only.** No change to locations, setups, order-flow gates, stops or thresholds. On the 4 days that became BULLISH, the existing rules then set a draw, an invalidation edge and the context sides (shorts at with-context zones become INITIATION), and check E applies (`ambiguities.md` E30 (c)).
+5. **Rerun:** all 17 plan files (13 days), R4 (2058 candidate rows), candidate log P0.11, the C3 risk check and E24 (0 failures), the three lookahead audits (R1, R3, R4: 0 violations; 63 plan build checks, 0 failed), the hand-check pack (FLIP 0), the 4-day hand-check sheet v1.2 (with the htf_acceptance evidence table) and `draw_status_by_day.md` v1.1. New hashes: `plan_hashes_2026-11-05.md` (R4 rows: 2064 checked, 0 with a wrong plan version or sha256). The previous R4 run folder moved to `runs/phase1_r4_prev_v13` (not in git).
+
+**Each day: label, htf_acceptance and the evidence** (no outcomes, no P&L). Window = the plan's 1-minute bars, week start - 7 days to 08:10 CT.
+
+| day | | context_base | htf_acceptance | market_context | draw_status | htf_acceptance evidence at the HTF VAH (the HTF VAL is INSIDE on every day) |
+|---|---|---|---|---|---|---|
+| 2025-10-22 | Wed | BALANCED | NONE | BALANCED | NONE | HTFVAH 25394.75: INSIDE (price not beyond) |
+| 2025-10-23 | Thu | BALANCED | NONE | BALANCED | NONE | HTFVAH 25394.75: INSIDE (price not beyond) |
+| 2025-10-24 | Fri | NONE_NO_EVIDENCE | NONE | NONE | NONE | HTFVAH 25394.75: TESTING, first close beyond 2025-10-24 07:31 CT, 39 min, closes 100.0%, volume 100.0% |
+| 2025-10-27 | Mon | NONE_NO_EVIDENCE | ABOVE | BULLISH | ACTIVE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-24 07:31 CT, 4359 min, closes 100.0%, volume 100.0% |
+| 2025-10-28 | Tue | BALANCED | ABOVE | BALANCED | NONE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-24 07:31 CT, 5799 min, closes 100.0%, volume 100.0% |
+| 2025-10-29 | Wed | NONE_NO_EVIDENCE | ABOVE | BULLISH | ACTIVE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-24 07:31 CT, 7239 min, closes 100.0%, volume 100.0% |
+| 2025-10-30 | Thu | BALANCED | ABOVE | BALANCED | NONE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-24 07:31 CT, 8679 min, closes 100.0%, volume 100.0% |
+| 2025-10-31 | Fri | NONE_NO_EVIDENCE | ABOVE | BULLISH | ACTIVE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-24 07:31 CT, 10119 min, closes 100.0%, volume 100.0% |
+| 2025-11-03 | Mon | BALANCED | ABOVE | BALANCED | NONE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-26 17:00 (window start) CT, 10990 min, closes 100.0%, volume 100.0% |
+| 2025-11-04 | Tue | NONE_NO_EVIDENCE | ABOVE | BULLISH | ACTIVE | HTFVAH 25394.75: ACCEPTED_ABOVE, first close beyond 2025-10-26 17:00 (window start) CT, 12430 min, closes 100.0%, volume 100.0% |
+| 2025-11-17 | Mon | BALANCED | NONE | BALANCED | NONE | HTFVAH 26039.75: INSIDE (price not beyond) |
+| 2025-11-18 | Tue | NONE_NO_EVIDENCE | NONE | NONE | NONE | HTFVAH 25954.75: INSIDE (price not beyond) |
+| 2025-11-19 | Wed | BULLISH | NONE | BULLISH | ACTIVE | HTFVAH 25844.75: INSIDE (price not beyond) |
+
+What changed: Oct 27, 29, 31 and Nov 4 go from NONE to **BULLISH** (NONE_NO_EVIDENCE + ABOVE). Price had been accepted above the HTF VAH (25394.75) since the first close above it on Oct 24 07:31 CT. Oct 24 itself stays NONE: 39 minutes by 08:10, short of 60. Oct 28, 30 and Nov 3 are BALANCED and stay BALANCED (acceptance logged only). On Oct 27 and Oct 31 the review goes from APPROVED to LOG_ONLY by the existing check E (a with-context zone lies beyond the new invalidation edge). The other 9 days only gain the new keys.
+
+Worth a look on the chart: Nov 4 is now BULLISH while price sits ACCEPTED_BELOW the weekly VAL. The precedence allows this (the weekly state only blocks a bullish read that passed, and there was none). On Nov 3 and Nov 4 the run of closes above the HTF VAH starts at the window start, so the minutes are a floor.
+
+## 0-4. Nov 4, hand-check sheet update before the chart check
 
 Kyron's request of Nov 4 (fourth set), items 1-6. Branch `book1a-phase0-pc`, local commits 22e1c78 (code) and the outputs commit after it; not pushed.
 No rule or threshold change, no P&L. Plan text, sidecars and plan hashes are unchanged. **Not frozen.**

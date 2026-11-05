@@ -32,9 +32,9 @@
 
 | field | value | hand | match |
 |---|---|---|---|
-| market_context | NONE | | |
-| draw |  | | |
-| draw_status | NONE | | |
+| market_context | BULLISH | | |
+| draw | 26295.00-26305.00|CR | | |
+| draw_status | ACTIVE | | |
 | balance |  | | |
 | balance_poc |  | | |
 | value_follows | WITH_PRICE | | |
@@ -48,9 +48,9 @@
 
 | zone | long | short | first_touch | side_conflict | ladder |
 |---|---|---|---|---|---|
-| PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC | ANY | INITIATION | YES | side_conflict=PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC|short|context=ANY,dd_edge=INITIATION | {"long": {"TP1": "26149.50-26159.50", "TP2": "26227.50-26267.50", "RUN": "26298.25-26308.25", "R_TP1": "1.54", "R_TP2": "3.27", "R_RUN": "4.83"}, "short": {"TP1": "26010.00-26020.00", "TP2": "25975.00-25985.00", "RUN": "25902.50-25912.50", "R_TP1": "0.33", "R_TP2": "1.10", "R_RUN": "2.71"}} |
-| D_PDVAH_PDSET_ONL_PDTVAH | ANY | ANY | YES |  | {"long": {"TP1": "26220.00-26230.00", "TP2": "26285.00-26295.00", "RUN": "26298.25-26308.25", "R_TP1": "1.31", "R_TP2": "3.42", "R_RUN": "3.85"}, "short": {"TP1": "26047.50-26057.50", "TP2": "26030.00-26040.00", "RUN": "25902.50-25912.50", "R_TP1": "2.99", "R_TP2": "3.56", "R_RUN": "7.71"}} |
+| PDPOC_AREA_DD_EDGE_PD_D_PDPOC_WKPOC_PDTPOC | ANY | INITIATION | YES |  | {"long": {"TP1": "26149.50-26159.50", "TP2": "26227.50-26267.50", "RUN": "26298.25-26308.25", "R_TP1": "1.54", "R_TP2": "3.27", "R_RUN": "4.83"}, "short": {"TP1": "26010.00-26020.00", "TP2": "25975.00-25985.00", "RUN": "25902.50-25912.50", "R_TP1": "0.33", "R_TP2": "1.10", "R_RUN": "2.71"}} |
+| D_PDVAH_PDSET_ONL_PDTVAH | ANY | INITIATION | YES |  | {"long": {"TP1": "26220.00-26230.00", "TP2": "26285.00-26295.00", "RUN": "26298.25-26308.25", "R_TP1": "1.31", "R_TP2": "3.42", "R_RUN": "3.85"}, "short": {"TP1": "26047.50-26057.50", "TP2": "26030.00-26040.00", "RUN": "25902.50-25912.50", "R_TP1": "2.99", "R_TP2": "3.56", "R_RUN": "7.71"}} |
 | D_ONTVAL_PDH_ONVAL_ONPOC_ONPOC_AREA_T_ONTPOC | NONE | NONE | YES |  | {} |
-| D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH | ANY | ANY | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "", "R_TP1": "", "R_TP2": "", "R_RUN": ""}, "short": {"TP1": "26267.50-26277.50", "TP2": "26080.00-26095.00", "RUN": "25902.50-25912.50", "R_TP1": "0.32", "R_TP2": "6.73", "R_RUN": "13.13"}} |
+| D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH | ANY | INITIATION | YES | side_conflict=D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH|short|context=INITIATION,edge_control=ANY | {"long": {"TP1": "", "TP2": "", "RUN": "", "R_TP1": "", "R_TP2": "", "R_RUN": ""}, "short": {"TP1": "26267.50-26277.50", "TP2": "26080.00-26095.00", "RUN": "25902.50-25912.50", "R_TP1": "0.32", "R_TP2": "6.73", "R_RUN": "13.13"}} |
 
 review=APPROVED; fails=[]; notes=['C: D_ONTVAL_PDH_ONVAL_ONPOC_ONPOC_AREA_T_ONTPOC long NONE: 1 NQ does not fit $1000 (stop 232 ticks)', 'C: D_ONTVAL_PDH_ONVAL_ONPOC_ONPOC_AREA_T_ONTPOC short NONE: 1 NQ does not fit $1000 (stop 232 ticks)']

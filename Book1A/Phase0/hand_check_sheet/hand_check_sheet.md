@@ -1,4 +1,4 @@
-# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.1)
+# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.2)
 
 Check each value against the source named on its row, not against the plan. Sources: **NT VP** = the NinjaTrader Volume Profile tool drawn over the stated window (CT); **NT VWAP** = the NinjaTrader VWAP setting stated on the row; **GEX csv** = `gex_levels_block1.csv`, row session = the day, the named column; **sidecar** = the frozen plan sidecar `PreopenPlan_<day>_book1a.json`, the named key. Every value is frozen at 08:10 CT from data before 08:10 CT. No trades, outcomes or P&L.
 
@@ -10,7 +10,7 @@ Each day's plan was rebuilt with the frozen code for this sheet; the rebuilt pla
 
 ## 2025-10-22 (Wed)
 
-Plan plan-v2.4-book1a-v1.3; market_context BALANCED; review APPROVED; 3 decision zones.
+Plan plan-v2.4-book1a-v1.4; market_context BALANCED; review APPROVED; 3 decision zones.
 
 ### 08:10 values
 
@@ -24,6 +24,8 @@ Plan plan-v2.4-book1a-v1.3; market_context BALANCED; review APPROVED; 3 decision
 | weekly sd1_up | 25337.16 | the +1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 19 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_dn | 25187.72 | the -1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 19 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | market_context | BALANCED | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
+| context_base | BALANCED | the inputs in the context evidence below (sidecar `plan` line `context_base=`) | | |
+| htf_acceptance | NONE | the inputs in the context evidence below (sidecar `plan` line `htf_acceptance=`) | | |
 | draw_status | NONE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
 | balance | 25256-25340.5 | the inputs in the context evidence below (sidecar `plan` line `balance=`) | | |
 | balance_poc | 25318 | the inputs in the context evidence below (sidecar `plan` line `balance_poc=`) | | |
@@ -34,11 +36,13 @@ Plan plan-v2.4-book1a-v1.3; market_context BALANCED; review APPROVED; 3 decision
 | gex_regime | POS | sidecar `plan` line `gex_regime=` | | |
 | wkval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkval_state=` | | |
 | wkvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkvah_state=` | | |
+| htfval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfval_state=` | | |
+| htfvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfvah_state=` | | |
 | weekly double distribution | AVAILABLE; split no | sidecar `weekly_dd` (ours: PD rule applied to weekly) | | |
 
 ### Context evidence: the inputs behind each label (check the inputs on the chart, not the label)
 
-**market_context = BALANCED.** Rule (plan_fields.market_context): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE.
+**market_context = BALANCED** (context_base = BALANCED, htf_acceptance = NONE). Step 1, context_base (plan_fields.context_base): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE_CONFLICT if a directional read passed but the weekly acceptance blocked it (or both reads passed), else NONE_NO_EVIDENCE. Step 2, the Nov 5 precedence with htf_acceptance (below).
 
 | input | value | check in (chart window) | hand | match |
 |---|---|---|---|---|
@@ -53,6 +57,16 @@ Plan plan-v2.4-book1a-v1.3; market_context BALANCED; review APPROVED; 3 decision
 | weekly VAL / VAH | 25244.25 / 25340.5 | NT VP over the developing week Sun Oct 19 17:00 - 10-22 08:10 CT | | |
 | weekly VAL state / VAH state | INSIDE / INSIDE | PO-9 acceptance on 1-minute closes vs the weekly VAL / VAH: INSIDE = price at 08:10 inside the weekly value (or on the inside of that edge); TESTING = price beyond the edge, not yet accepted; ACCEPTED_* = the minutes since the first close beyond it, the share of closes beyond and the share of volume beyond meet the frozen PO-9 thresholds (>= 60 minutes, >= 80% of closes, >= 20% of volume) (details in the plan lines `wkval_state=` / `wkvah_state=`) | | |
 | balance composite overlaps | Y | see balance below | | |
+| context_base | BALANCED | from the rows above | | |
+
+**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+
+| edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
+|---|---|---|---|---|---|---|---|---|---|
+| HTFVAL (below) | 23590.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-12 17:00 - 2025-10-22 08:10 CT; level from the HTF composite: 60 days from 2025-07-29 through 2025-10-22 08:10 CT (map source MINUTE_APPROX) | | |
+| HTFVAH (above) | 25394.75 | INSIDE | none (price at 08:10 not above the edge) |  |  |  | 1-minute bars 2025-10-12 17:00 - 2025-10-22 08:10 CT; level from the HTF composite: 60 days from 2025-07-29 through 2025-10-22 08:10 CT (map source MINUTE_APPROX) | | |
+
+**Precedence result:** context_base BALANCED + htf_acceptance NONE = market_context **BALANCED**.
 
 **balance = 25256-25340.5, balance_poc = 25318.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -153,7 +167,7 @@ No candidate: market_context is BALANCED, so the rule has no direction to look i
 
 ## 2025-10-29 (Wed)
 
-Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 4 decision zones.
+Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review APPROVED; 4 decision zones.
 
 ### 08:10 values
 
@@ -166,8 +180,11 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 4 decision zon
 | weekly vwap | 26007.58 | the VWAP line: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_up | 26151.07 | the +1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_dn | 25864.08 | the -1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
-| market_context | NONE | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
-| draw_status | NONE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
+| market_context | BULLISH | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
+| context_base | NONE_NO_EVIDENCE | the inputs in the context evidence below (sidecar `plan` line `context_base=`) | | |
+| htf_acceptance | ABOVE | the inputs in the context evidence below (sidecar `plan` line `htf_acceptance=`) | | |
+| draw_status | ACTIVE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
+| draw | 26295.00-26305.00|CR | the inputs in the context evidence below (sidecar `plan` line `draw=`) | | |
 | value_follows | WITH_PRICE | the inputs in the context evidence below (sidecar `plan` line `value_follows=`) | | |
 | on_inventory | NET_LONG | the inputs in the context evidence below (sidecar `plan` line `on_inventory=`) | | |
 | on_vs_settle | 107.5 | the inputs in the context evidence below (sidecar `plan` line `on_vs_settle=`) | | |
@@ -175,11 +192,13 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 4 decision zon
 | gex_regime | POS | sidecar `plan` line `gex_regime=` | | |
 | wkval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkval_state=` | | |
 | wkvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkvah_state=` | | |
+| htfval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfval_state=` | | |
+| htfvah_state | accept=ABOVE|failed_reclaim=0 | sidecar `plan` line `htfvah_state=` | | |
 | weekly double distribution | AVAILABLE; split yes | the criteria table below (ours: PD rule applied to weekly) | | |
 
 ### Context evidence: the inputs behind each label (check the inputs on the chart, not the label)
 
-**market_context = NONE.** Rule (plan_fields.market_context): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE.
+**market_context = BULLISH** (context_base = NONE_NO_EVIDENCE, htf_acceptance = ABOVE). Step 1, context_base (plan_fields.context_base): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE_CONFLICT if a directional read passed but the weekly acceptance blocked it (or both reads passed), else NONE_NO_EVIDENCE. Step 2, the Nov 5 precedence with htf_acceptance (below).
 
 | input | value | check in (chart window) | hand | match |
 |---|---|---|---|---|
@@ -194,6 +213,16 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 4 decision zon
 | weekly VAL / VAH | 25907.5 / 26303.25 | NT VP over the developing week Sun Oct 26 17:00 - 10-29 08:10 CT | | |
 | weekly VAL state / VAH state | INSIDE / INSIDE | PO-9 acceptance on 1-minute closes vs the weekly VAL / VAH: INSIDE = price at 08:10 inside the weekly value (or on the inside of that edge); TESTING = price beyond the edge, not yet accepted; ACCEPTED_* = the minutes since the first close beyond it, the share of closes beyond and the share of volume beyond meet the frozen PO-9 thresholds (>= 60 minutes, >= 80% of closes, >= 20% of volume) (details in the plan lines `wkval_state=` / `wkvah_state=`) | | |
 | balance composite overlaps | N | see balance below | | |
+| context_base | NONE_NO_EVIDENCE | from the rows above | | |
+
+**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+
+| edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
+|---|---|---|---|---|---|---|---|---|---|
+| HTFVAL (below) | 23655.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-19 17:00 - 2025-10-29 08:10 CT; level from the HTF composite: 60 days from 2025-08-05 through 2025-10-29 08:10 CT (map source MINUTE_APPROX) | | |
+| HTFVAH (above) | 25394.75 | ACCEPTED_ABOVE | 2025-10-24 07:31 (25505.5) | 7239 (need >= 60) | 100.0% (need >= 80%) | 100.0% (need >= 20%) | 1-minute bars 2025-10-19 17:00 - 2025-10-29 08:10 CT; level from the HTF composite: 60 days from 2025-08-05 through 2025-10-29 08:10 CT (map source MINUTE_APPROX) | | |
+
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE = market_context **BULLISH**.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -228,10 +257,12 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 4 decision zon
 | ON high / ON low | 26309.75 / 26164.5 | overnight Tue Oct 28 17:00 - 10-29 08:10 CT: high / low | | |
 | ON high - settlement / ON low - settlement (reference) | 146.25 / 1.00 | from the rows above | | |
 
-**draw_status = NONE.** Rule (plan_v24): the draw is the nearest candidate in the context direction: BULLISH = HTF POC / HTF VAH above price, MAP4 POC areas above price, GEX levels above price; BEARISH = the mirror below price. NONE = no draw candidate exists (Context spec, Kyron Nov 4); it is never treated as ACTIVE: no draw= line is written and the ladder gets no draw.
+**draw_status = ACTIVE.** Rule (plan_v24): the draw is the nearest candidate in the context direction: BULLISH = HTF POC / HTF VAH above price, MAP4 POC areas above price, GEX levels above price; BEARISH = the mirror below price. NONE = no draw candidate exists (Context spec, Kyron Nov 4); it is never treated as ACTIVE: no draw= line is written and the ladder gets no draw.
 
-No candidate: market_context is NONE, so the rule has no direction to look in and no candidate exists. For reference, the HTF levels the rule would scan: HTF POC 24827.5 (below price), HTF VAH 25394.75, HTF VAL 23655.0 (price 26271.0). Check that the context inputs above give NONE; then NONE follows.
-
+| candidate | level (with pad) | distance pts | check in | hand | match |
+|---|---|---|---|---|---|
+| CR | 26295.0 - 26305.0 | 29.0 | see the level's source | | |
+| CR_0DTE | 26295.0 - 26305.0 | 29.0 | see the level's source | | |
 ### GEX values (source: GEX csv)
 
 | level | value in plan | check against | hand | match |
@@ -259,7 +290,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | PDPOC_AREA | VOLUME / VP | 26035.0 - 26055.0 | overlaps | NT VP, Tue Oct 28 cash 08:30-15:00 CT, 5-pt rows >= 70% of the peak row (26035.0) | | |
 | DD_EDGE_PD | STRUCTURE / VP | 26039.75 - 26079.75 | overlaps | NT VP over Tue Oct 28 cash 08:30-15:00 CT, 5-pt rows: the PD double distribution (two HVN blocks >= 70% of the smoothed peak, separator 26090.0 - 26109.75) | | |
 
-**D_PDVAH_PDSET_ONL_PDTVAH**: 26149.5 - 26179.75 (30.25 pts); families 4: AUCTION_VALUE, STRUCTURE, GEX, VWAP; long=ANY short=ANY; stop 123 ticks
+**D_PDVAH_PDSET_ONL_PDTVAH**: 26149.5 - 26179.75 (30.25 pts); families 4: AUCTION_VALUE, STRUCTURE, GEX, VWAP; long=ANY short=INITIATION; stop 123 ticks
 
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
@@ -284,7 +315,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | HVL_0DTE | GEX / GEX | 26210.0 | 10.00 pts outside | GEX csv: row 2025-10-29, column `hvl_0dte_nt` (= 26210.0); CME report 2025-10-28 (D-1) | | |
 | ONPOC_AREA | VOLUME / VP | 26227.5 - 26267.5 | overlaps | NT VP, overnight Tue Oct 28 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (26245.0) | | |
 
-**D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH**: 26286.75 - 26314.75 (28.00 pts); families 5: AUCTION_VALUE, STRUCTURE, DELTA, GEX, VWAP; long=ANY short=ANY; stop 114 ticks
+**D_ONVAH_WKTVAH_ONTVAH_WKVAH_ONH**: 26286.75 - 26314.75 (28.00 pts); families 5: AUCTION_VALUE, STRUCTURE, DELTA, GEX, VWAP; long=ANY short=INITIATION; stop 114 ticks
 
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
@@ -352,7 +383,7 @@ Row table: the gap between the two split blocks (2 rows either side) and the out
 
 ## 2025-10-31 (Fri)
 
-Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zones.
+Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review LOG_ONLY; 5 decision zones.
 
 ### 08:10 values
 
@@ -365,8 +396,11 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | weekly vwap | 26084.24 | the VWAP line: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_up | 26230.44 | the +1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_dn | 25938.04 | the -1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
-| market_context | NONE | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
-| draw_status | NONE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
+| market_context | BULLISH | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
+| context_base | NONE_NO_EVIDENCE | the inputs in the context evidence below (sidecar `plan` line `context_base=`) | | |
+| htf_acceptance | ABOVE | the inputs in the context evidence below (sidecar `plan` line `htf_acceptance=`) | | |
+| draw_status | ACTIVE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
+| draw | 26252.50-26292.50|WKPOC_AREA | the inputs in the context evidence below (sidecar `plan` line `draw=`) | | |
 | value_follows | DIVERGENT_UP | the inputs in the context evidence below (sidecar `plan` line `value_follows=`) | | |
 | on_inventory | NET_LONG | the inputs in the context evidence below (sidecar `plan` line `on_inventory=`) | | |
 | on_vs_settle | 316.0 | the inputs in the context evidence below (sidecar `plan` line `on_vs_settle=`) | | |
@@ -374,11 +408,13 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | gex_regime | POS | sidecar `plan` line `gex_regime=` | | |
 | wkval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkval_state=` | | |
 | wkvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkvah_state=` | | |
+| htfval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfval_state=` | | |
+| htfvah_state | accept=ABOVE|failed_reclaim=0 | sidecar `plan` line `htfvah_state=` | | |
 | weekly double distribution | AVAILABLE; split no | sidecar `weekly_dd` (ours: PD rule applied to weekly) | | |
 
 ### Context evidence: the inputs behind each label (check the inputs on the chart, not the label)
 
-**market_context = NONE.** Rule (plan_fields.market_context): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE.
+**market_context = BULLISH** (context_base = NONE_NO_EVIDENCE, htf_acceptance = ABOVE). Step 1, context_base (plan_fields.context_base): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE_CONFLICT if a directional read passed but the weekly acceptance blocked it (or both reads passed), else NONE_NO_EVIDENCE. Step 2, the Nov 5 precedence with htf_acceptance (below).
 
 | input | value | check in (chart window) | hand | match |
 |---|---|---|---|---|
@@ -393,6 +429,16 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | weekly VAL / VAH | 25957.25 / 26270.5 | NT VP over the developing week Sun Oct 26 17:00 - 10-31 08:10 CT | | |
 | weekly VAL state / VAH state | INSIDE / INSIDE | PO-9 acceptance on 1-minute closes vs the weekly VAL / VAH: INSIDE = price at 08:10 inside the weekly value (or on the inside of that edge); TESTING = price beyond the edge, not yet accepted; ACCEPTED_* = the minutes since the first close beyond it, the share of closes beyond and the share of volume beyond meet the frozen PO-9 thresholds (>= 60 minutes, >= 80% of closes, >= 20% of volume) (details in the plan lines `wkval_state=` / `wkvah_state=`) | | |
 | balance composite overlaps | N | see balance below | | |
+| context_base | NONE_NO_EVIDENCE | from the rows above | | |
+
+**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+
+| edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
+|---|---|---|---|---|---|---|---|---|---|
+| HTFVAL (below) | 23645.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-19 17:00 - 2025-10-31 08:10 CT; level from the HTF composite: 60 days from 2025-08-07 through 2025-10-31 08:10 CT (map source MINUTE_APPROX) | | |
+| HTFVAH (above) | 25394.75 | ACCEPTED_ABOVE | 2025-10-24 07:31 (25505.5) | 10119 (need >= 60) | 100.0% (need >= 80%) | 100.0% (need >= 20%) | 1-minute bars 2025-10-19 17:00 - 2025-10-31 08:10 CT; level from the HTF composite: 60 days from 2025-08-07 through 2025-10-31 08:10 CT (map source MINUTE_APPROX) | | |
+
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE = market_context **BULLISH**.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -427,10 +473,11 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | ON high / ON low | 26274 / 26127.25 | overnight Thu Oct 30 17:00 - 10-31 08:10 CT: high / low | | |
 | ON high - settlement / ON low - settlement (reference) | 391.25 / 244.50 | from the rows above | | |
 
-**draw_status = NONE.** Rule (plan_v24): the draw is the nearest candidate in the context direction: BULLISH = HTF POC / HTF VAH above price, MAP4 POC areas above price, GEX levels above price; BEARISH = the mirror below price. NONE = no draw candidate exists (Context spec, Kyron Nov 4); it is never treated as ACTIVE: no draw= line is written and the ladder gets no draw.
+**draw_status = ACTIVE.** Rule (plan_v24): the draw is the nearest candidate in the context direction: BULLISH = HTF POC / HTF VAH above price, MAP4 POC areas above price, GEX levels above price; BEARISH = the mirror below price. NONE = no draw candidate exists (Context spec, Kyron Nov 4); it is never treated as ACTIVE: no draw= line is written and the ladder gets no draw.
 
-No candidate: market_context is NONE, so the rule has no direction to look in and no candidate exists. For reference, the HTF levels the rule would scan: HTF POC 24827.5 (below price), HTF VAH 25394.75, HTF VAL 23645.0 (price 26198.75). Check that the context inputs above give NONE; then NONE follows.
-
+| candidate | level (with pad) | distance pts | check in | hand | match |
+|---|---|---|---|---|---|
+| WKPOC_AREA | 26252.5 - 26292.5 | 53.75 | see the level's source | | |
 ### GEX values (source: GEX csv)
 
 | level | value in plan | check against | hand | match |
@@ -445,7 +492,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 
 ### Decision zones: every level behind each zone
 
-**D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL**: 25952.25 - 25980.0 (27.75 pts); families 3: AUCTION_VALUE, DELTA, VOLUME; long=ANY short=ANY; stop 113 ticks
+**D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL**: 25952.25 - 25980.0 (27.75 pts); families 3: AUCTION_VALUE, DELTA, VOLUME; long=ANY short=INITIATION; stop 113 ticks
 
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
@@ -493,7 +540,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | ONPOC_AREA | VOLUME / VP | 26175.0 - 26200.0 | overlaps | NT VP, overnight Thu Oct 30 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (26190.0) | | |
 | REJ_HIGH_PD | STRUCTURE / chart | 26142.5 - 26182.5 | overlaps | 1-minute chart: swing bar close Thu Oct 30 09:01, swing 26182.5; available Thu Oct 30 09:16 (pack section B) | | |
 
-**T_PD2TPOC**: 26237.5 - 26247.5 (10.00 pts); families 2: DELTA, VOLUME; long=ANY short=ANY; stop 42 ticks
+**T_PD2TPOC**: 26237.5 - 26247.5 (10.00 pts); families 2: DELTA, VOLUME; long=ANY short=INITIATION; stop 42 ticks
 
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
@@ -512,7 +559,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 
 ## 2025-11-18 (Tue)
 
-Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zones.
+Plan plan-v2.4-book1a-v1.4; market_context NONE; review APPROVED; 5 decision zones.
 
 ### 08:10 values
 
@@ -526,6 +573,8 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | weekly sd1_up | 25163.00 | the +1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Nov 16 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | weekly sd1_dn | 24816.55 | the -1 sigma band: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Nov 16 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | market_context | NONE | the inputs in the context evidence below (sidecar `plan` line `market_context=`) | | |
+| context_base | NONE_NO_EVIDENCE | the inputs in the context evidence below (sidecar `plan` line `context_base=`) | | |
+| htf_acceptance | NONE | the inputs in the context evidence below (sidecar `plan` line `htf_acceptance=`) | | |
 | draw_status | NONE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
 | value_follows | WITH_PRICE | the inputs in the context evidence below (sidecar `plan` line `value_follows=`) | | |
 | on_inventory | NET_SHORT | the inputs in the context evidence below (sidecar `plan` line `on_inventory=`) | | |
@@ -534,11 +583,13 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | gex_regime | NEG | sidecar `plan` line `gex_regime=` | | |
 | wkval_state | accept=BELOW|failed_reclaim=0 | sidecar `plan` line `wkval_state=` | | |
 | wkvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `wkvah_state=` | | |
+| htfval_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfval_state=` | | |
+| htfvah_state | accept=INSIDE|failed_reclaim=0 | sidecar `plan` line `htfvah_state=` | | |
 | weekly double distribution | AVAILABLE; split yes | the criteria table below (ours: PD rule applied to weekly) | | |
 
 ### Context evidence: the inputs behind each label (check the inputs on the chart, not the label)
 
-**market_context = NONE.** Rule (plan_fields.market_context): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE.
+**market_context = NONE** (context_base = NONE_NO_EVIDENCE, htf_acceptance = NONE). Step 1, context_base (plan_fields.context_base): BULLISH = price >= HTF VAL, the low of the bars window <= HTF VAL (held or reclaimed it) and the weekly VAL state is not ACCEPTED_BELOW; BEARISH = the mirror at HTF VAH (state not ACCEPTED_ABOVE); exactly one of them = that label; else BALANCED if the balance composite overlaps; else NONE_CONFLICT if a directional read passed but the weekly acceptance blocked it (or both reads passed), else NONE_NO_EVIDENCE. Step 2, the Nov 5 precedence with htf_acceptance (below).
 
 | input | value | check in (chart window) | hand | match |
 |---|---|---|---|---|
@@ -553,6 +604,16 @@ Plan plan-v2.4-book1a-v1.3; market_context NONE; review APPROVED; 5 decision zon
 | weekly VAL / VAH | 24856.0 / 25285.25 | NT VP over the developing week Sun Nov 16 17:00 - 11-18 08:10 CT | | |
 | weekly VAL state / VAH state | ACCEPTED_BELOW / INSIDE | PO-9 acceptance on 1-minute closes vs the weekly VAL / VAH: INSIDE = price at 08:10 inside the weekly value (or on the inside of that edge); TESTING = price beyond the edge, not yet accepted; ACCEPTED_* = the minutes since the first close beyond it, the share of closes beyond and the share of volume beyond meet the frozen PO-9 thresholds (>= 60 minutes, >= 80% of closes, >= 20% of volume) (details in the plan lines `wkval_state=` / `wkvah_state=`) | | |
 | balance composite overlaps | N | see balance below | | |
+| context_base | NONE_NO_EVIDENCE | from the rows above | | |
+
+**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+
+| edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
+|---|---|---|---|---|---|---|---|---|---|
+| HTFVAL (below) | 24430.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-11-09 17:00 - 2025-11-18 08:10 CT; level from the HTF composite: 60 days from 2025-08-25 through 2025-11-18 08:10 CT (map source MINUTE_APPROX) | | |
+| HTFVAH (above) | 25954.75 | INSIDE | none (price at 08:10 not above the edge) |  |  |  | 1-minute bars 2025-11-09 17:00 - 2025-11-18 08:10 CT; level from the HTF composite: 60 days from 2025-08-25 through 2025-11-18 08:10 CT (map source MINUTE_APPROX) | | |
+
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance NONE = market_context **NONE**.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 

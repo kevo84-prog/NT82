@@ -34,9 +34,9 @@
 
 | field | value | hand | match |
 |---|---|---|---|
-| market_context | NONE | | |
-| draw |  | | |
-| draw_status | NONE | | |
+| market_context | BULLISH | | |
+| draw | 26252.50-26292.50|WKPOC_AREA | | |
+| draw_status | ACTIVE | | |
 | balance |  | | |
 | balance_poc |  | | |
 | value_follows | DIVERGENT_UP | | |
@@ -50,10 +50,10 @@
 
 | zone | long | short | first_touch | side_conflict | ladder |
 |---|---|---|---|---|---|
-| D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL | ANY | ANY | YES |  | {"long": {"TP1": "26049.25-26089.25", "TP2": "26175.00-26200.00", "RUN": "26265.50-26275.50", "R_TP1": "2.45", "R_TP2": "6.90", "R_RUN": "10.11"}, "short": {"TP1": "25389.75-25399.75", "TP2": "", "RUN": "", "R_TP1": "19.56", "R_TP2": "", "R_RUN": ""}} |
+| D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL | ANY | INITIATION | YES | side_conflict=D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL|short|context=INITIATION,edge_control=ANY | {"long": {"TP1": "26049.25-26089.25", "TP2": "26175.00-26200.00", "RUN": "26265.50-26275.50", "R_TP1": "2.45", "R_TP2": "6.90", "R_RUN": "10.11"}, "short": {"TP1": "25389.75-25399.75", "TP2": "", "RUN": "", "R_TP1": "19.56", "R_TP2": "", "R_RUN": ""}} |
 | D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ | NONE | NONE | YES |  | {} |
 | REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC | NONE | NONE | YES |  | {} |
-| T_PD2TPOC | ANY | ANY | YES |  | {"long": {"TP1": "26266.50-26306.50", "TP2": "", "RUN": "26265.50-26275.50", "R_TP1": "1.81", "R_TP2": "", "R_RUN": "1.71"}, "short": {"TP1": "26142.50-26182.50", "TP2": "26070.00-26080.00", "RUN": "25952.25-25962.25", "R_TP1": "5.24", "R_TP2": "15.00", "R_RUN": "26.21"}} |
-| WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK | NONE | NONE | YES |  | {} |
+| T_PD2TPOC | ANY | INITIATION | YES |  | {"long": {"TP1": "26266.50-26306.50", "TP2": "", "RUN": "26265.50-26275.50", "R_TP1": "1.81", "R_TP2": "", "R_RUN": "1.71"}, "short": {"TP1": "26142.50-26182.50", "TP2": "26070.00-26080.00", "RUN": "25952.25-25962.25", "R_TP1": "5.24", "R_TP2": "15.00", "R_RUN": "26.21"}} |
+| WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK | NONE | NONE | YES | side_conflict=WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK|short|context=INITIATION,edge_control=ANY | {} |
 
-review=APPROVED; fails=[]; notes=['C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ long NONE: 1 NQ does not fit $1000 (stop 421 ticks)', 'C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ short NONE: 1 NQ does not fit $1000 (stop 421 ticks)', 'C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC long NONE: 1 NQ does not fit $1000 (stop 378 ticks)', 'C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC short NONE: 1 NQ does not fit $1000 (stop 378 ticks)', 'C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK long NONE: 1 NQ does not fit $1000 (stop 218 ticks)', 'C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK short NONE: 1 NQ does not fit $1000 (stop 218 ticks)']
+review=LOG_ONLY; fails=[]; notes=['C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ long NONE: 1 NQ does not fit $1000 (stop 421 ticks)', 'C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ short NONE: 1 NQ does not fit $1000 (stop 421 ticks)', 'C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC long NONE: 1 NQ does not fit $1000 (stop 378 ticks)', 'C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC short NONE: 1 NQ does not fit $1000 (stop 378 ticks)', 'C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK long NONE: 1 NQ does not fit $1000 (stop 218 ticks)', 'C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK short NONE: 1 NQ does not fit $1000 (stop 218 ticks)', 'E: a with-context zone lies beyond the invalidation edge']
