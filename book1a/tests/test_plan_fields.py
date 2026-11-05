@@ -26,7 +26,15 @@ class TestContext(unittest.TestCase):
         self.assertEqual(pf.market_context(ci(held_or_reclaimed_val=False, balance_overlapping=True,
                                               balance_lo=23950.0, balance_hi=24050.0, balance_poc=24000.0)), "BALANCED")
         f = pf.balance_fields(ci(balance_overlapping=True, balance_lo=23950.0, balance_hi=24050.0, balance_poc=24000.0))
-        self.assertEqual(f, {"balance": "23950-24050", "balance_poc": "24000"})
+        self.assertEqual(f, {"balance": "23950.00-24050.00", "balance_poc": "24000.00"})
+
+    def test_balance_written_exactly(self):
+        """Bug fix, Nov 5, 2026: balance= and balance_poc= equal the map's merged VAL / VAH / POC to the tick
+        (the old ':g' format wrote 25874.25-26033.75 as 25874.2-26033.8)."""
+        f = pf.balance_fields(ci(balance_overlapping=True, balance_lo=25874.25, balance_hi=26033.75, balance_poc=25925.0))
+        self.assertEqual(f, {"balance": "25874.25-26033.75", "balance_poc": "25925.00"})
+        f = pf.balance_fields(ci(balance_overlapping=True, balance_lo=25964.5, balance_hi=26126.75, balance_poc=26090.0))
+        self.assertEqual(f["balance"], "25964.50-26126.75")
 
     def test_value_follows(self):
         self.assertEqual(pf.value_follows(24200, 24100, 23900, 23800, 24050, 24080, 23950, 23900, 24000, 24040), "DIVERGENT_UP")

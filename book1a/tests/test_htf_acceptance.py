@@ -297,5 +297,21 @@ class TestPlanHTFAcceptance(TestPlanBuilder):
         self.assertEqual(ev["context_resolved"], "NONE_CONFLICT")
         self.assertNotIn("invalidate_below", kv); self.assertNotIn("draw", kv)
 
+    def test_balance_lines_equal_the_map_composite(self):
+        """BALANCED from the map's overlap test; balance= / balance_poc= are the packet's merged VAL-VAH / POC exactly."""
+        p = dict(self.packet)
+        p["balance_composite"] = {"available": True, "overlapping": True, "members": ["PD", "ON"],
+                                  "val": 23874.25, "vah": 24033.75, "poc": 23925.0}
+        ev = {}
+        text, _ = P.build(p, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
+        kv = self._kv(text)
+        self.assertEqual((kv["balance"], kv["balance_poc"]), ("23874.25-24033.75", "23925.00"))
+        if kv["market_context"] == "BALANCED":
+            self.assertEqual(ev["context_base"], "BALANCED")
+        p["balance_composite"] = {"overlapping": False}
+        text, _ = P.build(p, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=())
+        kv = self._kv(text)
+        self.assertNotIn("balance", kv); self.assertNotEqual(kv["market_context"], "BALANCED")
+
 if __name__ == "__main__":
     unittest.main()

@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.5"   # v1.4: htf_acceptance (PO-9 at HTF VAH/VAL) + context precedence; v1.5: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
+VERSION = "plan-v2.4-book1a-v1.6"   # v1.6: balance= exact (bug fix); v1.4: htf_acceptance (PO-9 at HTF VAH/VAL) + context precedence; v1.5: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
                                     # v1.1: DD_EDGE reads the v2.3 packet form (E21)
                                     # v1.2: weekly DD_EDGE (E23, ours: PD rule applied to weekly, book1a.weekly_dd)
                                     # v1.3: weekly DD UNAVAILABLE noted (E26); FLIP review flag (E25)

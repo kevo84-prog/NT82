@@ -23,7 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
-VERSION = "plan-fields-v1.2"   # v1.1: htf_acceptance precedence, None split; v1.2: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
+VERSION = "plan-fields-v1.3"   # v1.3: balance= written exactly (bug fix); v1.1: htf_acceptance precedence, None split; v1.2: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
 
 RESTRICTIVENESS = {"NONE": 3, "INITIATION": 2, "RESPONSE": 1, "ANY": 0}
 
@@ -145,7 +145,8 @@ def market_context(ci: ContextInputs, htf_acceptance: str = "NONE") -> str:
 
 def balance_fields(ci: ContextInputs) -> Dict[str, Optional[str]]:
     if ci.balance_overlapping and ci.balance_lo is not None:
-        return {"balance": f"{ci.balance_lo:g}-{ci.balance_hi:g}", "balance_poc": f"{ci.balance_poc:g}"}
+        # bug fix (Nov 5, 2026): ":g" kept 6 significant digits (25874.25 -> 25874.2); write the map values exactly
+        return {"balance": f"{ci.balance_lo:.2f}-{ci.balance_hi:.2f}", "balance_poc": f"{ci.balance_poc:.2f}"}
     return {"balance": None, "balance_poc": None}
 
 
