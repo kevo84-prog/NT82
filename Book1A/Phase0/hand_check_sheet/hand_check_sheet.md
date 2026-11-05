@@ -1,4 +1,4 @@
-# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.2)
+# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.3)
 
 Check each value against the source named on its row, not against the plan. Sources: **NT VP** = the NinjaTrader Volume Profile tool drawn over the stated window (CT); **NT VWAP** = the NinjaTrader VWAP setting stated on the row; **GEX csv** = `gex_levels_block1.csv`, row session = the day, the named column; **sidecar** = the frozen plan sidecar `PreopenPlan_<day>_book1a.json`, the named key. Every value is frozen at 08:10 CT from data before 08:10 CT. No trades, outcomes or P&L.
 
@@ -10,7 +10,7 @@ Each day's plan was rebuilt with the frozen code for this sheet; the rebuilt pla
 
 ## 2025-10-22 (Wed)
 
-Plan plan-v2.4-book1a-v1.4; market_context BALANCED; review APPROVED; 3 decision zones.
+Plan plan-v2.4-book1a-v1.6; market_context BALANCED; review APPROVED; 3 decision zones.
 
 ### 08:10 values
 
@@ -27,8 +27,8 @@ Plan plan-v2.4-book1a-v1.4; market_context BALANCED; review APPROVED; 3 decision
 | context_base | BALANCED | the inputs in the context evidence below (sidecar `plan` line `context_base=`) | | |
 | htf_acceptance | NONE | the inputs in the context evidence below (sidecar `plan` line `htf_acceptance=`) | | |
 | draw_status | NONE | the inputs in the context evidence below (sidecar `plan` line `draw_status=`) | | |
-| balance | 25256-25340.5 | the inputs in the context evidence below (sidecar `plan` line `balance=`) | | |
-| balance_poc | 25318 | the inputs in the context evidence below (sidecar `plan` line `balance_poc=`) | | |
+| balance | 25256.00-25340.50 | the inputs in the context evidence below (sidecar `plan` line `balance=`) | | |
+| balance_poc | 25318.00 | the inputs in the context evidence below (sidecar `plan` line `balance_poc=`) | | |
 | value_follows | DIVERGENT_UP | the inputs in the context evidence below (sidecar `plan` line `value_follows=`) | | |
 | on_inventory | NET_SHORT | the inputs in the context evidence below (sidecar `plan` line `on_inventory=`) | | |
 | on_vs_settle | -36.0 | the inputs in the context evidence below (sidecar `plan` line `on_vs_settle=`) | | |
@@ -59,14 +59,16 @@ Plan plan-v2.4-book1a-v1.4; market_context BALANCED; review APPROVED; 3 decision
 | balance composite overlaps | Y | see balance below | | |
 | context_base | BALANCED | from the rows above | | |
 
-**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept; then the weekly guard on every BULLISH (not ACCEPTED_BELOW the weekly VAL) and every BEARISH (not ACCEPTED_ABOVE the weekly VAH): failure = NONE_CONFLICT -> NONE (clarified Nov 5, 2026).
 
 | edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
 |---|---|---|---|---|---|---|---|---|---|
 | HTFVAL (below) | 23590.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-12 17:00 - 2025-10-22 08:10 CT; level from the HTF composite: 60 days from 2025-07-29 through 2025-10-22 08:10 CT (map source MINUTE_APPROX) | | |
 | HTFVAH (above) | 25394.75 | INSIDE | none (price at 08:10 not above the edge) |  |  |  | 1-minute bars 2025-10-12 17:00 - 2025-10-22 08:10 CT; level from the HTF composite: 60 days from 2025-07-29 through 2025-10-22 08:10 CT (map source MINUTE_APPROX) | | |
 
-**Precedence result:** context_base BALANCED + htf_acceptance NONE = market_context **BALANCED**.
+**Precedence result:** context_base BALANCED + htf_acceptance NONE -> BALANCED; weekly guard N/A (weekly VAL INSIDE, weekly VAH INSIDE) = market_context **BALANCED** (context_source NONE).
+
+**Context invalidation edge: none.** No directional context, so no invalidation line. The plan writes it 2 ticks beyond the edge (`invalidate_below=` / `invalidate_above=`); S1.4 switches the context to Balanced after 3 consecutive 1-minute closes beyond that line (AcceptBars = 3, the strategy's acceptance rule). Context invalidation only, never a trade stop.
 
 **balance = 25256-25340.5, balance_poc = 25318.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -167,7 +169,7 @@ No candidate: market_context is BALANCED, so the rule has no direction to look i
 
 ## 2025-10-29 (Wed)
 
-Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review APPROVED; 4 decision zones.
+Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 4 decision zones.
 
 ### 08:10 values
 
@@ -215,14 +217,16 @@ Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review APPROVED; 4 decision 
 | balance composite overlaps | N | see balance below | | |
 | context_base | NONE_NO_EVIDENCE | from the rows above | | |
 
-**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept; then the weekly guard on every BULLISH (not ACCEPTED_BELOW the weekly VAL) and every BEARISH (not ACCEPTED_ABOVE the weekly VAH): failure = NONE_CONFLICT -> NONE (clarified Nov 5, 2026).
 
 | edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
 |---|---|---|---|---|---|---|---|---|---|
 | HTFVAL (below) | 23655.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-19 17:00 - 2025-10-29 08:10 CT; level from the HTF composite: 60 days from 2025-08-05 through 2025-10-29 08:10 CT (map source MINUTE_APPROX) | | |
 | HTFVAH (above) | 25394.75 | ACCEPTED_ABOVE | 2025-10-24 07:31 (25505.5) | 7239 (need >= 60) | 100.0% (need >= 80%) | 100.0% (need >= 20%) | 1-minute bars 2025-10-19 17:00 - 2025-10-29 08:10 CT; level from the HTF composite: 60 days from 2025-08-05 through 2025-10-29 08:10 CT (map source MINUTE_APPROX) | | |
 
-**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE = market_context **BULLISH**.
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE -> BULLISH; weekly guard PASS (weekly VAL INSIDE, weekly VAH INSIDE) = market_context **BULLISH** (context_source HTF_ACCEPTANCE).
+
+**Context invalidation edge: below 25394.75.** Acceptance-based context: it invalidates at the composite edge it is accepted beyond (Bullish: 3 closes below the composite VAH; Bearish: 3 closes above the composite VAL). The plan writes it 2 ticks beyond the edge (`invalidate_below=` / `invalidate_above=`); S1.4 switches the context to Balanced after 3 consecutive 1-minute closes beyond that line (AcceptBars = 3, the strategy's acceptance rule). Context invalidation only, never a trade stop.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -383,7 +387,7 @@ Row table: the gap between the two split blocks (2 rows either side) and the out
 
 ## 2025-10-31 (Fri)
 
-Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review LOG_ONLY; 5 decision zones.
+Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 5 decision zones.
 
 ### 08:10 values
 
@@ -431,14 +435,16 @@ Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review LOG_ONLY; 5 decision 
 | balance composite overlaps | N | see balance below | | |
 | context_base | NONE_NO_EVIDENCE | from the rows above | | |
 
-**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+**htf_acceptance = ABOVE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept; then the weekly guard on every BULLISH (not ACCEPTED_BELOW the weekly VAL) and every BEARISH (not ACCEPTED_ABOVE the weekly VAH): failure = NONE_CONFLICT -> NONE (clarified Nov 5, 2026).
 
 | edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
 |---|---|---|---|---|---|---|---|---|---|
 | HTFVAL (below) | 23645.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-10-19 17:00 - 2025-10-31 08:10 CT; level from the HTF composite: 60 days from 2025-08-07 through 2025-10-31 08:10 CT (map source MINUTE_APPROX) | | |
 | HTFVAH (above) | 25394.75 | ACCEPTED_ABOVE | 2025-10-24 07:31 (25505.5) | 10119 (need >= 60) | 100.0% (need >= 80%) | 100.0% (need >= 20%) | 1-minute bars 2025-10-19 17:00 - 2025-10-31 08:10 CT; level from the HTF composite: 60 days from 2025-08-07 through 2025-10-31 08:10 CT (map source MINUTE_APPROX) | | |
 
-**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE = market_context **BULLISH**.
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance ABOVE -> BULLISH; weekly guard PASS (weekly VAL INSIDE, weekly VAH INSIDE) = market_context **BULLISH** (context_source HTF_ACCEPTANCE).
+
+**Context invalidation edge: below 25394.75.** Acceptance-based context: it invalidates at the composite edge it is accepted beyond (Bullish: 3 closes below the composite VAH; Bearish: 3 closes above the composite VAL). The plan writes it 2 ticks beyond the edge (`invalidate_below=` / `invalidate_above=`); S1.4 switches the context to Balanced after 3 consecutive 1-minute closes beyond that line (AcceptBars = 3, the strategy's acceptance rule). Context invalidation only, never a trade stop.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 
@@ -559,7 +565,7 @@ Plan plan-v2.4-book1a-v1.4; market_context BULLISH; review LOG_ONLY; 5 decision 
 
 ## 2025-11-18 (Tue)
 
-Plan plan-v2.4-book1a-v1.4; market_context NONE; review APPROVED; 5 decision zones.
+Plan plan-v2.4-book1a-v1.6; market_context NONE; review APPROVED; 5 decision zones.
 
 ### 08:10 values
 
@@ -606,14 +612,16 @@ Plan plan-v2.4-book1a-v1.4; market_context NONE; review APPROVED; 5 decision zon
 | balance composite overlaps | N | see balance below | | |
 | context_base | NONE_NO_EVIDENCE | from the rows above | | |
 
-**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept.
+**htf_acceptance = NONE.** Rule (Context doc, Nov 5, 2026; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58): the PO-9 acceptance definition, unchanged, at the HTF composite VAH and VAL: price at 08:10 beyond the edge, >= 60 minutes since the first 1-minute close beyond it (the first close of the current run of closes beyond, scanning back from 08:10), >= 80% of the closes since then beyond it, >= 20% of the volume since that close beyond it; bars closed at or before 08:10 CT only (the bar stamped 08:10 = trades 08:09:00-08:09:59.999 is the last one). ACCEPTED_ABOVE at the VAH = ABOVE, ACCEPTED_BELOW at the VAL = BELOW, else NONE. Context evidence only, never an entry signal. Precedence: BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept; then the weekly guard on every BULLISH (not ACCEPTED_BELOW the weekly VAL) and every BEARISH (not ACCEPTED_ABOVE the weekly VAH): failure = NONE_CONFLICT -> NONE (clarified Nov 5, 2026).
 
 | edge | level | state | first 1-minute close beyond (CT, close) | minutes since | closes beyond | volume beyond | window (CT) | hand | match |
 |---|---|---|---|---|---|---|---|---|---|
 | HTFVAL (below) | 24430.0 | INSIDE | none (price at 08:10 not below the edge) |  |  |  | 1-minute bars 2025-11-09 17:00 - 2025-11-18 08:10 CT; level from the HTF composite: 60 days from 2025-08-25 through 2025-11-18 08:10 CT (map source MINUTE_APPROX) | | |
 | HTFVAH (above) | 25954.75 | INSIDE | none (price at 08:10 not above the edge) |  |  |  | 1-minute bars 2025-11-09 17:00 - 2025-11-18 08:10 CT; level from the HTF composite: 60 days from 2025-08-25 through 2025-11-18 08:10 CT (map source MINUTE_APPROX) | | |
 
-**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance NONE = market_context **NONE**.
+**Precedence result:** context_base NONE_NO_EVIDENCE + htf_acceptance NONE -> NONE_NO_EVIDENCE; weekly guard N/A (weekly VAL ACCEPTED_BELOW, weekly VAH INSIDE) = market_context **NONE** (context_source NONE).
+
+**Context invalidation edge: none.** No directional context, so no invalidation line. The plan writes it 2 ticks beyond the edge (`invalidate_below=` / `invalidate_above=`); S1.4 switches the context to Balanced after 3 consecutive 1-minute closes beyond that line (AcceptBars = 3, the strategy's acceptance rule). Context invalidation only, never a trade stop.
 
 **balance = none.** Rule (map BalanceJson): PD and ON value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one volume profile and its 70% value area is the balance. Overlap % = overlap / the narrower value area.
 

@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)",
   "plan_id=2025-11-18-b1a",
   "date=2025-11-18",
   "asof=08:25",
@@ -41,6 +41,8 @@
   "context_base=NONE_NO_EVIDENCE",
   "htf_acceptance=NONE",
   "# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58",
+  "context_source=NONE",
+  "weekly_guard=N/A",
   "htfval_state=accept=INSIDE|failed_reclaim=0",
   "htfvah_state=accept=INSIDE|failed_reclaim=0",
   "value_follows=WITH_PRICE",
@@ -91,6 +93,8 @@
  "market_context": "NONE",
  "context_base": "NONE_NO_EVIDENCE",
  "htf_acceptance": "NONE",
+ "context_source": "NONE",
+ "weekly_guard": "N/A",
  "htf_acceptance_states": [
   {
    "level_name": "HTFVAL",

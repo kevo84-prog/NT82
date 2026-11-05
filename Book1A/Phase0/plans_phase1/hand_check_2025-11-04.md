@@ -29,9 +29,9 @@
 
 | field | value | hand | match |
 |---|---|---|---|
-| market_context | BULLISH | | |
-| draw | 25737.50-25777.50|ONPOC_AREA | | |
-| draw_status | ACTIVE | | |
+| market_context | NONE | | |
+| draw |  | | |
+| draw_status | NONE | | |
 | balance |  | | |
 | balance_poc |  | | |
 | value_follows | WITH_PRICE | | |
@@ -45,7 +45,7 @@
 
 | zone | long | short | first_touch | side_conflict | ladder |
 |---|---|---|---|---|---|
-| ONPOC_AREA_T_ONPOC_ONTPOC | ANY | INITIATION | YES |  | {"long": {"TP1": "25813.25-25823.25", "TP2": "25985.00-25995.00", "RUN": "26184.00-26194.00", "R_TP1": "0.88", "R_TP2": "5.12", "R_RUN": "10.04"}, "short": {"TP1": "25660.00-25670.00", "TP2": "", "RUN": "", "R_TP1": "1.67", "R_TP2": "", "R_RUN": ""}} |
-| T_PD2L | ANY | INITIATION | YES |  | {"long": {"TP1": "25919.75-25929.75", "TP2": "25985.00-25995.00", "RUN": "26184.00-26194.00", "R_TP1": "2.48", "R_TP2": "8.69", "R_RUN": "27.64"}, "short": {"TP1": "25813.25-25823.25", "TP2": "25737.50-25777.50", "RUN": "25737.50-25777.50", "R_TP1": "5.76", "R_TP2": "10.12", "R_RUN": "10.12"}} |
+| ONPOC_AREA_T_ONPOC_ONTPOC | ANY | ANY | YES |  | {"long": {"TP1": "25813.25-25823.25", "TP2": "25985.00-25995.00", "RUN": "26184.00-26194.00", "R_TP1": "0.88", "R_TP2": "5.12", "R_RUN": "10.04"}, "short": {"TP1": "25660.00-25670.00", "TP2": "", "RUN": "", "R_TP1": "1.67", "R_TP2": "", "R_RUN": ""}} |
+| T_PD2L | ANY | ANY | YES |  | {"long": {"TP1": "25919.75-25929.75", "TP2": "25985.00-25995.00", "RUN": "26184.00-26194.00", "R_TP1": "2.48", "R_TP2": "8.69", "R_RUN": "27.64"}, "short": {"TP1": "25813.25-25823.25", "TP2": "25737.50-25777.50", "RUN": "", "R_TP1": "5.76", "R_TP2": "10.12", "R_RUN": ""}} |
 
 review=APPROVED; fails=[]; notes=[]

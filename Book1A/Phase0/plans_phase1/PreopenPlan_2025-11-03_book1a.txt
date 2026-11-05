@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
 plan_id=2025-11-03-b1a
 date=2025-11-03
 asof=08:25
@@ -33,8 +33,8 @@ zone=26237.50-26247.50|T_PD3TPOC|TARGET
 zone=26298.75-26314.75|T_D_PD3VAH_PD3TVAH_PWKTVAH|TARGET
 zone=26321.50-26331.50|T_PD3H|TARGET
 zone=26394.00-26404.00|T_PWKH|TARGET
-balance=25964.5-26126.8
-balance_poc=26090
+balance=25964.50-26126.75
+balance_poc=26090.00
 macro=not verified (backtest)
 news=not used (backtest)
 # --- Book 1A fields (logged by S1.4, not read) ---
@@ -43,6 +43,8 @@ draw_status=NONE
 context_base=BALANCED
 htf_acceptance=ABOVE
 # htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=NONE
+weekly_guard=N/A
 htfval_state=accept=INSIDE|failed_reclaim=0
 htfvah_state=accept=ABOVE|failed_reclaim=0
 value_follows=WITH_PRICE

@@ -1,6 +1,6 @@
 {
  "version": "run-r4-v1.0",
- "commit": "0e0210d83184400062b8a0de3e3fa8a5ab4bca95",
+ "commit": "8bd4005e473601dce2898716155e3575583d69e3",
  "phase": "phase1",
  "sessions": [
   "2025-10-22",
@@ -16,17 +16,17 @@
  ],
  "a0_run": "K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\runs\\phase1",
  "plans_dir": "K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\plans_phase1",
- "plan_version": "plan-v2.4-book1a-v1.4",
+ "plan_version": "plan-v2.4-book1a-v1.6",
  "fill_model": "v3.5",
  "veto": "L1|T8 (FZ1 logged only)",
  "retest": "RH1 15 bars / 2 ticks",
  "exit_model": "M0",
- "trades": 6,
+ "trades": 8,
  "candidate_rows": 2058,
  "candidate_days": [
   "2025-10-22",
   "2025-10-28",
   "2025-11-04"
  ],
- "generated": "2026-11-04T20:24:04.903182"
+ "generated": "2026-11-04T23:08:34.597558"
 }

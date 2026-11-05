@@ -12,7 +12,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-VERSION = "draw-none-report-v1.1"   # v1.1: context_base, htf_acceptance and its evidence (Nov 5, 2026)
+VERSION = "draw-none-report-v1.2"   # v1.1: context_base, htf_acceptance and its evidence; v1.2: weekly guard, context_source (Nov 5, 2026)
 
 
 def why_context(ev) -> str:
@@ -36,6 +36,8 @@ def why_context(ev) -> str:
     parts.append("balance composite overlaps" if bc.get("overlapping") else
                  f"no balance (PD-ON overlap {bc.get('overlap_pct_pd_on')}%)")
     parts.append(f"context_base {ev['context_base']}")
+    if ev.get("weekly_guard") == "FAIL":
+        parts.append(f"weekly guard FAIL ({'weekly VAL ACCEPTED_BELOW blocks the acceptance-based BULLISH' if ev['htf_acceptance'] == 'ABOVE' else 'weekly VAH ACCEPTED_ABOVE blocks the acceptance-based BEARISH'}) -> NONE_CONFLICT")
     return "; ".join(parts)
 
 
@@ -84,7 +86,7 @@ def main(argv=None):
                    else "no candidate level in the context direction")
         assert kv["market_context"] == ev["market_context"] and kv["htf_acceptance"] == ev["htf_acceptance"], ds
         rows.append((ds, date.fromisoformat(ds).strftime("%a"), ev["market_context"], kv["draw_status"], kv.get("draw", ""), why,
-                     why_context(ev), ev["context_base"], ev["htf_acceptance"], acc_evidence(ev)))
+                     why_context(ev), ev["context_base"], ev["htf_acceptance"], acc_evidence(ev), ev["weekly_guard"], ev["context_source"]))
     n_none = sum(1 for r in rows if r[3] == "NONE")
     L = [f"# draw_status by day: NONE days and why ({VERSION})", "",
          "Context spec (Kyron, Nov 4, 2026): draw_status = ACTIVE | REACHED | INVALIDATED | NONE. NONE = no draw candidate "
@@ -97,11 +99,13 @@ def main(argv=None):
          "or NONE context day has draw_status NONE.", "",
          "Nov 5, 2026 (pre-freeze specification change, Kyron): context_base is the label before the HTF acceptance step; "
          "htf_acceptance is the PO-9 acceptance, unchanged, at the HTF composite VAH / VAL on bars closed by 08:10 CT; "
-         "market_context = the precedence of the two (Context doc).", "",
-         "| day | | context_base | htf_acceptance | market_context | draw_status | draw | why | context inputs | htf_acceptance evidence |",
-         "|---|---|---|---|---|---|---|---|---|---|"]
+         "market_context = the precedence of the two (Context doc), then the weekly guard on every BULLISH / BEARISH "
+         "(clarified Nov 5, 2026; failure = NONE_CONFLICT -> NONE). context_source = BASE or HTF_ACCEPTANCE (who set a "
+         "directional context).", "",
+         "| day | | context_base | htf_acceptance | weekly_guard | context_source | market_context | draw_status | draw | why | context inputs | htf_acceptance evidence |",
+         "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     esc = lambda x: str(x).replace("|", r"\|")     # the draw value carries "|<name>"; keep the table columns intact
-    L += ["| " + " | ".join(esc(r[i]) for i in (0, 1, 7, 8, 2, 3, 4, 5, 6, 9)) + " |" for r in rows]
+    L += ["| " + " | ".join(esc(r[i]) for i in (0, 1, 7, 8, 10, 11, 2, 3, 4, 5, 6, 9)) + " |" for r in rows]
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"wrote {a.out}: {len(rows)} days, {n_none} NONE")

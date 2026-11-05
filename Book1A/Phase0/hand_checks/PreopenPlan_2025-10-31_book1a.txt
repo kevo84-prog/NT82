@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
 plan_id=2025-10-31-b1a
 date=2025-10-31
 asof=08:25
@@ -26,7 +26,7 @@ zone=26122.25-26132.25|T_ONL|TARGET
 zone=26230.00-26240.00|T_DELTA_SELL_WK|TARGET
 zone=26298.75-26331.50|T_D_PD2VAH_PD2TVAH_WKTVAH_PD2H|TARGET
 zone=26339.75-26379.75|T_REJ_HIGH_WK|TARGET
-invalidate_below=25956.75|Balanced
+invalidate_below=25394.25|Balanced
 macro=not verified (backtest)
 news=not used (backtest)
 # --- Book 1A fields (logged by S1.4, not read) ---
@@ -35,6 +35,8 @@ draw_status=ACTIVE
 context_base=NONE_NO_EVIDENCE
 htf_acceptance=ABOVE
 # htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=HTF_ACCEPTANCE
+weekly_guard=PASS
 htfval_state=accept=INSIDE|failed_reclaim=0
 htfvah_state=accept=ABOVE|failed_reclaim=0
 draw=26252.50-26292.50|WKPOC_AREA
@@ -72,6 +74,6 @@ mq_cr_0dte=26150.00
 mq_ps_0dte=25775.00
 mq_hvl_0dte=25390.00
 # --- review ---
-review=LOG_ONLY
-review_note=C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ long NONE: 1 NQ does not fit $1000 (stop 421 ticks); C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ short NONE: 1 NQ does not fit $1000 (stop 421 ticks); C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC long NONE: 1 NQ does not fit $1000 (stop 378 ticks); C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC short NONE: 1 NQ does not fit $1000 (stop 378 ticks); C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK long NONE: 1 NQ does not fit $1000 (stop 218 ticks); C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK short NONE: 1 NQ does not fit $1000 (stop 218 ticks); E: a with-context zone lies beyond the invalidation edge
+review=APPROVED
+review_note=C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ long NONE: 1 NQ does not fit $1000 (stop 421 ticks); C: D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ short NONE: 1 NQ does not fit $1000 (stop 421 ticks); C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC long NONE: 1 NQ does not fit $1000 (stop 378 ticks); C: REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC short NONE: 1 NQ does not fit $1000 (stop 378 ticks); C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK long NONE: 1 NQ does not fit $1000 (stop 218 ticks); C: WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK short NONE: 1 NQ does not fit $1000 (stop 218 ticks)
 end=1

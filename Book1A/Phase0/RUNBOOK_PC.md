@@ -124,3 +124,11 @@ rem before committing the rebuilt plans: sha256 of the old plan files -> plan_ha
 %PY% book1a\hand_checks\plan_hashes_nov5.py . Book1A\Phase0\plan_hashes_2026-11-05.md Book1A\Phase0\plan_hashes_2026-11-05_before.txt
 %PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
 ```
+
+## As run on the PC, Nov 5, 2026, second part (context clarification; rule 6998761, bug fix 8bd4005, before the rebuild)
+Spec re-exported first. Then the same chain as the Nov 5 entry above (plans, R4 with copies to P0.11 / P0.12, the three audit_run commands, E24, the pack, the draw report, the sheet; v1.4 R4 run moved to `runs\phase1_r4_prev_v14`, the intermediate v1.5 run to `runs\phase1_r4_v15_intermediate`, not in git), and:
+```
+rem before the rebuild: sha256 of the v1.4 plan files -> plan_hashes_2026-11-05b_before.txt, then
+%PY% book1a\hand_checks\plan_hashes_nov5b.py . Book1A\Phase0\plan_hashes_2026-11-05b.md Book1A\Phase0\plan_hashes_2026-11-05b_before.txt
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests   (log renamed unit_tests_2026-11-05_8bd4005.log)
+```

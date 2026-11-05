@@ -30,7 +30,7 @@ from collections import defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
-VERSION = "hand-check-sheet-v1.2"
+VERSION = "hand-check-sheet-v1.3"   # v1.3: weekly guard on every Bullish / Bearish, acceptance invalidation (Nov 5, 2026)
 GEX_COLS = {"CR": "call_resistance", "PS": "put_support", "HVL": "hvl", "CR_0DTE": "call_resistance_0dte",
             "PS_0DTE": "put_support_0dte", "HVL_0DTE": "hvl_0dte"}
 
@@ -59,7 +59,9 @@ def _yn(b):
 
 PRECEDENCE_TEXT = ("BULLISH + ABOVE = BULLISH; BEARISH + BELOW = BEARISH; BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict); "
                    "BALANCED stays BALANCED whatever the acceptance; NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH; "
-                   "NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept")
+                   "NONE_CONFLICT stays NONE; no acceptance (NONE) = the existing label kept; then the weekly guard on every BULLISH "
+                   "(not ACCEPTED_BELOW the weekly VAL) and every BEARISH (not ACCEPTED_ABOVE the weekly VAH): failure = NONE_CONFLICT "
+                   "-> NONE (clarified Nov 5, 2026)")
 
 
 def htf_acceptance_evidence(ev, bars_win, htf_win):
@@ -89,8 +91,21 @@ def htf_acceptance_evidence(ev, bars_win, htf_win):
                  f"{bars_win}; level from the {htf_win} | | |")
     if not ev.get("htf_accept"):
         L.append("| HTF VAL / VAH | missing | not computed | | | | | | | |")
-    L += ["", f"**Precedence result:** context_base {ev['context_base']} + htf_acceptance {ev['htf_acceptance']} = market_context "
-          f"**{ev['market_context']}**.", ""]
+    inv = ev.get("invalidation") or {}
+    edge = ("below " + str(inv["invalidate_below"]) if inv.get("invalidate_below") is not None else
+            "above " + str(inv["invalidate_above"]) if inv.get("invalidate_above") is not None else "none")
+    src = ev.get("context_source")
+    L += ["", f"**Precedence result:** context_base {ev['context_base']} + htf_acceptance {ev['htf_acceptance']} -> "
+          f"{ev.get('context_resolved')}; weekly guard {ev.get('weekly_guard')} (weekly VAL {ev['wk_val_state']}, weekly VAH "
+          f"{ev['wk_vah_state']}) = market_context **{ev['market_context']}** (context_source {src}).", "",
+          f"**Context invalidation edge: {edge}.** "
+          + ("Acceptance-based context: it invalidates at the composite edge it is accepted beyond (Bullish: 3 closes below the "
+             "composite VAH; Bearish: 3 closes above the composite VAL). " if src == "HTF_ACCEPTANCE" else
+             "Base rule: Bullish below the higher of the weekly and composite VAL, Bearish above the lower of the weekly and "
+             "composite VAH. " if src == "BASE" else "No directional context, so no invalidation line. ")
+          + "The plan writes it 2 ticks beyond the edge (`invalidate_below=` / `invalidate_above=`); S1.4 switches the context "
+          "to Balanced after 3 consecutive 1-minute closes beyond that line (AcceptBars = 3, the strategy's acceptance rule). "
+          "Context invalidation only, never a trade stop.", ""]
     return L
 
 

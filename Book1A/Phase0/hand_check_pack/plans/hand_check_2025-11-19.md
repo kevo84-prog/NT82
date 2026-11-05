@@ -35,8 +35,8 @@
 | market_context | BULLISH | | |
 | draw | 24702.50-24742.50|WKPOC_AREA | | |
 | draw_status | ACTIVE | | |
-| balance | 24549.5-24778.5 | | |
-| balance_poc | 24670 | | |
+| balance | 24549.50-24778.50 | | |
+| balance_poc | 24670.00 | | |
 | value_follows | WITH_PRICE | | |
 | on_inventory | NET_LONG | | |
 | htf_structure | BALANCE | | |

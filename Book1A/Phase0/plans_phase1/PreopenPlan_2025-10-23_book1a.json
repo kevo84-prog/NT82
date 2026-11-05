@@ -1,6 +1,6 @@
 {
  "plan": [
-  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)",
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)",
   "plan_id=2025-10-23-b1a",
   "date=2025-10-23",
   "asof=08:25",
@@ -24,8 +24,8 @@
   "zone=25270.00-25280.00|T_DELTA_SELL_WK|TARGET",
   "zone=25295.00-25315.00|T_DELTA_SELL_WK|TARGET",
   "zone=25389.75-25399.75|T_HTFVAH|TARGET",
-  "balance=24896-25134",
-  "balance_poc=25000",
+  "balance=24896.00-25134.00",
+  "balance_poc=25000.00",
   "macro=not verified (backtest)",
   "news=not used (backtest)",
   "# --- Book 1A fields (logged by S1.4, not read) ---",
@@ -34,6 +34,8 @@
   "context_base=BALANCED",
   "htf_acceptance=NONE",
   "# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58",
+  "context_source=NONE",
+  "weekly_guard=N/A",
   "htfval_state=accept=INSIDE|failed_reclaim=0",
   "htfvah_state=accept=INSIDE|failed_reclaim=0",
   "value_follows=WITH_PRICE",
@@ -80,6 +82,8 @@
  "market_context": "BALANCED",
  "context_base": "BALANCED",
  "htf_acceptance": "NONE",
+ "context_source": "NONE",
+ "weekly_guard": "N/A",
  "htf_acceptance_states": [
   {
    "level_name": "HTFVAL",

@@ -7,7 +7,60 @@ Controlling doc: "Book 1A – Replay plan", re-exported Nov 2 (Drive edit Nov 1 
 Checklist: "Book 1A – Phase 0 build checklist", re-exported the same way. No P&L was opened, summarized or looked at.
 Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches were read through hard links).
 
-## 0. Nov 5, htf_acceptance: pre-freeze Context specification change (read this first)
+## 0. Nov 5 (second), Context clarification: weekly guard, acceptance invalidation, BALANCED check (read this first)
+
+Kyron's clarification of Nov 5. No new numbers, no P&L, no change to trade stops, precedence, thresholds or zone construction. Branch `book1a-phase0-pc`, local commits only, not pushed, not frozen.
+
+1. **Spec re-exported first** (`Book1A/specs/Book1A_2_context.md`, Drive modifiedTime 2026-11-05T03:59:33Z). Only the Precedence bullet changed: the weekly guard applies to every Bullish and Bearish; an acceptance-based context invalidates at the composite edge it is accepted beyond.
+2. **Rule and tests committed before the rebuild** (commit 6998761). `plan_fields` v1.2: `weekly_guard`, `resolve_context` (the precedence, unchanged, then the guard on every BULLISH / BEARISH; failure = NONE_CONFLICT -> NONE); `invalidation(source=)`. `plan_v24` v1.5 writes `context_source=` (BASE / HTF_ACCEPTANCE / NONE) and `weekly_guard=` (PASS / FAIL / N/A). Tests: both conflict cases (acceptance Bullish with the weekly VAL ACCEPTED_BELOW; acceptance Bearish with the weekly VAH ACCEPTED_ABOVE), the guard on every Bullish / Bearish over all states, the acceptance invalidation on both sides, BALANCED only when the overlap test passed.
+3. **Bug found and fixed before the rebuild** (commit 8bd4005, a bug, not a rule change): `balance=` and `balance_poc=` were written with Python `:g` (6 significant digits), so quarter-point edges were rounded off the tick (Oct 28: the map's 25874.25-26033.75 was written 25874.2-26033.8). S1.4 reads `balance=` (middle third, balance retest). Now written exactly with 2 decimals; test added. `plan_v24` v1.6, `plan_fields` v1.3. All 7 balance days' lines now equal the map values to the tick.
+4. **Rerun** (all on 8bd4005): 17 plan files (13 days), R4 (2058 candidate rows), candidate log P0.11, the C3 risk check and E24 (0 failures), the three lookahead audits (R1, R3, R4: 0 violations; 63 plan build checks, 0 failed), the pack (FLIP 0), the hand-check sheet v1.3 and `draw_status_by_day.md` v1.2. Unit tests 227, 0 failures (`unit_tests/unit_tests_2026-11-05_8bd4005.log`). New hashes: `plan_hashes_2026-11-05b.md` (R4 rows: 2066 checked, 0 with a wrong plan version or sha256). The v1.4 R4 run is `runs/phase1_r4_prev_v14`; an intermediate v1.5 run (before the balance fix) is `runs/phase1_r4_v15_intermediate` (neither in git).
+
+**13-day context table** (no outcomes, no P&L):
+
+| day | | context_base | htf_acceptance | weekly guard | context_source | market_context | draw_status | invalidation edge |
+|---|---|---|---|---|---|---|---|---|
+| 2025-10-22 | Wed | BALANCED | NONE | N/A | NONE | BALANCED | NONE | none |
+| 2025-10-23 | Thu | BALANCED | NONE | N/A | NONE | BALANCED | NONE | none |
+| 2025-10-24 | Fri | NONE_NO_EVIDENCE | NONE | N/A | NONE | NONE | NONE | none |
+| 2025-10-27 | Mon | NONE_NO_EVIDENCE | ABOVE | PASS | HTF_ACCEPTANCE | BULLISH | ACTIVE | below 25394.75 (HTF VAH) |
+| 2025-10-28 | Tue | BALANCED | ABOVE | N/A | NONE | BALANCED | NONE | none |
+| 2025-10-29 | Wed | NONE_NO_EVIDENCE | ABOVE | PASS | HTF_ACCEPTANCE | BULLISH | ACTIVE | below 25394.75 (HTF VAH) |
+| 2025-10-30 | Thu | BALANCED | ABOVE | N/A | NONE | BALANCED | NONE | none |
+| 2025-10-31 | Fri | NONE_NO_EVIDENCE | ABOVE | PASS | HTF_ACCEPTANCE | BULLISH | ACTIVE | below 25394.75 (HTF VAH) |
+| 2025-11-03 | Mon | BALANCED | ABOVE | N/A | NONE | BALANCED | NONE | none |
+| 2025-11-04 | Tue | NONE_NO_EVIDENCE | ABOVE | FAIL | NONE | NONE | NONE | none |
+| 2025-11-17 | Mon | BALANCED | NONE | N/A | NONE | BALANCED | NONE | none |
+| 2025-11-18 | Tue | NONE_NO_EVIDENCE | NONE | N/A | NONE | NONE | NONE | none |
+| 2025-11-19 | Wed | BULLISH | NONE | PASS | BASE | BULLISH | ACTIVE | below 24436.5 (base rule) |
+
+### 1. Weekly guard: what changed
+Only **Nov 4** changes: BULLISH -> **NONE** (NONE_NO_EVIDENCE + ABOVE, weekly guard FAIL -> NONE_CONFLICT). Evidence at 08:10 CT: price 25696.25; weekly VAL 26020.0, state ACCEPTED_BELOW: the first 1-minute close below it was Nov 3 19:29 CT (26016.25), 761 minutes before 08:10, 100% of closes and 100% of volume since then below it (PO-9 needs >= 60 min, 80%, 20%). Weekly VAH 26189.0: INSIDE. HTF VAH 25394.75: ACCEPTED_ABOVE. So the HTF acceptance says up and the weekly acceptance says down: conflict. The draw (ONPOC_AREA) and the invalidation line are gone; the two zones go back to long=ANY / short=ANY. Review stays APPROVED. Oct 27, 29, 31 pass the guard (weekly VAL INSIDE). Nov 19 (base BULLISH) passes. No day had an acceptance-based Bearish.
+
+### 2. Acceptance invalidation
+Oct 27, 29 and 31 are acceptance-based BULLISH, so the invalidation moves from the higher of the weekly / composite VAL to the **composite VAH 25394.75** (Oct 27 was 25705.0 weekly VAL, Oct 29 25907.5, Oct 31 25957.25). The plan writes `invalidate_below=25394.25|Balanced` (the existing writer puts the line 2 ticks beyond the edge). **Bar timeframe:** S1.4 counts closes of its primary series, the 1-minute chart (harness series [0], NinjaTrader 1-minute with Tick Replay), the same `AcceptBars = 3` counter its zone acceptance uses (`UpdatePlanState`: `invBelowCount = close < InvBelow ? +1 : 0`, switch at 3; `invalidate_above` uses close > InvAbove). **Direction:** Bullish = 3 consecutive 1-minute closes below the composite VAH line; Bearish (none in these days) = 3 closes above the composite VAL line (unit test). The counter runs only after the plan is active. It changes the context to Balanced; it is never a trade stop.
+
+### 3. BALANCED
+The code sets BALANCED only when the map's overlap test passed: `context_base` returns BALANCED only if `balance_overlapping` is true, and only after neither directional read gave a single label (test `test_balanced_only_when_overlap_passes`; plan-level test). Overlap rule (map v2.3 `BalanceJson`, frozen): PD and ON 70% value areas must overlap; PD2 joins if PD2 and PD overlap; the members are merged into one profile; its value area is `balance=`, its POC `balance_poc=`. Overlap % = overlap / the narrower value area. **ON cut at 08:10:** the map builds on the first tick at or after 08:10 CT, before adding that tick, so the ON profile holds only earlier ticks. Checked on the tape: on Oct 28 the packet's ON high 26057.75 equals the highest trade before 08:10; the highest trade before 08:30 was 26063.5. ON low and last equal the before-08:10 values on all three days.
+
+| day | PD2 VAL-VAH (POC) | PD VAL-VAH (POC) | ON VAL-VAH (POC) to 08:10 | overlap PD2-PD | overlap PD-ON | members | merged balance= (balance_poc=) | plan line |
+|---|---|---|---|---|---|---|---|---|
+| Oct 28 | Oct 24: 25503.25-25557.5 (25539) | Oct 27: 25866-25980.5 (25925) | 25946.5-26003 (25970) | 0% | 60.2% | PD, ON | 25874.25-26033.75 (25925) | `balance=25874.25-26033.75`, `balance_poc=25925.00` |
+| Oct 30 | Oct 28: 26015-26154.5 (26045) | Oct 29: 26210-26303.75 (26275) | 26170-26306.5 (26200) | 0% | 100% | PD, ON | 26195.5-26297.5 (26275) | `balance=26195.50-26297.50`, `balance_poc=26275.00` |
+| Nov 3 | Oct 30: 25967.5-26090 (25970.75) | Oct 31: 26000.75-26184 (26100) | 26066.75-26190.75 (26155) | 72.9% | 94.6% | PD2, PD, ON | 25964.5-26126.75 (26090) | `balance=25964.50-26126.75`, `balance_poc=26090.00` |
+
+I recomputed both overlap percentages from the value areas; they equal the map's. On all three days neither directional read passed (VAL not held / reclaimed, VAH not failed / lost: price far above both HTF edges), so BALANCED comes from the overlap, not from a conflict. The spec also names "the days of the current week" as an alternative merged range; the frozen map does PD2 + PD + ON only (Context input 3 says balance= comes from that composite). Not added (`ambiguities.md` E31 (d)).
+
+### 4. Oct 27 and Oct 31 LOG_ONLY: the check E detail, and now
+Check E (unchanged): for a BULLISH context with an `invalidate_below` edge, every decision zone below price (zone high < price) with long=ANY must have its low >= edge - 2 ticks; else review = LOG_ONLY. Before this change (plan v1.4):
+- **Oct 27**: price 25838.0. Edge = weekly VAL 25705.0 (higher than HTF VAL 23640.0), line 25704.50. Zone D_ONL_ONVAL_WKVAL_ONTVAL_WKTVAL_ONPOC_P3_DD_EDGE_WK 25695.00-25734.75, below price, long=ANY, short=INITIATION. Its low 25695.00 < 25704.50: the long side (the with-context side) violates check E. The zone straddles the weekly VAL the context depends on.
+- **Oct 31**: price 26198.75. Edge = weekly VAL 25957.25, line 25956.75. Zone D_WKVAL_PDVAL_PDPOC_WKPOC_PDTVAL 25952.25-25980.00, below price, long=ANY. Low 25952.25 < 25956.75: the long side violates check E. (The C notes on that day are risk notes on other zones, not fails.)
+- **Now (plan v1.6):** the edge is the composite VAH 25394.75 (line 25394.25). Both zones' lows are above it, so check E passes and both days are **APPROVED**. Check E itself is unchanged.
+
+### 5. E30 accepted
+E30 (a)-(c) accepted (Kyron, Nov 5). Acceptance durations stay minimums when the run predates the bar window (Nov 3, Nov 4).
+
+## 0-5a. Nov 5, htf_acceptance: pre-freeze Context specification change
 
 Kyron's decision of Nov 5: Option B, a pre-freeze specification change to the Book 1A Context rule (not a bug fix). Branch `book1a-phase0-pc`, local commits only, not pushed, not frozen.
 

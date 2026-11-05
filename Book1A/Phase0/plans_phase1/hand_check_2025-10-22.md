@@ -30,8 +30,8 @@
 | market_context | BALANCED | | |
 | draw |  | | |
 | draw_status | NONE | | |
-| balance | 25256-25340.5 | | |
-| balance_poc | 25318 | | |
+| balance | 25256.00-25340.50 | | |
+| balance_poc | 25318.00 | | |
 | value_follows | DIVERGENT_UP | | |
 | on_inventory | NET_SHORT | | |
 | htf_structure | BALANCE | | |

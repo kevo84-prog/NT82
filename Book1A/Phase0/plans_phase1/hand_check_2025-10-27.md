@@ -45,4 +45,4 @@
 | D_ONTVAH_WKTVAH_ONVAH_WKVAH | ANY | INITIATION | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "25995.00-26005.00", "R_TP1": "", "R_TP2": "", "R_RUN": "7.51"}, "short": {"TP1": "25722.50-25732.50", "TP2": "25550.00-25560.00", "RUN": "25700.00-25710.00", "R_TP1": "2.92", "R_TP2": "10.42", "R_RUN": "3.90"}} |
 | WKPOC_AREA_ONPOC_AREA | ANY | INITIATION | YES |  | {"long": {"TP1": "", "TP2": "", "RUN": "25995.00-26005.00", "R_TP1": "", "R_TP2": "", "R_RUN": "14.76"}, "short": {"TP1": "25812.25-25822.25", "TP2": "25795.00-25805.00", "RUN": "25700.00-25710.00", "R_TP1": "0.74", "R_TP2": "2.38", "R_RUN": "11.43"}} |
 
-review=LOG_ONLY; fails=[]; notes=['E: a with-context zone lies beyond the invalidation edge']
+review=APPROVED; fails=[]; notes=[]

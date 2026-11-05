@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
 plan_id=2025-10-29-b1a
 date=2025-10-29
 asof=08:25
@@ -31,7 +31,7 @@ zone=25975.00-25985.00|T_DELTA_BUY_WK|TARGET
 zone=26045.00-26055.00|T_DELTA_BUY_WK|TARGET
 zone=26045.00-26055.00|T_DELTA_BUY_PD|TARGET
 zone=26080.00-26095.00|T_DELTA_BUY_PD|TARGET
-invalidate_below=25907.00|Balanced
+invalidate_below=25394.25|Balanced
 macro=not verified (backtest)
 news=not used (backtest)
 # --- Book 1A fields (logged by S1.4, not read) ---
@@ -40,6 +40,8 @@ draw_status=ACTIVE
 context_base=NONE_NO_EVIDENCE
 htf_acceptance=ABOVE
 # htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=HTF_ACCEPTANCE
+weekly_guard=PASS
 htfval_state=accept=INSIDE|failed_reclaim=0
 htfvah_state=accept=ABOVE|failed_reclaim=0
 draw=26295.00-26305.00|CR

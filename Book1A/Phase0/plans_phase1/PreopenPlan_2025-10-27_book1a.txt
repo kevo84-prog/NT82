@@ -1,4 +1,4 @@
-# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.4)
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
 plan_id=2025-10-27-b1a
 date=2025-10-27
 asof=08:25
@@ -28,7 +28,7 @@ zone=25730.00-25745.00|T_DELTA_BUY_ON|TARGET
 zone=25795.00-25805.00|T_DELTA_BUY_WK|TARGET
 zone=25795.00-25805.00|T_DELTA_BUY_ON|TARGET
 zone=25847.50-25857.50|T_ONH|TARGET
-invalidate_below=25704.50|Balanced
+invalidate_below=25394.25|Balanced
 macro=not verified (backtest)
 news=not used (backtest)
 # --- Book 1A fields (logged by S1.4, not read) ---
@@ -37,6 +37,8 @@ draw_status=ACTIVE
 context_base=NONE_NO_EVIDENCE
 htf_acceptance=ABOVE
 # htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=HTF_ACCEPTANCE
+weekly_guard=PASS
 htfval_state=accept=INSIDE|failed_reclaim=0
 htfvah_state=accept=ABOVE|failed_reclaim=0
 draw=25995.00-26005.00|CR
@@ -72,6 +74,6 @@ mq_cr_0dte=25575.00
 mq_ps_0dte=25000.00
 mq_hvl_0dte=25040.00
 # --- review ---
-review=LOG_ONLY
-review_note=E: a with-context zone lies beyond the invalidation edge
+review=APPROVED
+review_note=all checks passed
 end=1
