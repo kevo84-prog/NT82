@@ -19,7 +19,8 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.3"   # v1.1: DD_EDGE reads the v2.3 packet form (E21)
+VERSION = "plan-v2.4-book1a-v1.4"   # v1.4: htf_acceptance (PO-9 at HTF VAH/VAL) + context precedence (Nov 5, 2026)
+                                    # v1.1: DD_EDGE reads the v2.3 packet form (E21)
                                     # v1.2: weekly DD_EDGE (E23, ours: PD rule applied to weekly, book1a.weekly_dd)
                                     # v1.3: weekly DD UNAVAILABLE noted (E26); FLIP review flag (E25)
 CT = ZoneInfo("America/Chicago")
@@ -45,6 +46,29 @@ def _find(lv: Dict[str, float], *parts: str) -> Optional[float]:
 
 def _ctx_label(c: str) -> str:
     return {"BULLISH": "Bullish", "BEARISH": "Bearish", "BALANCED": "Balanced"}.get(c, "None")
+
+
+def acceptance_evidence(used: Sequence[Bar], st, as_of) -> dict:
+    """Hand-check evidence for one PO-9 state (not written to the plan): the first 1-minute close beyond the edge in
+    the current excursion, the minutes, close share and volume share since it, and the bars window."""
+    out = dict(name=st.level_name, level=st.level, state=st.state, minutes=st.minutes_since_first_close,
+               close_share=st.close_share, volume_share=st.volume_share, first_close_ct=None, first_close=None,
+               excursion_starts_at_window_start=False, n_bars_since=None,
+               window_from=used[0].close_ct.isoformat() if used else None, window_to=used[-1].close_ct.isoformat() if used else None,
+               as_of=as_of.isoformat())
+    if st.minutes_since_first_close is None:
+        return out
+    beyond = (lambda b: b.close < st.level) if st.level_name.endswith("VAL") else (lambda b: b.close > st.level)
+    first = None
+    for k in range(len(used) - 1, -1, -1):
+        if beyond(used[k]):
+            first = k
+        else:
+            break
+    if first is not None:
+        out.update(first_close_ct=used[first].close_ct.isoformat(), first_close=used[first].close,
+                   excursion_starts_at_window_start=(first == 0), n_bars_since=len(used) - first)
+    return out
 
 
 def dd_inputs(ddp) -> Optional[tuple]:
@@ -204,7 +228,15 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
                           wk_val_state=wk_val_state.state if wk_val_state else "INSIDE",
                           wk_vah_state=wk_vah_state.state if wk_vah_state else "INSIDE",
                           balance_overlapping=bool(bc.get("overlapping")), balance_lo=bc.get("val"), balance_hi=bc.get("vah"), balance_poc=bal_poc)
-    mctx = PF.market_context(ci) if htf_val is not None and htf_vah is not None else "NONE"
+    # Nov 5, 2026 (pre-freeze specification change, Kyron): PO-9 acceptance, unchanged, at the HTF composite VAH and
+    # VAL, bars closed at or before 08:10 only. PF.HTF_ACCEPTANCE_LABEL. Context evidence only.
+    htf_ok = htf_val is not None and htf_vah is not None
+    htf_val_state = M.acceptance_state(used, "VAL", htf_val, htf_vah, ref, as_of, "HTFVAL") if htf_ok else None
+    htf_vah_state = M.acceptance_state(used, "VAH", htf_vah, htf_val, ref, as_of, "HTFVAH") if htf_ok else None
+    htf_acc = PF.htf_acceptance_from_states(htf_val_state.state if htf_val_state else None,
+                                            htf_vah_state.state if htf_vah_state else None)
+    ctx_base = PF.context_base(ci) if htf_ok else "NONE_NO_EVIDENCE"
+    mctx = PF.apply_htf_acceptance(ctx_base, htf_acc)
     if htf_val is None or htf_vah is None:
         notes.append("context: HTF composite value missing from the packet levels -> NONE")
     # draw: next HTF level in the context direction
@@ -249,7 +281,9 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
             balance_composite=bc, market_context=mctx,
             draw_candidates=[dict(dist=_r(c[0]), name=c[1], lo=_r(c[2]), hi=_r(c[3])) for c in sorted(draw_cands)],
             draw_status=draw.status if draw else "NONE", pd=dict(pd1), pd2=dict(pd2), value_follows=vf,
-            overnight=dict(on), settle=settle, on_inventory=on_inv)
+            overnight=dict(on), settle=settle, on_inventory=on_inv,
+            context_base=ctx_base, htf_acceptance=htf_acc,
+            htf_accept=[acceptance_evidence(used, st, as_of) for st in (htf_val_state, htf_vah_state) if st is not None])
 
     # ---- sides, check C, ladder per decision zone --------------------------------------------------
     zone_rows = []
@@ -331,7 +365,10 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         if inv["invalidate_below"] is not None: L.append(f"invalidate_below={_r(inv['invalidate_below'] - 2 * TICK):.2f}|Balanced")
     L += ["macro=not verified (backtest)", "news=not used (backtest)",
           "# --- Book 1A fields (logged by S1.4, not read) ---",
-          f"market_context={mctx}", f"draw_status={draw.status if draw else 'NONE'}"]
+          f"market_context={mctx}", f"draw_status={draw.status if draw else 'NONE'}",
+          f"context_base={ctx_base}", f"htf_acceptance={htf_acc}", "# htf_acceptance: " + PF.HTF_ACCEPTANCE_LABEL]
+    if htf_val_state: L.append(f"htfval_state={htf_val_state.tag()}")
+    if htf_vah_state: L.append(f"htfvah_state={htf_vah_state.tag()}")
     if draw: L.append(f"draw={draw.draw_lo:.2f}-{draw.draw_hi:.2f}|{draw_name}")
     L += [f"value_follows={vf}", f"on_inventory={on_inv['on_inventory']}", f"on_vs_settle={on_inv['on_vs_settle']}",
           f"htf_structure={hst}", f"gex_regime={gex_regime}",
@@ -353,7 +390,10 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         L += ["gex_model=MQ_REPLICA", "gex_source=EOD_PRIOR"]
         for g in gex_levels: L.append(f"mq_{g.name.lower()}={g.lo:.2f}")
     L += ["# --- review ---", f"review={review}", "review_note=" + ("; ".join(fails + notes) if (fails or notes) else "all checks passed"), "end=1"]
-    side = {"plan": L, "date": p["date"], "as_of": as_of.isoformat(), "market_context": mctx, "review": review, "fails": fails, "notes": notes,
+    side = {"plan": L, "date": p["date"], "as_of": as_of.isoformat(), "market_context": mctx, "context_base": ctx_base,
+            "htf_acceptance": htf_acc, "htf_acceptance_states": [st.__dict__ | {"available_at": st.available_at.isoformat()}
+                                                                  for st in (htf_val_state, htf_vah_state) if st is not None],
+            "review": review, "fails": fails, "notes": notes,
             "research": research, "zones": [dict(label=zr["label"], lo=zr["lo"], hi=zr["hi"], long=zr["long"], short=zr["short"],
                                                  families=zr["fam"].families, levels=zr["fam"].levels, ladder=zr["ladder"],
                                                  stop_ticks=zr["stop_ticks"], available_at=as_of.isoformat()) for zr in zone_rows],

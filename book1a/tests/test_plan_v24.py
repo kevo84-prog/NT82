@@ -192,7 +192,7 @@ class TestDrawStatusNone(TestPlanBuilder):
         from unittest import mock
         from book1a import plan_fields as PF
         ev = {}
-        with mock.patch.object(PF, "market_context", return_value="BULLISH"):
+        with mock.patch.object(PF, "apply_htf_acceptance", return_value="BULLISH"):
             text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
         kv = self._kv(text)
         self.assertTrue(ev["draw_candidates"])     # HTFPOC 24120 / HTFVAH 24300 sit above price 23990
@@ -204,7 +204,7 @@ class TestDrawStatusNone(TestPlanBuilder):
         from book1a import plan_fields as PF
         for ctx in ("BALANCED", "NONE"):
             ev = {}
-            with mock.patch.object(PF, "market_context", return_value=ctx):
+            with mock.patch.object(PF, "apply_htf_acceptance", return_value=ctx):
                 text, _ = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
             self.assertEqual(ev["draw_candidates"], [])
             self.assertEqual(self._kv(text)["draw_status"], "NONE")

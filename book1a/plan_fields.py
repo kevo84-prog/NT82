@@ -5,6 +5,9 @@ Phase 2 (Context, C6):
   INVALIDATED | NONE (NONE = no draw candidate exists; written by plan_v24 only then, with no draw= line, and never
   treated as ACTIVE; a DrawState is never NONE); draw=<lo>-<hi>; balance=<lo>-<hi>, balance_poc=; value_follows (value_vs_price);
   on_inventory; edge_control; gex_regime; htf_structure.
+  Nov 5, 2026 (pre-freeze specification change, Kyron): htf_acceptance = ABOVE | BELOW | NONE (PO-9 at the HTF
+  composite VAH / VAL, data before 08:10 CT), context_base = BULLISH | BEARISH | BALANCED | NONE_NO_EVIDENCE |
+  NONE_CONFLICT, and the precedence in apply_htf_acceptance. Context evidence only.
 Phase 3 (zone selection and side rules):
   sides long= / short= in {ANY, RESPONSE, INITIATION, NONE}; the most restrictive rule wins
   (NONE > INITIATION > RESPONSE > ANY); every conflict is logged as
@@ -17,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
-VERSION = "plan-fields-v1.0"
+VERSION = "plan-fields-v1.1"   # v1.1: htf_acceptance precedence, None split (Nov 5, 2026)
 
 RESTRICTIVENESS = {"NONE": 3, "INITIATION": 2, "RESPONSE": 1, "ANY": 0}
 
@@ -38,20 +41,77 @@ class ContextInputs:
     balance_poc: Optional[float] = None
 
 
-def market_context(ci: ContextInputs) -> str:
-    """Context rule (draft, approved Oct 31; our mapping marked 'needed' in the doc)."""
+HTF_ACCEPTANCE_LABEL = ("ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, "
+                        "00:34:58")
+HTF_ACCEPTANCE_VALUES = ("ABOVE", "BELOW", "NONE")
+CONTEXT_BASE_VALUES = ("BULLISH", "BEARISH", "BALANCED", "NONE_NO_EVIDENCE", "NONE_CONFLICT")
+
+
+def context_base(ci: ContextInputs) -> str:
+    """Context rule before the HTF acceptance step (draft, approved Oct 31; our mapping marked 'needed').
+    None is split (Kyron, Nov 5, 2026, pre-freeze specification change):
+      NONE_CONFLICT    = a higher-time-frame directional read passed but the weekly PO-9 acceptance disagrees
+                         (bullish read but ACCEPTED_BELOW the weekly VAL, or bearish read but ACCEPTED_ABOVE the
+                         weekly VAH); also both directional reads passing at once (price inside HTF value with
+                         both edges touched; the HTF acceptance is always NONE there, so the label is kept either way);
+      NONE_NO_EVIDENCE = no directional test passed."""
     inside_or_above = ci.price >= ci.htf_val
     inside_or_below = ci.price <= ci.htf_vah
-    bullish = inside_or_above and ci.held_or_reclaimed_val and ci.wk_val_state != "ACCEPTED_BELOW"
-    bearish = inside_or_below and ci.failed_or_lost_vah and ci.wk_vah_state != "ACCEPTED_ABOVE"
+    read_bull = inside_or_above and ci.held_or_reclaimed_val
+    read_bear = inside_or_below and ci.failed_or_lost_vah
+    bullish = read_bull and ci.wk_val_state != "ACCEPTED_BELOW"
+    bearish = read_bear and ci.wk_vah_state != "ACCEPTED_ABOVE"
     if bullish and not bearish:
         return "BULLISH"
     if bearish and not bullish:
         return "BEARISH"
     if ci.balance_overlapping:
         return "BALANCED"
-    # the HTF read and the weekly acceptance disagree, or nothing fits
+    if read_bull or read_bear:
+        return "NONE_CONFLICT"
+    return "NONE_NO_EVIDENCE"
+
+
+def apply_htf_acceptance(base: str, htf_acceptance: str) -> str:
+    """Precedence (Context doc, Nov 5, 2026; deterministic). Returns the market_context written to S1.4:
+    BULLISH | BEARISH | BALANCED | NONE.
+      BULLISH + ABOVE = BULLISH;  BEARISH + BELOW = BEARISH;
+      BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict);
+      BALANCED stays BALANCED whatever the acceptance (acceptance logged only);
+      NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH;  NONE_CONFLICT stays NONE;
+      no acceptance (NONE) = the existing label kept."""
+    if base not in CONTEXT_BASE_VALUES:
+        raise ValueError(f"unknown context base {base!r}")
+    if htf_acceptance not in HTF_ACCEPTANCE_VALUES:
+        raise ValueError(f"unknown htf_acceptance {htf_acceptance!r}")
+    if base == "BALANCED":
+        return "BALANCED"
+    if base == "NONE_CONFLICT":
+        return "NONE"
+    if htf_acceptance == "NONE":
+        return "NONE" if base == "NONE_NO_EVIDENCE" else base
+    if base == "NONE_NO_EVIDENCE":
+        return "BULLISH" if htf_acceptance == "ABOVE" else "BEARISH"
+    if base == "BULLISH":
+        return "BULLISH" if htf_acceptance == "ABOVE" else "NONE"
+    return "BEARISH" if htf_acceptance == "BELOW" else "NONE"     # BEARISH
+
+
+def htf_acceptance_from_states(val_state: Optional[str], vah_state: Optional[str]) -> str:
+    """PO-9 states at the HTF composite VAL / VAH -> htf_acceptance."""
+    below = val_state == "ACCEPTED_BELOW"
+    above = vah_state == "ACCEPTED_ABOVE"
+    if below and not above:
+        return "BELOW"
+    if above and not below:
+        return "ABOVE"
     return "NONE"
+
+
+def market_context(ci: ContextInputs, htf_acceptance: str = "NONE") -> str:
+    """market_context written to S1.4 (BULLISH | BEARISH | BALANCED | NONE): context_base, then the HTF
+    acceptance precedence. With htf_acceptance=NONE this is the Oct 31 rule unchanged."""
+    return apply_htf_acceptance(context_base(ci), htf_acceptance)
 
 
 def balance_fields(ci: ContextInputs) -> Dict[str, Optional[str]]:

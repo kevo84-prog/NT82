@@ -1,4 +1,4 @@
-<!-- exported 2026-11-01T20:17Z from Google Doc 1FhnNBFcc58teeZ76Sbi7kjz0b2OhX0Nd1Rmyh-AepfY, modifiedTime 2026-11-01T17:59:42.973Z -->
+<!-- exported 2026-11-05T02:05Z from Google Doc 1FhnNBFcc58teeZ76Sbi7kjz0b2OhX0Nd1Rmyh-AepfY, modifiedTime 2026-11-05T01:57:22.453Z -->
 # **Book 1A – 2 Context (bullish or bearish)**
 
 **Status:** draft v2, updated Oct 31, 2026\. The context line and invalidation were approved by Kyron on Oct 31\. Changes 1–7 from the context review of Parts 1–6 and the other Jeron videos were approved the same day. Nov 1, 2026: C6 (market\_context and draw\_status written as separate fields) and C5 (no runner only on Balanced days with positive gamma) approved by Kyron. Applies to Book 1A only.  
@@ -37,8 +37,10 @@
 * **Bearish:** the mirror (inside or below composite value after failing at or losing its VAH, and not ACCEPTED\_ABOVE the weekly VAH).  
 * **Balanced (changed):** the PD2, PD and ON value areas, or the days of the current week, overlap and are merged into one range, written as balance= and balance\_poc=. Trade its extremes, not the POC. This replaces our earlier "inside composite and weekly value with no recent edge test". Jeron: Part 4, 00:01:51–00:02:23; Part 6, 00:01:40–00:02:50; Part 5, 00:05:11.  
 * **None:** the higher-time-frame read and the weekly acceptance disagree (for example composite bullish but ACCEPTED\_BELOW the weekly VAL). Our mapping (needed).  
-* **draw=\<lo\>-\<hi\>:** the next higher-time-frame level in the context direction: composite POC, HVN, the far value edge, or a gamma magnet (input 6). It is the runner target in Phase 6\. The plan writes market\_context=BULLISH \| BEARISH \| BALANCED \| NONE and, separately, draw\_status=ACTIVE \| REACHED \| INVALIDATED \| NONE (C6; NONE = no draw candidate exists, never treated as ACTIVE; added to this copy Nov 4, 2026 from Kyron's spec update, the Drive copy wins). Reaching the draw changes draw\_status, not market\_context.  
-* Context only sets sides and targets. The strategy still needs order-flow proof at the open.
+* **draw=\<lo\>-\<hi\>:** the next higher-time-frame level in the context direction: composite POC, HVN, the far value edge, or a gamma magnet (input 6). It is the runner target in Phase 6\. The plan writes market\_context=BULLISH \| BEARISH \| BALANCED \| NONE and, separately, draw\_status=ACTIVE \| REACHED \| INVALIDATED \| NONE (C6; NONE added Nov 4, 2026: no draw candidate exists, for example on a Balanced day, so there is no target; NONE is never treated as ACTIVE). Reaching the draw changes draw\_status, not market\_context.  
+* Context only sets sides and targets. The strategy still needs order-flow proof at the open.  
+* Acceptance outside composite value (pre-freeze specification change, Nov 5, 2026, Kyron; ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58–00:35:10): the PO-9 acceptance definition, unchanged, is applied to the higher-time-frame composite VAH and VAL as of 08:10 CT (60+ minutes since the first 1-minute close beyond the edge, 80%+ of closes since then beyond it, 20%+ of the volume since that close beyond it; data before 08:10 only). The result is logged as htf\_acceptance=ABOVE \| BELOW \| NONE. It is context evidence, never an entry signal.  
+* Precedence (deterministic): Bullish \+ ABOVE \= Bullish; Bearish \+ BELOW \= Bearish; Bullish \+ BELOW or Bearish \+ ABOVE \= None (conflict); Balanced stays Balanced whatever the acceptance (it is a real merged-range condition; acceptance is logged only); None is split into NONE\_NO\_EVIDENCE (no directional test passed) and NONE\_CONFLICT (higher-time-frame read and weekly acceptance disagree): NONE\_NO\_EVIDENCE \+ ABOVE \= Bullish, \+ BELOW \= Bearish; NONE\_CONFLICT stays None; with no acceptance, the existing label is kept. Frozen once committed, whatever the resulting context counts.
 
 ## **Context inputs added (approved Oct 31\)**
 
@@ -54,7 +56,7 @@ Each input is written as a plan key. The strategy logs keys it does not use, so 
 
 * **Rule:** on\_inventory=NET\_LONG \| NET\_SHORT \| NEUTRAL, on\_vs\_settle=\<points\>, on\_profile=THIN \| NORMAL.  
 * **Use:** a net-long overnight far above settlement on a thin profile is expected to rebalance fast toward settlement, unless buyers accept above it; if they accept, upside targets open. Written as the two scenarios for the open. Net short is the mirror.  
-* **Jeron:** Part 3, \~00:01–00:07 ("The overnight inventory is net long… the rebalancing is going to happen fast. That gives us an advantage on shorts. It also gives us an advantage on longs…").  
+* **Jeron:** Part 3, \~00:05–00:07 ("The overnight inventory is net long… the rebalancing is going to happen fast. That gives us an advantage on shorts. It also gives us an advantage on longs…").  
 * **Needed:** how far from settlement counts as "far", and what counts as a "thin" profile. Jeron gives no numbers.
 
 ### **3\. Balanced \= Jeron's merged range**
