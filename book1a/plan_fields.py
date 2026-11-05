@@ -2,7 +2,8 @@
 
 Phase 2 (Context, C6):
   market_context = BULLISH | BEARISH | BALANCED | NONE, and separately draw_status = ACTIVE | REACHED |
-  INVALIDATED; draw=<lo>-<hi>; balance=<lo>-<hi>, balance_poc=; value_follows (value_vs_price);
+  INVALIDATED | NONE (NONE = no draw candidate exists; written by plan_v24 only then, with no draw= line, and never
+  treated as ACTIVE; a DrawState is never NONE); draw=<lo>-<hi>; balance=<lo>-<hi>, balance_poc=; value_follows (value_vs_price);
   on_inventory; edge_control; gex_regime; htf_structure.
 Phase 3 (zone selection and side rules):
   sides long= / short= in {ANY, RESPONSE, INITIATION, NONE}; the most restrictive rule wins
@@ -113,7 +114,7 @@ def gex_regime(total_net_gex: Optional[float]) -> Optional[str]:
 class DrawState:
     draw_lo: float
     draw_hi: float
-    status: str = "ACTIVE"             # ACTIVE | REACHED | INVALIDATED
+    status: str = "ACTIVE"             # ACTIVE | REACHED | INVALIDATED (NONE = no DrawState at all; see plan_v24)
     new_target_needed: bool = False     # logged only (Context, trigger 2)
 
     def on_price(self, bar_high: float, bar_low: float) -> None:

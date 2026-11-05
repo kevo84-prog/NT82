@@ -31,31 +31,11 @@ def main(argv=None):
     ap.add_argument("--days", nargs="*", default=DEFAULT_DAYS)
     a = ap.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from book1a import bars as B, plan_v24 as P, sessions as S, vwap as V, weekly_dd as WD
     run, block1, out = Path(a.run), Path(a.block1), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    gex = {r["session"]: r for r in csv.DictReader(open(block1 / "gex_levels_block1.csv", newline="", encoding="utf-8-sig"))}
-    cal = list(csv.DictReader(open(block1 / "econ_calendar_2025-10_2026-04.csv", newline="", encoding="utf-8-sig")))
-    tape = run / "tape_map.csv.gz"
+    gex, cal = load_inputs(block1)
     for ds in a.days:
-        d = date.fromisoformat(ds)
-        as_of = datetime.combine(d, time(8, 10), tzinfo=CT)
-        # the map names packets PreopenPacket_<instrument>_<day>.json (e.g. PreopenPacket_NQ_DEC25_2025-10-22.json)
-        hits = sorted((run / "map").glob(f"PreopenPacket_*{ds}.json"))
-        if len(hits) != 1:
-            raise SystemExit(f"expected one map packet for {ds}, found {[h.name for h in hits]}")
-        packet = json.load(open(hits[0]))
-        start = V.week_start(d) - timedelta(days=7)
-        rows = list(_rows(tape, start, as_of))
-        bars = B.bars_from_rows(rows, start, as_of)
-        pd_date = S.sessions(d - timedelta(days=7), d - timedelta(days=1))[-1]
-        prof = B.profiles_from_rows(rows, {"WK": (V.week_start(d), as_of), "ON": (V.session_start(d), as_of),
-                                           "PD": (datetime.combine(pd_date, time(8, 30), tzinfo=CT), datetime.combine(pd_date, time(15, 0), tzinfo=CT))})
-        ts, px, sz = B.trades_from_tape(tape, V.week_start(d), as_of)
-        vres = V.vwap_0810(ts, px, sz, d)
-        wdd, _, _ = WD.weekly(rows, V.week_start(d), as_of, packet=packet)     # E23: data before 08:10 CT only; E26
-        text, side = P.build(packet, bars, prof, vres, gex.get(ds), cal, roll_dates=[x.isoformat() for x in S.ROLL_DATES], as_of=as_of,
-                             weekly_dd=wdd)
+        text, side, _packet = build_day(run, ds, gex, cal)
         (out / f"PreopenPlan_{ds}_book1a.txt").write_text(text, encoding="utf-8")
         (out / f"PreopenPlan_{ds}_book1a.json").write_text(json.dumps(side, indent=1, default=str), encoding="utf-8")
         L = [f"# Hand check {ds} (map v2.4 Book 1A outputs, families, context and sides)", "",
@@ -86,6 +66,40 @@ def main(argv=None):
         (out / f"hand_check_{ds}.md").write_text("\n".join(L) + "\n", encoding="utf-8")
         print(ds, side["market_context"], len(side["zones"]), "decision zones", side["review"])
     return 0
+
+
+def load_inputs(block1: Path):
+    gex = {r["session"]: r for r in csv.DictReader(open(Path(block1) / "gex_levels_block1.csv", newline="", encoding="utf-8-sig"))}
+    cal = list(csv.DictReader(open(Path(block1) / "econ_calendar_2025-10_2026-04.csv", newline="", encoding="utf-8-sig")))
+    return gex, cal
+
+
+def build_day(run: Path, ds: str, gex: dict, cal: list, evidence: dict = None):
+    """Build one day's Book 1A plan from a run folder (map packet + map tape). Returns (text, sidecar, packet).
+    evidence: optional dict that plan_v24.build fills with the context inputs (not part of the plan)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from book1a import bars as B, plan_v24 as P, sessions as S, vwap as V, weekly_dd as WD
+    run = Path(run)
+    d = date.fromisoformat(ds)
+    as_of = datetime.combine(d, time(8, 10), tzinfo=CT)
+    tape = run / "tape_map.csv.gz"
+    # the map names packets PreopenPacket_<instrument>_<day>.json (e.g. PreopenPacket_NQ_DEC25_2025-10-22.json)
+    hits = sorted((run / "map").glob(f"PreopenPacket_*{ds}.json"))
+    if len(hits) != 1:
+        raise SystemExit(f"expected one map packet for {ds}, found {[h.name for h in hits]}")
+    packet = json.load(open(hits[0]))
+    start = V.week_start(d) - timedelta(days=7)
+    rows = list(_rows(tape, start, as_of))
+    bars = B.bars_from_rows(rows, start, as_of)
+    pd_date = S.sessions(d - timedelta(days=7), d - timedelta(days=1))[-1]
+    prof = B.profiles_from_rows(rows, {"WK": (V.week_start(d), as_of), "ON": (V.session_start(d), as_of),
+                                       "PD": (datetime.combine(pd_date, time(8, 30), tzinfo=CT), datetime.combine(pd_date, time(15, 0), tzinfo=CT))})
+    ts, px, sz = B.trades_from_tape(tape, V.week_start(d), as_of)
+    vres = V.vwap_0810(ts, px, sz, d)
+    wdd, _, _ = WD.weekly(rows, V.week_start(d), as_of, packet=packet)     # E23: data before 08:10 CT only; E26
+    text, side = P.build(packet, bars, prof, vres, gex.get(ds), cal, roll_dates=[x.isoformat() for x in S.ROLL_DATES], as_of=as_of,
+                         weekly_dd=wdd, evidence=evidence)
+    return text, side, packet
 
 
 def _rows(tape, start, end):

@@ -172,3 +172,67 @@ class TestDDInputs(unittest.TestCase):
     def test_generic_form(self):
         from book1a import plan_v24 as P
         self.assertEqual(P.dd_inputs({"dist_a": [1, 2], "separator": [2, 3], "dist_b": [3, 4], "profile": "WK"})[3], "WK")
+
+
+class TestDrawStatusNone(TestPlanBuilder):
+    """Context spec (Kyron, Nov 4): draw_status = ACTIVE | REACHED | INVALIDATED | NONE; NONE = no draw candidate exists,
+    never treated as ACTIVE."""
+    def _kv(self, text):
+        return {l.split("=", 1)[0]: l.split("=", 1)[1] for l in text.splitlines() if "=" in l and not l.startswith("#")}
+
+    def test_none_only_when_no_candidate(self):
+        ev = {}
+        text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
+        kv = self._kv(text)
+        self.assertEqual(kv["draw_status"] == "NONE", ev["draw_candidates"] == [])
+        if kv["draw_status"] == "NONE":
+            self.assertNotIn("draw", kv)            # no draw level is written, so nothing can read one as a target
+
+    def test_bullish_with_a_candidate_is_active_not_none(self):
+        from unittest import mock
+        from book1a import plan_fields as PF
+        ev = {}
+        with mock.patch.object(PF, "market_context", return_value="BULLISH"):
+            text, side = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
+        kv = self._kv(text)
+        self.assertTrue(ev["draw_candidates"])     # HTFPOC 24120 / HTFVAH 24300 sit above price 23990
+        self.assertEqual(kv["draw_status"], "ACTIVE")
+        self.assertIn("draw", kv)
+
+    def test_balanced_or_none_context_has_no_candidate(self):
+        from unittest import mock
+        from book1a import plan_fields as PF
+        for ctx in ("BALANCED", "NONE"):
+            ev = {}
+            with mock.patch.object(PF, "market_context", return_value=ctx):
+                text, _ = P.build(self.packet, self.bars, self.profiles, self.vwap, self.gex, [], roll_dates=(), evidence=ev)
+            self.assertEqual(ev["draw_candidates"], [])
+            self.assertEqual(self._kv(text)["draw_status"], "NONE")
+
+    def test_draw_state_never_none(self):
+        from book1a import plan_fields as PF
+        d = PF.DrawState(100.0, 110.0)
+        self.assertEqual(d.status, "ACTIVE")
+        d.on_price(105.0, 99.0); self.assertEqual(d.status, "REACHED")
+        d2 = PF.DrawState(100.0, 110.0); d2.on_invalidation(); self.assertEqual(d2.status, "INVALIDATED")
+
+    def test_ladder_does_not_use_a_draw_when_none(self):
+        """The ladder runner falls back to the draw only when a DrawState exists; NONE passes draw=None."""
+        from book1a import plan_fields as PF
+        c = {"lo": 100.0, "hi": 101.0}
+        far = PF.DrawState(500.0, 510.0)
+        with_none = P._ladder("long", c, 100.5, [], {}, [], [], None, None, {}, None, [], 6)
+        with_draw = P._ladder("long", c, 100.5, [], {}, [], [], None, None, {}, far, [], 6)
+        self.assertEqual(with_none["RUN"], "")
+        self.assertEqual(with_draw["RUN"], "500.00-510.00")
+
+    def test_s14_has_no_draw_key(self):
+        """S1.4 (the frozen NT strategy) does not parse draw= or draw_status= (logged-only Book 1A fields)."""
+        import os
+        from pathlib import Path
+        src = Path(os.environ.get("BOOK1_ROOT", r"K:\Databento_BackTesting")) / "jeron_harness" / "nt_source" / "JeronOrderFlowStrategy.cs"
+        if not src.exists():
+            self.skipTest("NT source not on this machine")
+        s = src.read_text(encoding="utf-8", errors="replace")
+        self.assertNotIn('key == "draw', s)
+        self.assertNotIn('"draw_status"', s)

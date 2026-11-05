@@ -65,9 +65,11 @@ def dd_inputs(ddp) -> Optional[tuple]:
 
 def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dict, gex_row: Optional[dict],
           calendar_rows: Sequence[dict], roll_dates: Sequence[str] = (), as_of: Optional[datetime] = None,
-          weekly_dd: Optional[dict] = None):
+          weekly_dd: Optional[dict] = None, evidence: Optional[dict] = None):
     """Returns (plan_text, sidecar dict). profiles: {"WK"|"PD"|"ON": {"volume": {row: v}, "delta": {row: d}, "poc_row": r}}.
-    weekly_dd: book1a.weekly_dd.weekly() result (E23); None = no weekly DD input (logged in the sidecar)."""
+    weekly_dd: book1a.weekly_dd.weekly() result (E23); None = no weekly DD input (logged in the sidecar).
+    evidence: optional dict filled with the input numbers behind the context fields (for the hand-check sheet only;
+    never written to the plan text or the sidecar, so plan and sidecar hashes do not depend on it)."""
     d = date.fromisoformat(p["date"])
     as_of = as_of or datetime.combine(d, time(8, 10), tzinfo=CT)
     ref = float(p["ref_price"])
@@ -238,6 +240,16 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
     on_inv = PF.on_inventory(on.get("vwap") or on.get("poc") or ref, settle if settle is not None else ref, ref)
     h1 = (p.get("structure") or {})
     hst = PF.htf_structure(h1.get("swing_highs") or [], h1.get("swing_lows") or [])
+    if evidence is not None:
+        evidence.update(
+            price=ref, htf_val=htf_val, htf_vah=htf_vah, htf_poc=htf_poc, bars_low=lo_w, bars_high=hi_w,
+            bars_from=used[0].close_ct.isoformat() if used else None, bars_to=used[-1].close_ct.isoformat() if used else None,
+            held_or_reclaimed_val=ci.held_or_reclaimed_val, failed_or_lost_vah=ci.failed_or_lost_vah,
+            wk_val=wk_val, wk_vah=wk_vah, wk_val_state=ci.wk_val_state, wk_vah_state=ci.wk_vah_state,
+            balance_composite=bc, market_context=mctx,
+            draw_candidates=[dict(dist=_r(c[0]), name=c[1], lo=_r(c[2]), hi=_r(c[3])) for c in sorted(draw_cands)],
+            draw_status=draw.status if draw else "NONE", pd=dict(pd1), pd2=dict(pd2), value_follows=vf,
+            overnight=dict(on), settle=settle, on_inventory=on_inv)
 
     # ---- sides, check C, ladder per decision zone --------------------------------------------------
     zone_rows = []
