@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 from book1a import families as F, map_v24 as M, plan_fields as PF, risk as R
 from book1a.map_v24 import Bar, Zone
 
-VERSION = "plan-v2.4-book1a-v1.4"   # v1.4: htf_acceptance (PO-9 at HTF VAH/VAL) + context precedence (Nov 5, 2026)
+VERSION = "plan-v2.4-book1a-v1.5"   # v1.4: htf_acceptance (PO-9 at HTF VAH/VAL) + context precedence; v1.5: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
                                     # v1.1: DD_EDGE reads the v2.3 packet form (E21)
                                     # v1.2: weekly DD_EDGE (E23, ours: PD rule applied to weekly, book1a.weekly_dd)
                                     # v1.3: weekly DD UNAVAILABLE noted (E26); FLIP review flag (E25)
@@ -236,7 +236,9 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
     htf_acc = PF.htf_acceptance_from_states(htf_val_state.state if htf_val_state else None,
                                             htf_vah_state.state if htf_vah_state else None)
     ctx_base = PF.context_base(ci) if htf_ok else "NONE_NO_EVIDENCE"
-    mctx = PF.apply_htf_acceptance(ctx_base, htf_acc)
+    # Nov 5, 2026 clarification: the weekly guard on every BULLISH / BEARISH (acceptance-based included)
+    rc = PF.resolve_context(ctx_base, htf_acc, ci.wk_val_state, ci.wk_vah_state)
+    mctx, ctx_source, wk_guard = rc["market_context"], rc["context_source"], rc["weekly_guard"]
     if htf_val is None or htf_vah is None:
         notes.append("context: HTF composite value missing from the packet levels -> NONE")
     # draw: next HTF level in the context direction
@@ -260,7 +262,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         _, nm, dlo, dhi = min(draw_cands)
         draw = PF.DrawState(_r(dlo), _r(dhi)); draw_name = nm
     inv = PF.invalidation(mctx, wk_val if wk_val is not None else -1e9, wk_vah if wk_vah is not None else 1e9,
-                          htf_val if htf_val is not None else -1e9, htf_vah if htf_vah is not None else 1e9)
+                          htf_val if htf_val is not None else -1e9, htf_vah if htf_vah is not None else 1e9,
+                          source=ctx_source)
     ps = {s.get("slot"): s for s in p.get("prior_sessions", [])}
     pd1, pd2 = ps.get("PD") or {}, ps.get("PD2") or {}
     vf = "WITH_PRICE"
@@ -282,7 +285,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
             draw_candidates=[dict(dist=_r(c[0]), name=c[1], lo=_r(c[2]), hi=_r(c[3])) for c in sorted(draw_cands)],
             draw_status=draw.status if draw else "NONE", pd=dict(pd1), pd2=dict(pd2), value_follows=vf,
             overnight=dict(on), settle=settle, on_inventory=on_inv,
-            context_base=ctx_base, htf_acceptance=htf_acc,
+            context_base=ctx_base, htf_acceptance=htf_acc, context_source=ctx_source, weekly_guard=wk_guard,
+            context_resolved=rc["resolved"], invalidation=dict(inv),
             htf_accept=[acceptance_evidence(used, st, as_of) for st in (htf_val_state, htf_vah_state) if st is not None])
 
     # ---- sides, check C, ladder per decision zone --------------------------------------------------
@@ -366,7 +370,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
     L += ["macro=not verified (backtest)", "news=not used (backtest)",
           "# --- Book 1A fields (logged by S1.4, not read) ---",
           f"market_context={mctx}", f"draw_status={draw.status if draw else 'NONE'}",
-          f"context_base={ctx_base}", f"htf_acceptance={htf_acc}", "# htf_acceptance: " + PF.HTF_ACCEPTANCE_LABEL]
+          f"context_base={ctx_base}", f"htf_acceptance={htf_acc}", "# htf_acceptance: " + PF.HTF_ACCEPTANCE_LABEL,
+          f"context_source={ctx_source}", f"weekly_guard={wk_guard}"]
     if htf_val_state: L.append(f"htfval_state={htf_val_state.tag()}")
     if htf_vah_state: L.append(f"htfvah_state={htf_vah_state.tag()}")
     if draw: L.append(f"draw={draw.draw_lo:.2f}-{draw.draw_hi:.2f}|{draw_name}")
@@ -391,7 +396,8 @@ def build(p: dict, bars: Sequence[Bar], profiles: Dict[str, dict], vwap_res: dic
         for g in gex_levels: L.append(f"mq_{g.name.lower()}={g.lo:.2f}")
     L += ["# --- review ---", f"review={review}", "review_note=" + ("; ".join(fails + notes) if (fails or notes) else "all checks passed"), "end=1"]
     side = {"plan": L, "date": p["date"], "as_of": as_of.isoformat(), "market_context": mctx, "context_base": ctx_base,
-            "htf_acceptance": htf_acc, "htf_acceptance_states": [st.__dict__ | {"available_at": st.available_at.isoformat()}
+            "htf_acceptance": htf_acc, "context_source": ctx_source, "weekly_guard": wk_guard,
+            "htf_acceptance_states": [st.__dict__ | {"available_at": st.available_at.isoformat()}
                                                                   for st in (htf_val_state, htf_vah_state) if st is not None],
             "review": review, "fails": fails, "notes": notes,
             "research": research, "zones": [dict(label=zr["label"], lo=zr["lo"], hi=zr["hi"], long=zr["long"], short=zr["short"],

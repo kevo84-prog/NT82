@@ -8,6 +8,9 @@ Phase 2 (Context, C6):
   Nov 5, 2026 (pre-freeze specification change, Kyron): htf_acceptance = ABOVE | BELOW | NONE (PO-9 at the HTF
   composite VAH / VAL, data before 08:10 CT), context_base = BULLISH | BEARISH | BALANCED | NONE_NO_EVIDENCE |
   NONE_CONFLICT, and the precedence in apply_htf_acceptance. Context evidence only.
+  Nov 5, 2026 clarification (Kyron): the weekly guard applies to every BULLISH (not ACCEPTED_BELOW the weekly VAL) and
+  every BEARISH (not ACCEPTED_ABOVE the weekly VAH), acceptance-based included; failure = NONE_CONFLICT -> NONE.
+  An acceptance-based context invalidates at the composite edge it is accepted beyond (Trigger 1, 3 closes).
 Phase 3 (zone selection and side rules):
   sides long= / short= in {ANY, RESPONSE, INITIATION, NONE}; the most restrictive rule wins
   (NONE > INITIATION > RESPONSE > ANY); every conflict is logged as
@@ -20,7 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
-VERSION = "plan-fields-v1.1"   # v1.1: htf_acceptance precedence, None split (Nov 5, 2026)
+VERSION = "plan-fields-v1.2"   # v1.1: htf_acceptance precedence, None split; v1.2: symmetric weekly guard, acceptance invalidation (Nov 5, 2026)
 
 RESTRICTIVENESS = {"NONE": 3, "INITIATION": 2, "RESPONSE": 1, "ANY": 0}
 
@@ -72,29 +75,55 @@ def context_base(ci: ContextInputs) -> str:
     return "NONE_NO_EVIDENCE"
 
 
-def apply_htf_acceptance(base: str, htf_acceptance: str) -> str:
-    """Precedence (Context doc, Nov 5, 2026; deterministic). Returns the market_context written to S1.4:
-    BULLISH | BEARISH | BALANCED | NONE.
+def weekly_guard(context: str, wk_val_state: str, wk_vah_state: str) -> bool:
+    """Weekly guard (Context rule; clarified Nov 5, 2026: applies to every Bullish and Bearish).
+    BULLISH needs price not ACCEPTED_BELOW the weekly VAL; BEARISH needs not ACCEPTED_ABOVE the weekly VAH."""
+    if context == "BULLISH":
+        return wk_val_state != "ACCEPTED_BELOW"
+    if context == "BEARISH":
+        return wk_vah_state != "ACCEPTED_ABOVE"
+    return True
+
+
+def resolve_context(base: str, htf_acceptance: str, wk_val_state: str = "INSIDE",
+                    wk_vah_state: str = "INSIDE") -> Dict[str, str]:
+    """Precedence (Context doc, Nov 5, 2026; deterministic), then the weekly guard on every BULLISH / BEARISH.
       BULLISH + ABOVE = BULLISH;  BEARISH + BELOW = BEARISH;
       BULLISH + BELOW or BEARISH + ABOVE = NONE (conflict);
       BALANCED stays BALANCED whatever the acceptance (acceptance logged only);
-      NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH;  NONE_CONFLICT stays NONE;
-      no acceptance (NONE) = the existing label kept."""
+      NONE_NO_EVIDENCE + ABOVE = BULLISH, + BELOW = BEARISH, only if the weekly guard passes, else NONE_CONFLICT;
+      NONE_CONFLICT stays NONE;  no acceptance (NONE) = the existing label kept.
+    Returns market_context (BULLISH | BEARISH | BALANCED | NONE, the value written to S1.4), context_source
+    (BASE | HTF_ACCEPTANCE: who set a BULLISH / BEARISH; NONE otherwise), resolved (the label after the guard, in the
+    context_base vocabulary) and weekly_guard (PASS | FAIL | N/A)."""
     if base not in CONTEXT_BASE_VALUES:
         raise ValueError(f"unknown context base {base!r}")
     if htf_acceptance not in HTF_ACCEPTANCE_VALUES:
         raise ValueError(f"unknown htf_acceptance {htf_acceptance!r}")
-    if base == "BALANCED":
-        return "BALANCED"
-    if base == "NONE_CONFLICT":
-        return "NONE"
-    if htf_acceptance == "NONE":
-        return "NONE" if base == "NONE_NO_EVIDENCE" else base
-    if base == "NONE_NO_EVIDENCE":
-        return "BULLISH" if htf_acceptance == "ABOVE" else "BEARISH"
-    if base == "BULLISH":
-        return "BULLISH" if htf_acceptance == "ABOVE" else "NONE"
-    return "BEARISH" if htf_acceptance == "BELOW" else "NONE"     # BEARISH
+    source = "BASE"
+    if base in ("BALANCED", "NONE_CONFLICT"):
+        ctx = base
+    elif htf_acceptance == "NONE":
+        ctx = base
+    elif base == "NONE_NO_EVIDENCE":
+        ctx, source = ("BULLISH" if htf_acceptance == "ABOVE" else "BEARISH"), "HTF_ACCEPTANCE"
+    elif base == "BULLISH":
+        ctx = "BULLISH" if htf_acceptance == "ABOVE" else "NONE_CONFLICT"
+    else:                                                                   # BEARISH
+        ctx = "BEARISH" if htf_acceptance == "BELOW" else "NONE_CONFLICT"
+    guard = "N/A"
+    if ctx in ("BULLISH", "BEARISH"):
+        guard = "PASS" if weekly_guard(ctx, wk_val_state, wk_vah_state) else "FAIL"
+        if guard == "FAIL":
+            ctx = "NONE_CONFLICT"
+    mctx = "NONE" if ctx.startswith("NONE_") else ctx
+    return {"market_context": mctx, "context_source": source if mctx in ("BULLISH", "BEARISH") else "NONE",
+            "resolved": ctx, "weekly_guard": guard}
+
+
+def apply_htf_acceptance(base: str, htf_acceptance: str, wk_val_state: str = "INSIDE", wk_vah_state: str = "INSIDE") -> str:
+    """market_context written to S1.4 (BULLISH | BEARISH | BALANCED | NONE); see resolve_context."""
+    return resolve_context(base, htf_acceptance, wk_val_state, wk_vah_state)["market_context"]
 
 
 def htf_acceptance_from_states(val_state: Optional[str], vah_state: Optional[str]) -> str:
@@ -110,8 +139,8 @@ def htf_acceptance_from_states(val_state: Optional[str], vah_state: Optional[str
 
 def market_context(ci: ContextInputs, htf_acceptance: str = "NONE") -> str:
     """market_context written to S1.4 (BULLISH | BEARISH | BALANCED | NONE): context_base, then the HTF
-    acceptance precedence. With htf_acceptance=NONE this is the Oct 31 rule unchanged."""
-    return apply_htf_acceptance(context_base(ci), htf_acceptance)
+    acceptance precedence and the weekly guard. With htf_acceptance=NONE this is the Oct 31 rule unchanged."""
+    return apply_htf_acceptance(context_base(ci), htf_acceptance, ci.wk_val_state, ci.wk_vah_state)
 
 
 def balance_fields(ci: ContextInputs) -> Dict[str, Optional[str]]:
@@ -190,10 +219,19 @@ class DrawState:
                 "NEW_TARGET_NEEDED": "1" if self.new_target_needed else "0"}
 
 
-def invalidation(context: str, wk_val: float, wk_vah: float, htf_val: float, htf_vah: float) -> Dict[str, Optional[float]]:
+def invalidation(context: str, wk_val: float, wk_vah: float, htf_val: float, htf_vah: float,
+                 source: str = "BASE") -> Dict[str, Optional[float]]:
     """Trigger 1: a Bullish context invalidates below the weekly or composite VAL it depends on
     (the nearer edge below price is the one that protects it: we write the higher of the two);
-    a Bearish one above the VAH. Acceptance = 3 closes (strategy rule)."""
+    a Bearish one above the VAH. Acceptance = 3 closes (strategy rule).
+    Nov 5, 2026 (Kyron): an acceptance-based context (source HTF_ACCEPTANCE) invalidates at the composite edge it is
+    accepted beyond: Bullish below the composite VAH, Bearish above the composite VAL. Context invalidation only,
+    never a trade stop."""
+    if source == "HTF_ACCEPTANCE":
+        if context == "BULLISH":
+            return {"invalidate_below": htf_vah, "invalidate_above": None}
+        if context == "BEARISH":
+            return {"invalidate_below": None, "invalidate_above": htf_val}
     if context == "BULLISH":
         return {"invalidate_below": max(wk_val, htf_val), "invalidate_above": None}
     if context == "BEARISH":
