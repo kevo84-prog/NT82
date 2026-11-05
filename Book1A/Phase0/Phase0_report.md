@@ -7,7 +7,74 @@ Controlling doc: "Book 1A – Replay plan", re-exported Nov 2 (Drive edit Nov 1 
 Checklist: "Book 1A – Phase 0 build checklist", re-exported the same way. No P&L was opened, summarized or looked at.
 Book 1 was not edited, moved or overwritten (it was read in place; Book 1 caches were read through hard links).
 
-## 0. Nov 4 decisions, third part (read this first)
+## 0. Nov 4, hand-check sheet update before the chart check (read this first)
+
+Kyron's request of Nov 4 (fourth set), items 1-6. Branch `book1a-phase0-pc`, local commits 22e1c78 (code) and the outputs commit after it; not pushed.
+No rule or threshold change, no P&L. Plan text, sidecars and plan hashes are unchanged. **Not frozen.**
+
+1. **draw_status NONE.** The Context spec now allows ACTIVE | REACHED | INVALIDATED | NONE; NONE = no draw candidate
+   exists. The code writes NONE only then: `draw_status=NONE` comes from `draw is None`, which happens only when the
+   candidate list is empty, and then no `draw=` line is written. Nothing downstream reads NONE as an active target:
+   S1.4 does not parse `draw` or `draw_status` at all (logged-only Book 1A fields); the plan's ladder uses the draw only
+   when a DrawState exists; a DrawState is never NONE. New tests `TestDrawStatusNone` (6 tests) cover all of this.
+   NONE days (`hand_check_sheet/draw_status_by_day.md`; each plan rebuilt and equal to the frozen file): **12 of the
+   13 plan days are NONE**, only Nov 19 is ACTIVE (BULLISH, draw WKPOC_AREA 24702.50-24742.50).
+   - Context BALANCED, so no direction to look in: Oct 22, 23, 28, 30, Nov 3, 17.
+   - Context NONE, so no direction: Oct 24, 27, 29, 31, Nov 4, 18. On these days no balance formed (PD-ON value
+     areas do not overlap) and neither the BULLISH nor the BEARISH test passed.
+   - Observation only, no change: on Oct 24 - Nov 4, price was above the HTF composite value. The BULLISH test needs
+     the bars window low to touch the HTF VAL (held or reclaimed it), which it did not, so those days are BALANCED or
+     NONE, never BULLISH. That is the frozen rule as written; the chart check shows the inputs.
+   - The local spec copy `book1a/specs/Book1A_2_context.md` now names NONE (the Drive copy wins).
+2. **Context evidence.** For market_context, balance, value_follows, on_inventory and draw_status, the sheet now shows
+   the input numbers behind each label and the chart window to check each in: price at 08:10; HTF VAL / VAH / POC with
+   the composite window; the low / high of the bars window; held-or-reclaimed and failed-or-lost tests; weekly VAL /
+   VAH and their acceptance states; PD2, PD and ON VAH / POC / VAL with their windows; the overlap %; the merged
+   balance; PD and PD2 full-day highs / lows and the three DIVERGENT tests; ON VWAP, the PD settlement (30 s before
+   15:00 CT), on_vs_settle, ON high / low vs settlement (reference only); the draw candidates or why there are none.
+   The sheet rebuilds each plan with the frozen code and stops unless it equals the frozen plan byte for byte (all 4
+   match), so the evidence is the frozen plan's. The builder takes an optional `evidence` dict for this; it is never
+   written to the plan or the sidecar.
+3. **VWAP rows** now name the NinjaTrader setting instead of the sidecar: Order Flow VWAP, session reset 17:00 CT, weekly
+   anchored Sunday 17:00 CT, ETH, 1 standard deviation; read the bar stamped 08:10 (trades 08:09:00-08:09:59.999, the
+   last bar included; the code uses trades before 08:10:00). The sheet notes that the formula was already verified
+   against raw trades in P0.6.
+4. **Tolerance note** at the top of the sheet: highs and lows must match exactly; a profile value may differ by at most
+   one 5-point row, and only if that does not change whether a zone forms, merges or becomes a decision zone; any other
+   difference is MATERIAL.
+5. **Weekly double distribution, Oct 29 and Nov 18:** the frozen criteria values, recomputed from the map tape and
+   checked equal to the sidecar: row count, peak smoothed row, the HVN line (70%) and LVN line (30%), every HVN block,
+   every LVN and single-print run and which HVN gap it sits in, and the row table across the split (volume, smoothed,
+   % of peak, TPO periods, flags). For Kyron's attention under the tolerance rule: on Oct 29 the split rests on one
+   LVN row (25950, smoothed 28% of peak vs the 30% line) and a 2-row lower HVN block; a one-row difference on the
+   chart there would change whether the split forms, so it would be material.
+6. **Jeron check tables:** section 0-J below.
+
+Files: `hand_check_sheet/hand_check_sheet.md` (hand-check-sheet-v1.1), `hand_check_sheet/draw_status_by_day.md`
+(draw-none-report-v1.0), both with their command files. Code commit 22e1c78. Unit tests: 175 run, 0 failures, 0 errors on 22e1c78 (`unit_tests/unit_tests_2026-11-05.log`; the log is named by the UTC date).
+
+**Still blocks the freeze:** only Kyron's chart check of the sheet. Blinding controls must be set up before Phase 1.
+
+## 0-J. Where Jeron's concepts are separated from our mechanical choices
+
+Each Book 1A phase doc in `book1a/specs/` (copies of the Drive docs; the Drive copy wins) ends with a **Jeron check**
+table. Each row names a rule, the Jeron source (video part and time stamp) and a verdict: **Jeron** (his concept),
+**Jeron (... ours)** (his concept with our numbers, e.g. "15 bars, 2-tick fail ours"), **Ours (needed)** (a
+mechanical choice the replay needs that Jeron does not state), or **Research** (logged only, not used).
+
+| Phase doc | Jeron check table |
+|---|---|
+| 1 AMT map | `book1a/specs/Book1A_1_AMT_map.md`, table "ID / Map change / Jeron source / Jeron check" (PO-1 ... PO-13) near the top |
+| 2 Context | `book1a/specs/Book1A_2_context.md`, section "Jeron check" |
+| 3 Zones and sides | `book1a/specs/Book1A_3_zones_sides.md`, section "Jeron check" |
+| 4 Zone review | `book1a/specs/Book1A_4_zone_review.md`, section "Jeron check" |
+| 5 Entry footprint | `book1a/specs/Book1A_5_entry_footprint.md`, section "Jeron check" |
+| 6 Exit footprint | `book1a/specs/Book1A_6_exit_footprint.md`, section "Jeron check" |
+
+Our labels in code and outputs follow the same split: "(ours)" in the specs, and e.g. "ours: PD rule applied to
+weekly" on the weekly double distribution (E23).
+
+## 0-3. Nov 4 decisions, third part
 
 Kyron's Phase 0 decisions of Nov 4 (third set), items 1-8. Branch `book1a-phase0-pc`, local commits e9813f4 (code),
 b414c98 (reports), plus the outputs commit; not pushed. No P&L, no outcome, no threshold change. **Not frozen.**

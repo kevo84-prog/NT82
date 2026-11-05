@@ -37,7 +37,7 @@
 * **Bearish:** the mirror (inside or below composite value after failing at or losing its VAH, and not ACCEPTED\_ABOVE the weekly VAH).  
 * **Balanced (changed):** the PD2, PD and ON value areas, or the days of the current week, overlap and are merged into one range, written as balance= and balance\_poc=. Trade its extremes, not the POC. This replaces our earlier "inside composite and weekly value with no recent edge test". Jeron: Part 4, 00:01:51–00:02:23; Part 6, 00:01:40–00:02:50; Part 5, 00:05:11.  
 * **None:** the higher-time-frame read and the weekly acceptance disagree (for example composite bullish but ACCEPTED\_BELOW the weekly VAL). Our mapping (needed).  
-* **draw=\<lo\>-\<hi\>:** the next higher-time-frame level in the context direction: composite POC, HVN, the far value edge, or a gamma magnet (input 6). It is the runner target in Phase 6\. The plan writes market\_context=BULLISH \| BEARISH \| BALANCED \| NONE and, separately, draw\_status=ACTIVE \| REACHED \| INVALIDATED (C6). Reaching the draw changes draw\_status, not market\_context.  
+* **draw=\<lo\>-\<hi\>:** the next higher-time-frame level in the context direction: composite POC, HVN, the far value edge, or a gamma magnet (input 6). It is the runner target in Phase 6\. The plan writes market\_context=BULLISH \| BEARISH \| BALANCED \| NONE and, separately, draw\_status=ACTIVE \| REACHED \| INVALIDATED \| NONE (C6; NONE = no draw candidate exists, never treated as ACTIVE; added to this copy Nov 4, 2026 from Kyron's spec update, the Drive copy wins). Reaching the draw changes draw\_status, not market\_context.  
 * Context only sets sides and targets. The strategy still needs order-flow proof at the open.
 
 ## **Context inputs added (approved Oct 31\)**
