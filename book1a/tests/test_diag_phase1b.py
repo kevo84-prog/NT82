@@ -260,3 +260,49 @@ class TestGexV3(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestMjLadderSource(unittest.TestCase):
+    """Amendment Nov 6, 2026: M-J1 / M-J2 ladder for R4 trades from an intraday zone admitted by L1."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory(); self.addCleanup(tmp.cleanup)
+        self.plans = Path(tmp.name)
+        (self.plans / "PreopenPlan_2025-10-22_book1a.txt").write_text("\n".join([
+            "date=2025-10-22",
+            "ladder=D_A|long|TP1=110.00-111.00|TP2=120.00-121.00|RUN=|R_TP1=1|R_TP2=2|R_RUN=",
+            "ladder=D_A|short|TP1=|TP2=|RUN=|R_TP1=|R_TP2=|R_RUN=", "end=1", ""]), encoding="utf-8")
+        self.intraday = dict(LocationType="DEVELOPING_INTRADAY_IMB_SELL", LocationId="IMB_SELL_1")
+
+    def l1(self, inh):
+        return dict(plan_zone_label="D_A", l1_side_inherited=inh, plan_long="INITIATION", plan_short="ANY")
+
+    def test_plan_aligned(self):
+        lad, f = D.mj_ladder_source("R4", self.intraday, self.l1("ALLOWED"), self.plans, "2025-10-22", 1)
+        self.assertEqual(D.mj1_choice(lad), ("TP2", "120.00-121.00"))
+        self.assertEqual((f["mj_zone_source"], f["mj_alignment"], f["mj_plan_long"], f["mj_plan_short"]),
+                         ("L1_ADMITTING_PLAN_ZONE", "PLAN_ALIGNED", "INITIATION", "ANY"))
+
+    def test_none_and_mismatch_are_exploratory(self):
+        for inh in ("NONE", "MISMATCH"):
+            lad, f = D.mj_ladder_source("R4", self.intraday, self.l1(inh), self.plans, "2025-10-22", 1)
+            self.assertEqual((f["mj_alignment"], f["mj_l1_side_inherited"]), ("EXPLORATORY_NOT_PLAN_ALIGNED", inh))
+            self.assertIsNotNone(D.mj1_choice(lad))
+
+    def test_missing_ladder_in_direction(self):
+        lad, f = D.mj_ladder_source("R4", self.intraday, self.l1("ALLOWED"), self.plans, "2025-10-22", -1)
+        self.assertIsNone(D.mj1_choice(lad))                                    # short ladder empty -> NOT_APPLICABLE
+        lad2, _ = D.mj_ladder_source("R4", self.intraday, dict(self.l1("ALLOWED"), plan_zone_label="D_X"), self.plans, "2025-10-22", 1)
+        self.assertIsNone(lad2)
+
+    def test_plan_zone_trade_unchanged(self):
+        lad, f = D.mj_ladder_source("R4", dict(LocationType="FROZEN_PREOPEN (as-of 08:25)", LocationId="P_D_A_01"), None,
+                                    self.plans, "2025-10-22", 1)
+        self.assertEqual((f["mj_zone_source"], f["mj_zone_label"]), ("PLAN_ZONE", "D_A"))
+        self.assertEqual(D.mj1_choice(lad), ("TP2", "120.00-121.00"))
+
+    def test_not_admitted_and_r1(self):
+        self.assertEqual(D.mj_ladder_source("R4", self.intraday, None, self.plans, "2025-10-22", 1)[0], None)
+        lad, f = D.mj_ladder_source("R1", self.intraday, self.l1("ALLOWED"), self.plans, "2025-10-22", 1)
+        self.assertIsNone(lad); self.assertTrue(f["mj_zone_source"].startswith("NOT_APPLICABLE"))
+        self.assertTrue(D.mj_alignment("NOT_APPLICABLE (before)").startswith("DATA_MISSING"))

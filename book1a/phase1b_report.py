@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pandas as pd
 
-VERSION = "phase1b-report-v1.0"
+VERSION = "phase1b-report-v1.1"
 CONTROLLING = {"R1": "b4a2108fa2ab531ef84e1a2933d05fafb8e4519f6674ee8857f0cd79c344b21c",
                "R2": "6123f88e7a62242b559e89a385b7749e67d6d2d433108cb839524a37c606842e",
                "R3": "f413d15f4dad259d908390f6fcff659490f61cd5c9ce5a0f14a1bbeb486e71d1",
@@ -176,7 +176,24 @@ def report(runs: Path, before: dict, diag: Path, tests: Path, out: Path):
          "Every diagnostic is logged only: none changes an R1-R4 entry, exit, stop, target, size, rule or plan. "
          "No P&L, R, win rate or outcome table anywhere in this report (D6).", "",
          f"R3 and R4 risk implementation: {man['risk_impl_version']['R3']} / {man['risk_impl_version']['R4']} (controlling for Phase 2 onward). "
-         "Every diagnostic file starts with a line naming the risk version and the sha256 of the four ledgers it used.", ""]
+         "Every diagnostic file starts with a line naming the risk version and the sha256 of the four ledgers it used.", "",
+         "## Amendment v1.1 (Kyron, Nov 6, 2026; registered before Phase 2)", "",
+         "- Version 1.1 supersedes the Nov 6 v1.0 report. D1-D6 of v1.0 were accepted subject to this diagnostic amendment.",
+         "- M-J1 / M-J2 for R4 trades from an intraday zone admitted by L1: the admitting plan DECISION zone (the L1_PLAN_SIDE "
+         "zone) ladder in the trade's direction when it exists, else NOT_APPLICABLE. New fields: `mj_zone_source` (PLAN_ZONE / "
+         "L1_ADMITTING_PLAN_ZONE), `mj_zone_label`, `mj_alignment` (PLAN_ALIGNED when l1_side_inherited = ALLOWED; "
+         "EXPLORATORY_NOT_PLAN_ALIGNED for NONE or MISMATCH), `mj_l1_side_inherited`, and the plan zone's long= / short= in "
+         "`mj_plan_long` / `mj_plan_short`. Trades from a plan zone keep the existing calculation. Diagnostics only: no entry, "
+         "stop, target, size, rule or L1 changed.",
+         "- Registered for the Phase 2 what-fails-and-why review (`book1a/phase2_review_fields.py`, per trade, every R1-R4 trade, "
+         "logged only): (a) MFE / MAE from the entry fill over the trades from entry fill to exit fill, both included, ticks and R "
+         "(POST_ENTRY); (b) after a stop exit, the window (stop fill, stop fill + 30 min] cut at 15:00 CT: the largest move in "
+         "the trade's direction from the stop fill (ticks and R) and whether the original target traded (Y/N), POST_EXIT, "
+         "TRUNCATED with the minutes available when cut; (c) minutes from initiation to entry, confirm-bar delta, delta % and "
+         "range (AT_ENTRY). Built and unit-tested on synthetic data only; **not computed on Phase 1** (the module refuses any "
+         "phase but Phase 2 and no Phase 1b code calls it).",
+         "- Access log event 11 (`Book1A/Phase0/P0.1_blind_run_setup.md`): Kyron and the reviewer (not the runner) saw the "
+         "Phase 1 exit-reason tally in the P5 table; it is not used for any rule, threshold or diagnostic choice.", ""]
 
     # D1
     L += ["## D1 Trading untouched", "",
@@ -236,7 +253,10 @@ def report(runs: Path, before: dict, diag: Path, tests: Path, out: Path):
           "TP1; M-J2 with 1, 2 and 5 NQ (and two legs on a tape); the 10 NQ and MNQ formulas on the U3 examples (60 ticks at 3 NQ = "
           "$947.22 fits, 4 NQ = $1,262.96 does not); every GEX tag (hvl_side, cr_ps_width, pin_zone, pc_gamma_ratio, time of day); "
           "the V2 seed giving the same twins twice; L1_PLAN_SIDE (ALLOWED, NONE, MISMATCH, the admitting zone by the L1 distance); "
-          "the V3 zero crossing. Guard tests for risk-c3-v2 in `test_risk_c3_v2.py`.", ""]
+          "the V3 zero crossing; v1.1: the M-J ladder source (plan-aligned, NONE, MISMATCH, missing ladder, plan-zone trade). "
+          "Phase 2 review fields (`book1a/tests/test_phase2_review_fields.py`, synthetic ticks and bars): MFE / MAE long and short "
+          "with the entry and exit trades included, the post-stop window long and short, TRUNCATED at 15:00, target traded Y / N, "
+          "entry context, and the Phase-2-only guard. Guard tests for risk-c3-v2 in `test_risk_c3_v2.py`.", ""]
 
     # D4
     L += ["## D4 Coverage (counts only)", "",
@@ -256,12 +276,15 @@ def report(runs: Path, before: dict, diag: Path, tests: Path, out: Path):
         ex[c] = ex[c].where(ex[c] != "OK", "carried")
     ex["cue_a"] = ex.cue_fired.where(~ex.cue_fired.isin(["Y", "N"]), "carried")
     sz = read(diag, "diag_sizing_trades.csv"); gx = read(diag, "diag_gex_trades.csv")
-    m = ex[["session", "strategy", "trade_id", "cue_a", "mj1_status", "mj2_status"]].merge(
+    for c in ("mj_zone_source", "mj_alignment"):
+        if c in ex:
+            ex[c] = ex[c].where(~ex[c].isin(["PLAN_ZONE", "L1_ADMITTING_PLAN_ZONE", "PLAN_ALIGNED", "EXPLORATORY_NOT_PLAN_ALIGNED"]), "carried")
+    m = ex[["session", "strategy", "trade_id", "cue_a", "mj_zone_source", "mj_alignment", "mj1_status", "mj2_status"]].merge(
         sz[["strategy", "trade_id", "nq10_fits_1000"]], on=["strategy", "trade_id"]).merge(
         gx[["strategy", "trade_id", "hvl_side", "cr_ps_width", "pin_zone", "pc_gamma_ratio", "gamma_regime", "time_of_day"]],
         on=["strategy", "trade_id"])
     m["pin_zone"] = m.pin_zone.where(~m.pin_zone.isin(["Y", "N"]), "carried")
-    f_e = ["cue_a", "mj1_status", "mj2_status", "nq10_fits_1000", "hvl_side", "cr_ps_width", "pin_zone", "pc_gamma_ratio", "gamma_regime", "time_of_day"]
+    f_e = ["cue_a", "mj_zone_source", "mj_alignment", "mj1_status", "mj2_status", "nq10_fits_1000", "hvl_side", "cr_ps_width", "pin_zone", "pc_gamma_ratio", "gamma_regime", "time_of_day"]
     L += ["### Trades: exits, sizing, GEX tags", ""] + md_table(coverage(m, f_e, ["session", "strategy"]), ["session", "strategy", "rows"] + f_e)
     mq = read(diag, "diag_mnq_rejects.csv")
     if len(mq):

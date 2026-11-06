@@ -34,7 +34,7 @@ from zoneinfo import ZoneInfo
 
 CT = ZoneInfo("America/Chicago")
 
-VERSION = "diag-phase1b-v1.0"
+VERSION = "diag-phase1b-v1.1"
 TICK = 0.25
 SWING_N = 15                     # AMT PO-1: strictly highest / lowest of the 15 bars before and the 15 after
 PAIR_MAX_MIN = 60                # CVD_DIV pair window (spec, research assumption)
@@ -67,8 +67,10 @@ OURS = [
     "Exit cue (a): the first 3 bars ending after the entry fill; the first qualifying bar triggers; NOT_APPLICABLE when "
     "the M0 exit time is at or before the trigger bar's close.",
     "M-J1 / M-J2 target price = the near edge of the ladder target zone (long: its low; short: its high). Ladders exist "
-    "only in Book 1A plans, so trades on intraday zones and all R1-R3 trades (A0 plans) are NOT_APPLICABLE (no ladder). "
-    "A ladder target not beyond the fill is NOT_APPLICABLE (target behind entry).",
+    "only in Book 1A plans, so all R1-R3 trades (A0 plans) are NOT_APPLICABLE (no ladder). R4 trades from a plan zone use "
+    "that zone's ladder; R4 trades from an intraday zone admitted by L1 use the admitting plan DECISION zone's ladder in "
+    "the trade's direction (amendment Nov 6, 2026, Kyron), with mj_alignment PLAN_ALIGNED / EXPLORATORY_NOT_PLAN_ALIGNED; "
+    "no ladder in that direction = NOT_APPLICABLE. A ladder target not beyond the fill is NOT_APPLICABLE (target behind entry).",
     "Sizing stop ticks = the risk-c3-v2 reference (best ask long / best bid short at the decision) to the stop.",
     "MNQ diagnostic covers R3 / R4 attempts rejected with RISK_REJECT:PER_TRADE_BUDGET or RISK_REJECT:DAILY_BUDGET.",
     "V2 random twin: rng = numpy default_rng(20251205 + yyyymmdd as an integer); one side draw (0 = below, 1 = above "
@@ -324,6 +326,36 @@ def ladder_for(plans: Path, day: str, label: str, side: str) -> Optional[dict]:
                 kv = dict(x.split("=", 1) for x in p[2:] if "=" in x)
                 return {k: kv.get(k, "") for k in ("TP1", "TP2", "RUN")}
     return None
+
+
+def mj_alignment(l1_side: str) -> str:
+    """Amendment Nov 6, 2026: PLAN_ALIGNED when l1_side_inherited = ALLOWED; EXPLORATORY_NOT_PLAN_ALIGNED for NONE or MISMATCH."""
+    if l1_side == "ALLOWED":
+        return "PLAN_ALIGNED"
+    if l1_side in ("NONE", "MISMATCH"):
+        return "EXPLORATORY_NOT_PLAN_ALIGNED"
+    return f"DATA_MISSING (l1_side_inherited {l1_side})"
+
+
+def mj_ladder_source(strategy: str, cand: dict, l1_row: Optional[dict], plans: Path, day: str, side: int):
+    """Which ladder M-J1 / M-J2 use (amendment Nov 6, 2026). Returns (ladder or None, fields).
+    R4 trade from a plan zone: that zone's ladder (unchanged). R4 trade from an intraday zone admitted by L1: the admitting
+    plan DECISION zone's ladder in the trade's direction, with mj_alignment and that zone's long= / short=. Else no ladder."""
+    sd = "long" if side > 0 else "short"
+    if strategy != "R4":
+        return None, dict(mj_zone_source="NOT_APPLICABLE (A0 plans carry no ladder)", mj_alignment="NOT_APPLICABLE (A0 plans carry no ladder)")
+    lt, lid = cand.get("LocationType", ""), cand.get("LocationId", "")
+    if lt.startswith("FROZEN_PREOPEN") and lid.startswith("P_"):
+        lab = re.sub(r"_\d+$", "", lid[2:])
+        return ladder_for(plans, day, lab, sd), dict(mj_zone_source="PLAN_ZONE", mj_zone_label=lab,
+                                                     mj_alignment="NOT_APPLICABLE (plan-zone trade)")
+    if l1_row is not None:
+        lab, inh = l1_row["plan_zone_label"], l1_row["l1_side_inherited"]
+        return ladder_for(plans, day, lab, sd), dict(mj_zone_source="L1_ADMITTING_PLAN_ZONE", mj_zone_label=lab,
+                                                     mj_alignment=mj_alignment(inh), mj_l1_side_inherited=inh,
+                                                     mj_plan_long=l1_row["plan_long"], mj_plan_short=l1_row["plan_short"])
+    return None, dict(mj_zone_source="NOT_APPLICABLE (not a plan zone and not admitted by L1)",
+                      mj_alignment="NOT_APPLICABLE (not a plan zone and not admitted by L1)")
 
 
 def near_edge(rng: str, side: int) -> Optional[float]:
@@ -609,6 +641,7 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
             O.time("diag_l1_plan_side.csv", f"R4:{r['EventId']}", "l1_plan_side", "AT_ENTRY", t, t, asof)
         l1rows.append(row)
     O.csv("diag_l1_plan_side.csv", l1rows)
+    l1map = {x["event"]: x for x in l1rows}
 
     # ---------- per trade: CVD (AT_ENTRY / PROVISIONAL / POST_ENTRY), exits, sizing, GEX tags ----------
     gex = {r["session"]: r for r in csv.DictReader(open(gex_csv, newline="", encoding="utf-8-sig"))}
@@ -651,9 +684,8 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
             e = dict(base, timing="POST_ENTRY")
             x = cue_a(dy, tape, side, t_fill, t_exit); av = x.pop("_avail"); e.update(x)
             O.time("diag_exit_trades.csv", key, "cue_a", "POST_ENTRY", t, av, av)
-            lab = re.sub(r"_\d+$", "", c.get("LocationId", "")[2:]) if c.get("LocationId", "").startswith("P_") else None
-            lad = ladder_for(plans, day_s, lab, "long" if side > 0 else "short") if (k == "R4" and lab and
-                                                                                        c.get("LocationType", "").startswith("FROZEN_PREOPEN")) else None
+            lad, src = mj_ladder_source(k, c, l1map.get(r.trade_id) if k == "R4" else None, plans, day_s, side)
+            e.update(src)
             kw = dict(stop_slip=1, gap_fill=True, stop_delay_ms=250, crossed="live")
             ch = mj1_choice(lad) if lad else None
             if ch is None:
