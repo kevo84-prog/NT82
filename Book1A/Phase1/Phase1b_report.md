@@ -1,9 +1,16 @@
-# Book 1A Phase 1b report: diagnostics (phase1b-report-v1.0)
+# Book 1A Phase 1b report: diagnostics (phase1b-report-v1.1)
 
-Written Nov 06, 2026. Code `142cbbe3ba030bacde983e292122269e571468ff`. Spec `book1a/specs/Phase1b_diagnostics_spec.md` (sha256 8ac07a864590d6a4f87e47dce802ecdf3ead521d3003f90e0a9fe335a06c393a, with addendum 5b).
+Written Nov 06, 2026. Code `cfbc9190a02834c858c85ba5a31137db6dbe29ab`. Spec `book1a/specs/Phase1b_diagnostics_spec.md` (sha256 8ac07a864590d6a4f87e47dce802ecdf3ead521d3003f90e0a9fe335a06c393a, with addendum 5b).
 Every diagnostic is logged only: none changes an R1-R4 entry, exit, stop, target, size, rule or plan. No P&L, R, win rate or outcome table anywhere in this report (D6).
 
 R3 and R4 risk implementation: risk-c3-v2 / risk-c3-v2 (controlling for Phase 2 onward). Every diagnostic file starts with a line naming the risk version and the sha256 of the four ledgers it used.
+
+## Amendment v1.1 (Kyron, Nov 6, 2026; registered before Phase 2)
+
+- Version 1.1 supersedes the Nov 6 v1.0 report. D1-D6 of v1.0 were accepted subject to this diagnostic amendment.
+- M-J1 / M-J2 for R4 trades from an intraday zone admitted by L1: the admitting plan DECISION zone (the L1_PLAN_SIDE zone) ladder in the trade's direction when it exists, else NOT_APPLICABLE. New fields: `mj_zone_source` (PLAN_ZONE / L1_ADMITTING_PLAN_ZONE), `mj_zone_label`, `mj_alignment` (PLAN_ALIGNED when l1_side_inherited = ALLOWED; EXPLORATORY_NOT_PLAN_ALIGNED for NONE or MISMATCH), `mj_l1_side_inherited`, and the plan zone's long= / short= in `mj_plan_long` / `mj_plan_short`. Trades from a plan zone keep the existing calculation. Diagnostics only: no entry, stop, target, size, rule or L1 changed.
+- Registered for the Phase 2 what-fails-and-why review (`book1a/phase2_review_fields.py`, per trade, every R1-R4 trade, logged only): (a) MFE / MAE from the entry fill over the trades from entry fill to exit fill, both included, ticks and R (POST_ENTRY); (b) after a stop exit, the window (stop fill, stop fill + 30 min] cut at 15:00 CT: the largest move in the trade's direction from the stop fill (ticks and R) and whether the original target traded (Y/N), POST_EXIT, TRUNCATED with the minutes available when cut; (c) minutes from initiation to entry, confirm-bar delta, delta % and range (AT_ENTRY). Built and unit-tested on synthetic data only; **not computed on Phase 1** (the module refuses any phase but Phase 2 and no Phase 1b code calls it).
+- Access log event 11 (`Book1A/Phase0/P0.1_blind_run_setup.md`): Kyron and the reviewer (not the runner) saw the Phase 1 exit-reason tally in the P5 table; it is not used for any rule, threshold or diagnostic choice.
 
 ## D1 Trading untouched
 
@@ -42,13 +49,13 @@ Phase 1 (Oct 22 - Nov 4, 2025) rerun with every diagnostic on, at the commit abo
 
 ## D2 Point in time
 
-Every timed field group is registered in `diag_timing.csv` with its decision time, available_at and the latest data timestamp it used. Groups checked: 49647 (AT_ENTRY 27250, PROVISIONAL 22338, POST_ENTRY 59). Violations: **0**. POST_ENTRY labels present in every POST_ENTRY column: yes.
+Every timed field group is registered in `diag_timing.csv` with its decision time, available_at and the latest data timestamp it used. Groups checked: 49654 (AT_ENTRY 27250, PROVISIONAL 22338, POST_ENTRY 66). Violations: **0**. POST_ENTRY labels present in every POST_ENTRY column: yes.
 AT_ENTRY / PROVISIONAL: latest data at or before available_at = the decision time (the signal bar close). GEX: available_at = D-1 23:00 ET; the option OI and settlement rows used were all received at or before that cutoff (table in the GEX section). POST_ENTRY fields (CVD_DIV after entry, exit cue (a), M-J1, M-J2, MNQ hypothetical exits) are labelled and never mixed with AT_ENTRY fields.
 
 ## D3 Unit tests
 
-`Book1A\Phase1\Phase1b_unit_tests\unit_tests_2026-11-06.log`: tests run 276, failures 0, errors 0, result PASS.
-Phase 1b tests (`book1a/tests/test_diag_phase1b.py`): the four CVD_DIV cases; the 60-minute exclusion; PROVISIONAL vs AT_ENTRY; both CVD resets; cue (a) firing, not firing, NOT_APPLICABLE after an M0 exit; M-J1 target choice RUN / TP2 / TP1; M-J2 with 1, 2 and 5 NQ (and two legs on a tape); the 10 NQ and MNQ formulas on the U3 examples (60 ticks at 3 NQ = $947.22 fits, 4 NQ = $1,262.96 does not); every GEX tag (hvl_side, cr_ps_width, pin_zone, pc_gamma_ratio, time of day); the V2 seed giving the same twins twice; L1_PLAN_SIDE (ALLOWED, NONE, MISMATCH, the admitting zone by the L1 distance); the V3 zero crossing. Guard tests for risk-c3-v2 in `test_risk_c3_v2.py`.
+`Book1A\Phase1\Phase1b_unit_tests_v1_1\unit_tests_2026-11-06.log`: tests run 291, failures 0, errors 0, result PASS.
+Phase 1b tests (`book1a/tests/test_diag_phase1b.py`): the four CVD_DIV cases; the 60-minute exclusion; PROVISIONAL vs AT_ENTRY; both CVD resets; cue (a) firing, not firing, NOT_APPLICABLE after an M0 exit; M-J1 target choice RUN / TP2 / TP1; M-J2 with 1, 2 and 5 NQ (and two legs on a tape); the 10 NQ and MNQ formulas on the U3 examples (60 ticks at 3 NQ = $947.22 fits, 4 NQ = $1,262.96 does not); every GEX tag (hvl_side, cr_ps_width, pin_zone, pc_gamma_ratio, time of day); the V2 seed giving the same twins twice; L1_PLAN_SIDE (ALLOWED, NONE, MISMATCH, the admitting zone by the L1 distance); the V3 zero crossing; v1.1: the M-J ladder source (plan-aligned, NONE, MISMATCH, missing ladder, plan-zone trade). Phase 2 review fields (`book1a/tests/test_phase2_review_fields.py`, synthetic ticks and bars): MFE / MAE long and short with the entry and exit trades included, the post-stop window long and short, TRUNCATED at 15:00, target traded Y / N, entry context, and the Phase-2-only guard. Guard tests for risk-c3-v2 in `test_risk_c3_v2.py`.
 
 ## D4 Coverage (counts only)
 
@@ -98,20 +105,20 @@ Each cell: carried / NOT_APPLICABLE / DATA_MISSING / NOT_RUN / NOT_BUILT. No out
 
 ### Trades: exits, sizing, GEX tags
 
-| session | strategy | rows | cue_a | mj1_status | mj2_status | nq10_fits_1000 | hvl_side | cr_ps_width | pin_zone | pc_gamma_ratio | gamma_regime | time_of_day |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2025-10-22 | R1 | 2 | 2/0/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 |
-| 2025-10-29 | R4 | 1 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-10-30 | R1 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-10-30 | R2 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-10-30 | R4 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-10-31 | R1 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-10-31 | R4 | 2 | 2/0/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 |
-| 2025-11-03 | R1 | 3 | 3/0/0/0/0 | 0/3/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 |
-| 2025-11-03 | R2 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-11-03 | R3 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
-| 2025-11-03 | R4 | 3 | 3/0/0/0/0 | 0/3/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 |
-| 2025-11-04 | R4 | 1 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| session | strategy | rows | cue_a | mj_zone_source | mj_alignment | mj1_status | mj2_status | nq10_fits_1000 | hvl_side | cr_ps_width | pin_zone | pc_gamma_ratio | gamma_regime | time_of_day |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2025-10-22 | R1 | 2 | 2/0/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 |
+| 2025-10-29 | R4 | 1 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-10-30 | R1 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-10-30 | R2 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-10-30 | R4 | 1 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-10-31 | R1 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-10-31 | R4 | 2 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 0/2/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 0/2/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 | 2/0/0/0/0 |
+| 2025-11-03 | R1 | 3 | 3/0/0/0/0 | 0/3/0/0/0 | 0/3/0/0/0 | 0/3/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 |
+| 2025-11-03 | R2 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-11-03 | R3 | 1 | 1/0/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
+| 2025-11-03 | R4 | 3 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 2/1/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 0/3/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 | 3/0/0/0/0 |
+| 2025-11-04 | R4 | 1 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 0/1/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 | 1/0/0/0/0 |
 
 ### MNQ feasibility (R3 / R4 RISK_REJECT rows)
 
@@ -261,7 +268,7 @@ Built since the last report (inputs now reachable): GEX V3, volatility control, 
 7. PROVISIONAL (accepted by Kyron, Nov 6): the most recent swing confirmed by the decision vs the highest high (lowest low) of the bars after that swing's confirmation bar. Window: from the bar after the confirmation bar through the signal bar. Cutoff: bar end <= the decision time (the signal bar closes at the decision; no tick after it is used). The pair window (60 minutes) and the location rule as for AT_ENTRY.
 8. BREAKOUT_SPEED: volume per second over [t - 60 s, t); percentile = share of the earlier session bar closes (from 17:00 CT) whose own 60 s value is <= the decision's, x 100; 3-bar CVD change = CVD(t) - CVD(t - 3 min), ticks strictly before each time.
 9. Exit cue (a): the first 3 bars ending after the entry fill; the first qualifying bar triggers; NOT_APPLICABLE when the M0 exit time is at or before the trigger bar's close.
-10. M-J1 / M-J2 target price = the near edge of the ladder target zone (long: its low; short: its high). Ladders exist only in Book 1A plans, so trades on intraday zones and all R1-R3 trades (A0 plans) are NOT_APPLICABLE (no ladder). A ladder target not beyond the fill is NOT_APPLICABLE (target behind entry).
+10. M-J1 / M-J2 target price = the near edge of the ladder target zone (long: its low; short: its high). Ladders exist only in Book 1A plans, so all R1-R3 trades (A0 plans) are NOT_APPLICABLE (no ladder). R4 trades from a plan zone use that zone's ladder; R4 trades from an intraday zone admitted by L1 use the admitting plan DECISION zone's ladder in the trade's direction (amendment Nov 6, 2026, Kyron), with mj_alignment PLAN_ALIGNED / EXPLORATORY_NOT_PLAN_ALIGNED; no ladder in that direction = NOT_APPLICABLE. A ladder target not beyond the fill is NOT_APPLICABLE (target behind entry).
 11. Sizing stop ticks = the risk-c3-v2 reference (best ask long / best bid short at the decision) to the stop.
 12. MNQ diagnostic covers R3 / R4 attempts rejected with RISK_REJECT:PER_TRADE_BUDGET or RISK_REJECT:DAILY_BUDGET.
 13. V2 random twin: rng = numpy default_rng(20251205 + yyyymmdd as an integer); one side draw (0 = below, 1 = above ref) per level in the order CR, PS, HVL, CR_0DTE, PS_0DTE, HVL_0DTE. ref_price = the last trade at or before 08:10:00 CT. The P1.1 gamma-rank levels (GAMMA*) are not among the six and stay as they are in every twin set.
@@ -284,22 +291,22 @@ This report contains no P&L, R, win rate or outcome-by-tag table. Counterfactual
 
 | file | sha256 |
 |---|---|
-| d2_lookahead_audit.json | `91c0914b8359952f98873e4e3e7a102504c3fd4928663b8a43d25f9c0b30905c` |
-| d5_cvd_pairs.csv | `4eb3cd29130f40efca222ce0b17c8a076cf7d9f5292c7e0f9247e28e6f1a03b9` |
-| d5_cvd_pairs_excluded_60min.csv | `0845e5dd42f73eef498f5b5f192fae033b5e27f8616a5461459b591046fcc93c` |
-| d5_cvd_swings.csv | `5c2529ae00f119accfcb42668ed601d23eb59ad5d04e9a629e1e91360607ffbd` |
-| diag_cvd_candidates.csv | `6fbd9b8d73453dd1b90facadb9592c381ded101147ff4668655cca78b3377590` |
-| diag_cvd_trades.csv | `cd3dd9bd34102ccbaa0fe05dc2d3ff04b5eb34d9d7524536ab96c0bcbbec25c2` |
-| diag_exit_trades.csv | `a071debdd59e6934d640d967382a9c377cda37d9f09fd878b4e06c564c1f4bbd` |
-| diag_gex_sessions.csv | `05c2b118c7778bc6d716ad356e8fbf7281ec1f2eef4f5e77fbab547e633fbc1b` |
-| diag_gex_trades.csv | `98fc4a1f5fe0004d2f5a038731fbd739d11dd5c27b9cfe8fe9393850a6e9be29` |
-| diag_gex_v3_sessions.csv | `33cbf85f9e86b947b93b2e871849c76417a9a1427ec1d421637bf81c32b236e9` |
-| diag_gex_zones.csv | `8e807f57b77ec1fcbf8e0850c87ca671d74f6a4772fac3dfa0971d08a64d5736` |
-| diag_l1_plan_side.csv | `d590f9413bf1bcb38e93b6babed448d49d754219d669c18705a8a03bbb2beebc` |
-| diag_manifest.json | `58f04ce8bfda814a332d3b79bfca1d7c7e727fd30a99a8044b101e02fa269a5f` |
-| diag_mnq_rejects.csv | `ec80d3b0b7ed333a7b88c45c8202c5d6fbbe0de43328c20ba4bbeae84b29a0af` |
-| diag_sizing_trades.csv | `58158abd19ddc10605c1abb98c4d1eef478b6827012c84c4817c0ba6d4669829` |
-| diag_timing.csv | `e00afde0093ba07be32b56f59fb31622d0eceb91d46cd883e5fbb7723c358fa7` |
+| d2_lookahead_audit.json | `a1b658d4f34f944daf0414f62264b96a30e068595514876384b8bb6ff95ec6bf` |
+| d5_cvd_pairs.csv | `d3df0c3a24dfd5298276f0f657b9ed8d5331eb7ccc26d36039160f3fd2890976` |
+| d5_cvd_pairs_excluded_60min.csv | `3c55065b75349c2152769ce425c742127bd329849df857f4c83044803b44a97c` |
+| d5_cvd_swings.csv | `4ab76909441ba32a731c6903037b3a4096801cf91b7a709cd625ea2a9f778fad` |
+| diag_cvd_candidates.csv | `67f9357291168085758a2208bb49cb0ed10560ad1a28a1886d5ba8d872ca7244` |
+| diag_cvd_trades.csv | `00605dda80bef0dcd97bfd8844ae61599cd4c0965acc66095ede7ffc636c2dd7` |
+| diag_exit_trades.csv | `11f8ec56376bad808ad64ab019bb0327f85e4e0401631f10a3d65db2029ff12d` |
+| diag_gex_sessions.csv | `4efb6e192ee7b7bcc538d314e349e63b7e29d0adb0c31e1ad8a29e25b3f23fc2` |
+| diag_gex_trades.csv | `2473e2af68ba92a385dee835dee4ebfa56f6ad3e40eb101efa3a41254b1fb41b` |
+| diag_gex_v3_sessions.csv | `50985fed83a1954a97400c3e1a11a1a812325635f38bcd8b9b0444a10e20f37a` |
+| diag_gex_zones.csv | `862391427e08f672e397fe083be7ab84ee6ebcfe5ccfae16830c318b4787446d` |
+| diag_l1_plan_side.csv | `fa630466d3d7eb01b14567f238bf6343e5e9b6c92b920a4d724c3ad2d03b4cd6` |
+| diag_manifest.json | `55823586cecdf560327f037f69c1dcc40c119a6f7d3363016c47bbc2e843c950` |
+| diag_mnq_rejects.csv | `d86fc70270ceb7d5676d345735b8c0d5d2fafe8113ecf9c8a913efbc24509ddc` |
+| diag_sizing_trades.csv | `26d5d6aa0bbd00cea21d5a8c621c8fd3b17d4fe51afa4fe9094e0325c3e2127f` |
+| diag_timing.csv | `f21e532f0eb4910dc29c5a600a1eda8900e27d46e0166c22858c1a81bf79ac9e` |
 | gex_v3_input_files.csv | `ad7c989604c1431b21108ec15ff0ecba75ddc59e4d3d913575559dbade5bee63` |
 | gex_v3_manifest.json | `35631037b31d104f90734caf3112251c6df747241975e543151b2cbe2a29325b` |
 
