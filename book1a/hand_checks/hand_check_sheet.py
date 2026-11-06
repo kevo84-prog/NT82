@@ -30,7 +30,7 @@ from collections import defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
-VERSION = "hand-check-sheet-v1.3"   # v1.3: weekly guard on every Bullish / Bearish, acceptance invalidation (Nov 5, 2026)
+VERSION = "hand-check-sheet-v1.4"   # v1.4: every same-label band / area that counts, "within N pts" (display only, Nov 5); v1.3: weekly guard on every Bullish / Bearish, acceptance invalidation (Nov 5, 2026)
 GEX_COLS = {"CR": "call_resistance", "PS": "put_support", "HVL": "hvl", "CR_0DTE": "call_resistance_0dte",
             "PS_0DTE": "put_support_0dte", "HVL_0DTE": "hvl_0dte"}
 
@@ -331,8 +331,10 @@ def main(argv=None):
         sc = json.load(open(side_file))
         g = gex.get(ds) or {}
         lv = {l["name"]: float(l["price"]) for l in pk.get("levels", []) if l.get("price") is not None}
-        bands = {b["label"]: b for b in sc.get("delta_bands", [])}
-        areas = {x["label"]: x for x in sc.get("map4_areas", [])}
+        # v1.4: a profile can have two same-sign delta bands with one label (e.g. T_DELTA_SELL_PD); keep every one
+        bands, areas = {}, {}
+        for b in sc.get("delta_bands", []): bands.setdefault(b["label"], []).append(b)
+        for x in sc.get("map4_areas", []): areas.setdefault(x["label"], []).append(x)
         vw = sc.get("vwap") or {}
 
         def vwap_key(n):
@@ -340,7 +342,7 @@ def main(argv=None):
             key = "vwap" if n in ("VWAP", "WKVWAP", "WVWAP") else ("sd1_up" if n.endswith(("UP", "U1")) else "sd1_dn")
             return k, key
 
-        def src(name):
+        def src(name, obj=None):
             n = name.upper()
             if n in GEX_COLS or n.startswith("GAMMA"):
                 col = GEX_COLS.get(n, name.lower())
@@ -351,10 +353,10 @@ def main(argv=None):
                 band = {"vwap": "the VWAP line", "sd1_up": "the +1 sigma band", "sd1_dn": "the -1 sigma band"}[key]
                 return "VWAP", f"{band}: {vwap_setting(k, d, V)}"
             if name in bands:
-                b = bands[name]
+                b = obj or bands[name][0]
                 return "VP", f"NT VP with delta, {b.get('profile')} profile ({level_source(b.get('profile', '') + 'POC', d).split(',')[0]}), 5-pt rows {b['lo']}-{b['hi']}: {b.get('sign')} delta, each row in the top 20% of abs delta"
             if name in areas:
-                x = areas[name]
+                x = obj or areas[name][0]
                 return "VP", f"NT VP, {level_source(name[:2] + 'POC', d).split(',')[0]}, 5-pt rows >= 70% of the peak row ({x.get('peak_row_lo')})"
             ls = level_source(name, d)
             if ls.startswith("packet level") or ls.startswith("HTF"):
@@ -395,8 +397,21 @@ def main(argv=None):
             for name in dict.fromkeys(z["levels"]):
                 kind, where = src(name)
                 if name in bands or name in areas:
-                    x = bands.get(name) or areas.get(name)
-                    val, pos = f"{x['lo']} - {x['hi']}", "overlaps"
+                    fam = "DELTA" if name in bands else "VOLUME"
+                    group = bands.get(name) or areas.get(name)
+                    tol = F.tolerance_for(fam)
+                    counting = [x for x in group if x["hi"] >= z["lo"] - tol and x["lo"] <= z["hi"] + tol]
+                    for x in counting or group:     # v1.4: every same-label band / area that counts for this zone
+                        if x["hi"] >= z["lo"] and x["lo"] <= z["hi"]:
+                            pos = "overlaps"
+                        else:
+                            gap = z["lo"] - x["hi"] if x["hi"] < z["lo"] else x["lo"] - z["hi"]
+                            pos = (f"within {gap:.2f} pts ({'below' if x['hi'] < z['lo'] else 'above'} the zone; counts by the "
+                                   f"{tol:g}-pt family tolerance)") if x in counting else f"{gap:.2f} pts outside (does not count)"
+                        if len(group) > 1:
+                            pos += f"; {len(group)} {fam.lower()} {'bands' if fam == 'DELTA' else 'areas'} share this label"
+                        L.append(f"| {name} | {fam} / {kind} | {x['lo']} - {x['hi']} | {pos} | {src(name, x)[1]} | | |")
+                    continue
                 else:
                     px = lv.get(name)
                     if px is None and kind == "VWAP":

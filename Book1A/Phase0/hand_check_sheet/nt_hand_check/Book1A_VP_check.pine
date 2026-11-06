@@ -1,0 +1,206 @@
+//@version=6
+// Book 1A Phase 0 hand check: volume profiles for the 4 check days (Kyron, Nov 5, 2026)
+// Draws the PD2 / PD cash, overnight (ON) and developing-week (WK) volume profiles that the frozen plans use,
+// computes POC / VAH / VAL with the map's rule (1-tick rows, 70% value area, POC ties -> nearest the middle,
+// expand by the larger neighbouring row, above wins ties) and compares them to the recomputed values.
+//
+// Chart: NQ Dec 2025 (CME_MINI:NQZ2025, or NQ1! if your history reaches back), 1-minute bars.
+// Windows are in Central time (any chart time zone works). TradingView stamps a bar at its OPEN time,
+// so the window 08:30-15:00 CT = bars opening 08:30 ... 14:59, and 17:00-08:10 = bars opening 17:00 ... 08:09.
+//
+// APPROXIMATION: TradingView gives the script 1-minute bars, not ticks, so each minute's volume is spread
+// evenly over the ticks of its range. Expect small differences from the tick-built values. Pass rule of the
+// hand check: within one 5-point row ("<= 1 row"). For any DIFF, cross-check with TradingView's built-in
+// Fixed Range Volume Profile drawn over the same window (row size 1 tick, value area 70%).
+// Read-only: no strategy, no orders, no P&L.
+
+indicator("Book 1A VP check", shorttitle = "B1A VP", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500)
+
+TICK = 0.25
+
+showPD2   = input.bool(true, "PD2 cash profile", group = "Profiles")
+showPD    = input.bool(true, "PD cash profile", group = "Profiles")
+showON    = input.bool(true, "Overnight profile (17:00-08:10 CT)", group = "Profiles")
+showWK    = input.bool(true, "Developing week (Sun 17:00 - 08:10 CT)", group = "Profiles")
+showExp   = input.bool(true, "Draw expected values (dotted)", group = "Profiles")
+showHist  = input.bool(true, "Draw histogram (5-pt rows)", group = "Histogram")
+histDay   = input.string("2025-10-22", "Histogram day", options = ["2025-10-22", "2025-10-29", "2025-10-31", "2025-11-18"], group = "Histogram")
+histWhich = input.string("PD and ON", "Histogram profiles", options = ["PD and ON", "PD2", "WK", "All four"], group = "Histogram")
+histPct   = input.int(35, "Histogram width, % of the window", minval = 5, maxval = 100, group = "Histogram")
+showTable = input.bool(true, "Results table", group = "Table")
+
+type Prof
+    string day
+    string name
+    string desc
+    int t0
+    int t1
+    float ePoc
+    float eVah
+    float eVal
+    bool on
+    map<int, float> vol
+    bool done = false
+    bool partial = false
+    bool nodata = false
+    float poc = na
+    float vah = na
+    float val = na
+
+ct(int y, int m, int d, int h, int mi) =>
+    timestamp("America/Chicago", y, m, d, h, mi)
+
+newProf(string day, string name, string desc, int t0, int t1, float p, float h, float l, bool on) =>
+    Prof.new(day, name, desc, t0, t1, p, h, l, on, map.new<int, float>())
+
+colorOf(string name) =>
+    name == "PD" ? color.orange : name == "PD2" ? color.yellow : name == "ON" ? color.fuchsia : color.aqua
+
+res(float got, float exp) =>
+    d = math.abs(got - exp)
+    d < 1e-9 ? "OK" : d <= 5.0 ? "<= 1 row" : "DIFF"
+
+f2(float x) =>
+    na(x) ? "-" : str.tostring(x, "#.00")
+
+var array<Prof> profs = array.new<Prof>()
+var int firstT = na
+
+if barstate.isfirst
+    firstT := time
+    // ---- 2025-10-22 (Wed): PD2 = Mon Oct 20, PD = Tue Oct 21, week from Sun Oct 19 17:00
+    profs.push(newProf("2025-10-22", "PD2", "PD2 Mon 10-20 cash", ct(2025, 10, 20, 8, 30), ct(2025, 10, 20, 15, 0), 25318.5, 25353.0, 25276.75, showPD2))
+    profs.push(newProf("2025-10-22", "PD", "PD Tue 10-21 cash", ct(2025, 10, 21, 8, 30), ct(2025, 10, 21, 15, 0), 25300.0, 25326.0, 25254.0, showPD))
+    profs.push(newProf("2025-10-22", "ON", "ON 10-21 17:00 - 10-22 08:10", ct(2025, 10, 21, 17, 0), ct(2025, 10, 22, 8, 10), 25250.0, 25286.5, 25222.75, showON))
+    profs.push(newProf("2025-10-22", "WK", "WK Sun 10-19 17:00 - 10-22 08:10", ct(2025, 10, 19, 17, 0), ct(2025, 10, 22, 8, 10), 25300.0, 25340.5, 25244.25, showWK))
+    // ---- 2025-10-29 (Wed): PD2 = Mon Oct 27, PD = Tue Oct 28, week from Sun Oct 26 17:00
+    profs.push(newProf("2025-10-29", "PD2", "PD2 Mon 10-27 cash", ct(2025, 10, 27, 8, 30), ct(2025, 10, 27, 15, 0), 25925.0, 25980.5, 25866.0, showPD2))
+    profs.push(newProf("2025-10-29", "PD", "PD Tue 10-28 cash", ct(2025, 10, 28, 8, 30), ct(2025, 10, 28, 15, 0), 26045.0, 26154.5, 26015.0, showPD))
+    profs.push(newProf("2025-10-29", "ON", "ON 10-28 17:00 - 10-29 08:10", ct(2025, 10, 28, 17, 0), ct(2025, 10, 29, 8, 10), 26240.0, 26291.75, 26231.75, showON))
+    profs.push(newProf("2025-10-29", "WK", "WK Sun 10-26 17:00 - 10-29 08:10", ct(2025, 10, 26, 17, 0), ct(2025, 10, 29, 8, 10), 26045.0, 26303.25, 25907.5, showWK))
+    // ---- 2025-10-31 (Fri): PD2 = Wed Oct 29, PD = Thu Oct 30, week from Sun Oct 26 17:00
+    profs.push(newProf("2025-10-31", "PD2", "PD2 Wed 10-29 cash", ct(2025, 10, 29, 8, 30), ct(2025, 10, 29, 15, 0), 26275.0, 26303.75, 26210.0, showPD2))
+    profs.push(newProf("2025-10-31", "PD", "PD Thu 10-30 cash", ct(2025, 10, 30, 8, 30), ct(2025, 10, 30, 15, 0), 25970.75, 26090.0, 25967.5, showPD))
+    profs.push(newProf("2025-10-31", "ON", "ON 10-30 17:00 - 10-31 08:10", ct(2025, 10, 30, 17, 0), ct(2025, 10, 31, 8, 10), 26190.0, 26217.25, 26158.5, showON))
+    profs.push(newProf("2025-10-31", "WK", "WK Sun 10-26 17:00 - 10-31 08:10", ct(2025, 10, 26, 17, 0), ct(2025, 10, 31, 8, 10), 25970.75, 26270.5, 25957.25, showWK))
+    // ---- 2025-11-18 (Tue): PD2 = Fri Nov 14, PD = Mon Nov 17, week from Sun Nov 16 17:00
+    profs.push(newProf("2025-11-18", "PD2", "PD2 Fri 11-14 cash", ct(2025, 11, 14, 8, 30), ct(2025, 11, 14, 15, 0), 25150.0, 25289.0, 24978.5, showPD2))
+    profs.push(newProf("2025-11-18", "PD", "PD Mon 11-17 cash", ct(2025, 11, 17, 8, 30), ct(2025, 11, 17, 15, 0), 25150.0, 25253.5, 24932.25, showPD))
+    profs.push(newProf("2025-11-18", "ON", "ON 11-17 17:00 - 11-18 08:10", ct(2025, 11, 17, 17, 0), ct(2025, 11, 18, 8, 10), 24750.0, 24851.25, 24680.5, showON))
+    profs.push(newProf("2025-11-18", "WK", "WK Sun 11-16 17:00 - 11-18 08:10", ct(2025, 11, 16, 17, 0), ct(2025, 11, 18, 8, 10), 25150.0, 25285.25, 24856.0, showWK))
+
+histWanted(Prof p) =>
+    p.day == histDay and (histWhich == "All four" or (histWhich == "PD and ON" and (p.name == "PD" or p.name == "ON")) or histWhich == p.name)
+
+finish(Prof p) =>
+    p.done := true
+    p.partial := firstT > p.t0
+    if p.vol.size() == 0
+        p.nodata := true
+    else
+        keys = p.vol.keys()
+        int mn = keys.get(0)
+        int mx = keys.get(0)
+        for k in keys
+            mn := math.min(mn, k)
+            mx := math.max(mx, k)
+        int n = mx - mn + 1
+        rows = array.new<float>(n, 0.0)
+        float tot = 0.0
+        for k in keys
+            v = p.vol.get(k)
+            rows.set(k - mn, v)
+            tot += v
+        float mid = (n - 1) / 2.0
+        int pi = 0
+        if n > 1
+            for i = 1 to n - 1
+                r = rows.get(i)
+                rp = rows.get(pi)
+                if r > rp or (r == rp and math.abs(i - mid) < math.abs(pi - mid))
+                    pi := i
+        float target = tot * 0.70
+        int lo = pi
+        int hi = pi
+        float acc = rows.get(pi)
+        while acc < target and (lo > 0 or hi < n - 1)
+            float up = hi + 1 < n ? rows.get(hi + 1) : -1.0
+            float dn = lo - 1 >= 0 ? rows.get(lo - 1) : -1.0
+            if up >= dn
+                hi += 1
+                acc += up
+            else
+                lo -= 1
+                acc += dn
+        p.poc := (mn + pi) * TICK
+        p.vah := (mn + hi) * TICK
+        p.val := (mn + lo) * TICK
+
+        c = colorOf(p.name)
+        line.new(p.t0, p.vah, p.t1, p.vah, xloc = xloc.bar_time, color = c, width = 2)
+        line.new(p.t0, p.poc, p.t1, p.poc, xloc = xloc.bar_time, color = c, width = 3)
+        line.new(p.t0, p.val, p.t1, p.val, xloc = xloc.bar_time, color = c, width = 2)
+        if showExp
+            line.new(p.t0, p.eVah, p.t1, p.eVah, xloc = xloc.bar_time, color = color.new(color.white, 20), style = line.style_dotted)
+            line.new(p.t0, p.ePoc, p.t1, p.ePoc, xloc = xloc.bar_time, color = color.new(color.white, 20), style = line.style_dotted)
+            line.new(p.t0, p.eVal, p.t1, p.eVal, xloc = xloc.bar_time, color = color.new(color.white, 20), style = line.style_dotted)
+        txt = p.desc + (p.partial ? "  (PARTIAL: load more history)" : "") +
+             "\nVAH " + f2(p.vah) + "  exp " + f2(p.eVah) + "  " + res(p.vah, p.eVah) +
+             "\nPOC " + f2(p.poc) + "  exp " + f2(p.ePoc) + "  " + res(p.poc, p.ePoc) +
+             "\nVAL " + f2(p.val) + "  exp " + f2(p.eVal) + "  " + res(p.val, p.eVal)
+        label.new(p.t1, p.vah, txt, xloc = xloc.bar_time, style = label.style_label_left, color = color.new(color.black, 25), textcolor = c, size = size.small, textalign = text.align_left)
+
+        if showHist and histWanted(p)
+            m5 = map.new<int, float>()
+            for k in keys
+                r = int(math.floor(k / 20.0))
+                m5.put(r, nz(m5.get(r)) + p.vol.get(k))
+            float mxv = 0.0
+            for r in m5.keys()
+                mxv := math.max(mxv, m5.get(r))
+            float span = (p.t1 - p.t0) * histPct / 100.0
+            for r in m5.keys()
+                v = m5.get(r)
+                inVa = r * 20 + 19 >= mn + lo and r * 20 <= mn + hi
+                box.new(left = p.t0, top = (r * 20 + 20) * TICK, right = p.t0 + int(span * v / mxv), bottom = r * 20 * TICK, xloc = xloc.bar_time, border_color = color.new(c, 100), bgcolor = color.new(c, inVa ? 55 : 80))
+    p.done   // fixed return value (CE10235: the if / else above must not be the function's return)
+
+// ---- accumulate every 1-minute bar into the profiles whose window contains it
+if timeframe.isintraday
+    int loT = int(math.round(low / TICK))
+    int hiT = int(math.round(high / TICK))
+    float vol = nz(volume)
+    for p in profs
+        if p.on and not p.done
+            if time >= p.t0 and time < p.t1
+                int n = hiT - loT + 1
+                float per = vol / n
+                for k = loT to hiT
+                    p.vol.put(k, nz(p.vol.get(k)) + per)
+            else if time >= p.t1
+                finish(p)
+
+// ---- results table
+var table tb = table.new(position.top_right, 6, 18, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTable and barstate.islast
+    table.cell(tb, 0, 0, "Day", text_color = color.white, text_size = size.small)
+    table.cell(tb, 1, 0, "Profile", text_color = color.white, text_size = size.small)
+    table.cell(tb, 2, 0, "VAH (TV / exp)", text_color = color.white, text_size = size.small)
+    table.cell(tb, 3, 0, "POC (TV / exp)", text_color = color.white, text_size = size.small)
+    table.cell(tb, 4, 0, "VAL (TV / exp)", text_color = color.white, text_size = size.small)
+    table.cell(tb, 5, 0, "Status", text_color = color.white, text_size = size.small)
+    int row = 1
+    for p in profs
+        if p.on
+            c = colorOf(p.name)
+            st = not p.done ? "not on chart" : p.nodata ? "no data" : p.partial ? "PARTIAL" : "done"
+            table.cell(tb, 0, row, p.day, text_color = c, text_size = size.small)
+            table.cell(tb, 1, row, p.name, text_color = c, text_size = size.small)
+            table.cell(tb, 2, row, f2(p.vah) + " / " + f2(p.eVah) + (na(p.vah) ? "" : "  " + res(p.vah, p.eVah)), text_color = c, text_size = size.small)
+            table.cell(tb, 3, row, f2(p.poc) + " / " + f2(p.ePoc) + (na(p.poc) ? "" : "  " + res(p.poc, p.ePoc)), text_color = c, text_size = size.small)
+            table.cell(tb, 4, row, f2(p.val) + " / " + f2(p.eVal) + (na(p.val) ? "" : "  " + res(p.val, p.eVal)), text_color = c, text_size = size.small)
+            table.cell(tb, 5, row, st, text_color = c, text_size = size.small)
+            row += 1
+
+if barstate.islast and timeframe.period != "1"
+    label.new(bar_index, high, "Book 1A VP check: use a 1-minute chart", color = color.red, textcolor = color.white)

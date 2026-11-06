@@ -1,4 +1,4 @@
-# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.3)
+# P0.7-P0.9 hand-check sheet: Oct 22, 29, 31 and Nov 18, 2025 (hand-check-sheet-v1.4)
 
 Check each value against the source named on its row, not against the plan. Sources: **NT VP** = the NinjaTrader Volume Profile tool drawn over the stated window (CT); **NT VWAP** = the NinjaTrader VWAP setting stated on the row; **GEX csv** = `gex_levels_block1.csv`, row session = the day, the named column; **sidecar** = the frozen plan sidecar `PreopenPlan_<day>_book1a.json`, the named key. Every value is frozen at 08:10 CT from data before 08:10 CT. No trades, outcomes or P&L.
 
@@ -141,8 +141,10 @@ No candidate: market_context is BALANCED, so the rule has no direction to look i
 | WKVWAP | VWAP / VWAP | 25262.44 | inside | the VWAP line: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 19 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | HVL | GEX / GEX | 25230.0 | inside | GEX csv: row 2025-10-22, column `hvl_nt` (= 25230.0); CME report 2025-10-21 (D-1) | | |
 | HVL_0DTE | GEX / GEX | 25260.0 | inside | GEX csv: row 2025-10-22, column `hvl_0dte_nt` (= 25260.0); CME report 2025-10-21 (D-1) | | |
-| T_DELTA_SELL_WK | DELTA / VP | 25295.0 - 25315.0 | overlaps | NT VP with delta, WK profile (developing week Sun Oct 19 17:00 - 08:10 CT), 5-pt rows 25295.0-25315.0: SELL delta, each row in the top 20% of abs delta | | |
-| T_DELTA_SELL_PD | DELTA / VP | 25270.0 - 25280.0 | overlaps | NT VP with delta, PD profile (Tue Oct 21 cash 08:30-15:00 CT), 5-pt rows 25270.0-25280.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_WK | DELTA / VP | 25215.0 - 25225.0 | overlaps; 3 delta bands share this label | NT VP with delta, WK profile (developing week Sun Oct 19 17:00 - 08:10 CT), 5-pt rows 25215.0-25225.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_WK | DELTA / VP | 25270.0 - 25280.0 | within 5.00 pts (above the zone; counts by the 5-pt family tolerance); 3 delta bands share this label | NT VP with delta, WK profile (developing week Sun Oct 19 17:00 - 08:10 CT), 5-pt rows 25270.0-25280.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_PD | DELTA / VP | 25215.0 - 25225.0 | overlaps; 2 delta bands share this label | NT VP with delta, PD profile (Tue Oct 21 cash 08:30-15:00 CT), 5-pt rows 25215.0-25225.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_PD | DELTA / VP | 25270.0 - 25280.0 | within 5.00 pts (above the zone; counts by the 5-pt family tolerance); 2 delta bands share this label | NT VP with delta, PD profile (Tue Oct 21 cash 08:30-15:00 CT), 5-pt rows 25270.0-25280.0: SELL delta, each row in the top 20% of abs delta | | |
 | T_DELTA_SELL_ON | DELTA / VP | 25225.0 - 25240.0 | overlaps | NT VP with delta, ON profile (overnight Tue Oct 21 17:00 - 08:10 CT), 5-pt rows 25225.0-25240.0: SELL delta, each row in the top 20% of abs delta | | |
 | ONPOC_AREA | VOLUME / VP | 25245.0 - 25265.0 | overlaps | NT VP, overnight Tue Oct 21 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (25250.0) | | |
 
@@ -288,9 +290,10 @@ Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 4 decision 
 | PDPOC | VOLUME / VP | 26045.0 | inside | NT VP, Tue Oct 28 cash 08:30-15:00 CT, volume profile | | |
 | PDTPOC | VOLUME / VP | 26052.5 | inside | NT VP, Tue Oct 28 cash 08:30-15:00 CT, TPO profile | | |
 | WKPOC | VOLUME / VP | 26045.0 | inside | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, volume profile | | |
-| T_DELTA_BUY_WK | DELTA / VP | 26045.0 - 26055.0 | overlaps | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26045.0-26055.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_WK | DELTA / VP | 26045.0 - 26055.0 | overlaps; 4 delta bands share this label | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26045.0-26055.0: BUY delta, each row in the top 20% of abs delta | | |
 | T_DELTA_SELL_PD | DELTA / VP | 26030.0 - 26040.0 | overlaps | NT VP with delta, PD profile (Tue Oct 28 cash 08:30-15:00 CT), 5-pt rows 26030.0-26040.0: SELL delta, each row in the top 20% of abs delta | | |
-| T_DELTA_BUY_PD | DELTA / VP | 26080.0 - 26095.0 | overlaps | NT VP with delta, PD profile (Tue Oct 28 cash 08:30-15:00 CT), 5-pt rows 26080.0-26095.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_PD | DELTA / VP | 26045.0 - 26055.0 | overlaps; 2 delta bands share this label | NT VP with delta, PD profile (Tue Oct 28 cash 08:30-15:00 CT), 5-pt rows 26045.0-26055.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_PD | DELTA / VP | 26080.0 - 26095.0 | within 0.25 pts (above the zone; counts by the 5-pt family tolerance); 2 delta bands share this label | NT VP with delta, PD profile (Tue Oct 28 cash 08:30-15:00 CT), 5-pt rows 26080.0-26095.0: BUY delta, each row in the top 20% of abs delta | | |
 | PDPOC_AREA | VOLUME / VP | 26035.0 - 26055.0 | overlaps | NT VP, Tue Oct 28 cash 08:30-15:00 CT, 5-pt rows >= 70% of the peak row (26035.0) | | |
 | DD_EDGE_PD | STRUCTURE / VP | 26039.75 - 26079.75 | overlaps | NT VP over Tue Oct 28 cash 08:30-15:00 CT, 5-pt rows: the PD double distribution (two HVN blocks >= 70% of the smoothed peak, separator 26090.0 - 26109.75) | | |
 
@@ -506,7 +509,8 @@ Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 5 decision 
 | PDVAL | AUCTION_VALUE / VP | 25967.5 | inside | NT VP, Thu Oct 30 cash 08:30-15:00 CT, volume profile | | |
 | WKPOC | VOLUME / VP | 25970.75 | inside | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, volume profile | | |
 | WKVAL | AUCTION_VALUE / VP | 25957.25 | inside | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, volume profile | | |
-| T_DELTA_SELL_PD | DELTA / VP | 26040.0 - 26050.0 | overlaps | NT VP with delta, PD profile (Thu Oct 30 cash 08:30-15:00 CT), 5-pt rows 26040.0-26050.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_PD | DELTA / VP | 25945.0 - 25955.0 | overlaps; 3 delta bands share this label | NT VP with delta, PD profile (Thu Oct 30 cash 08:30-15:00 CT), 5-pt rows 25945.0-25955.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_PD | DELTA / VP | 25975.0 - 25985.0 | overlaps; 3 delta bands share this label | NT VP with delta, PD profile (Thu Oct 30 cash 08:30-15:00 CT), 5-pt rows 25975.0-25985.0: SELL delta, each row in the top 20% of abs delta | | |
 
 **D_WKTVAL_PD3L_PD3VAL_PD3TVAL_PDTPOC_PD3POC_P2_PDPOC_AREA_REJ**: 25995.0 - 26099.75 (104.75 pts); families 6: AUCTION_VALUE, STRUCTURE, DELTA, VOLUME, GEX, VWAP; long=NONE short=NONE; stop 421 ticks
 
@@ -518,8 +522,8 @@ Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 5 decision 
 | PD3L | STRUCTURE / VP | 26006.0 | inside | NT VP, Tue Oct 28 cash 08:30-15:00 CT, low | | |
 | WKVWAP | VWAP / VWAP | 26084.24 | inside | the VWAP line: NT VWAP (Order Flow VWAP), weekly, anchored at Sunday 17:00 CT (Sun Oct 26 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | CR | GEX / GEX | 26000.0 | inside | GEX csv: row 2025-10-31, column `call_resistance_nt` (= 26000.0); CME report 2025-10-30 (D-1) | | |
-| T_DELTA_BUY_WK | DELTA / VP | 26275.0 - 26290.0 | overlaps | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26275.0-26290.0: BUY delta, each row in the top 20% of abs delta | | |
-| T_DELTA_SELL_PD | DELTA / VP | 26040.0 - 26050.0 | overlaps | NT VP with delta, PD profile (Thu Oct 30 cash 08:30-15:00 CT), 5-pt rows 26040.0-26050.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_WK | DELTA / VP | 26070.0 - 26080.0 | overlaps; 3 delta bands share this label | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26070.0-26080.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_PD | DELTA / VP | 26040.0 - 26050.0 | overlaps; 3 delta bands share this label | NT VP with delta, PD profile (Thu Oct 30 cash 08:30-15:00 CT), 5-pt rows 26040.0-26050.0: SELL delta, each row in the top 20% of abs delta | | |
 | PDPOC_AREA | VOLUME / VP | 26040.0 - 26070.0 | overlaps | NT VP, Thu Oct 30 cash 08:30-15:00 CT, 5-pt rows >= 70% of the peak row (26060.0) | | |
 
 **REJ_HIGH_PD_D_PD3VAH_ONTVAL_ONVAL_D_PD3TVAH_PDH_WKTPOC_ONPOC**: 26142.5 - 26236.5 (94.00 pts); families 6: AUCTION_VALUE, STRUCTURE, DELTA, VOLUME, GEX, VWAP; long=NONE short=NONE; stop 378 ticks
@@ -551,7 +555,7 @@ Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 5 decision 
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
 | T_DELTA_SELL_WK | DELTA / VP | 26230.0 - 26240.0 | overlaps | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26230.0-26240.0: SELL delta, each row in the top 20% of abs delta | | |
-| WKPOC_AREA | VOLUME / VP | 26252.5 - 26292.5 | overlaps | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (26270.0) | | |
+| WKPOC_AREA | VOLUME / VP | 26252.5 - 26292.5 | within 5.00 pts (above the zone; counts by the 5-pt family tolerance) | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (26270.0) | | |
 
 **WKPOC_AREA_D_WKVAH_ONH_PD2POC_REJ_HIGH_WK**: 26252.5 - 26306.5 (54.00 pts); families 4: AUCTION_VALUE, STRUCTURE, DELTA, VOLUME; long=NONE short=NONE; stop 218 ticks
 
@@ -559,7 +563,7 @@ Plan plan-v2.4-book1a-v1.6; market_context BULLISH; review APPROVED; 5 decision 
 |---|---|---|---|---|---|---|
 | ONH | STRUCTURE / VP | 26274.0 | inside | NT VP, overnight Thu Oct 30 17:00 - 08:10 CT, high | | |
 | WKVAH | AUCTION_VALUE / VP | 26270.5 | inside | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, volume profile | | |
-| T_DELTA_BUY_WK | DELTA / VP | 26275.0 - 26290.0 | overlaps | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26275.0-26290.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_WK | DELTA / VP | 26275.0 - 26290.0 | overlaps; 3 delta bands share this label | NT VP with delta, WK profile (developing week Sun Oct 26 17:00 - 08:10 CT), 5-pt rows 26275.0-26290.0: BUY delta, each row in the top 20% of abs delta | | |
 | WKPOC_AREA | VOLUME / VP | 26252.5 - 26292.5 | overlaps | NT VP, developing week Sun Oct 26 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (26270.0) | | |
 | REJ_HIGH_WK | STRUCTURE / chart | 26266.5 - 26306.5 | overlaps | 1-minute chart: swing bar close Wed Oct 29 23:38, swing 26306.5; available Wed Oct 29 23:53 (pack section B) | | |
 
@@ -687,7 +691,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 |---|---|---|---|---|---|---|
 | ONVAL | AUCTION_VALUE / VP | 24680.5 | inside | NT VP, overnight Mon Nov 17 17:00 - 08:10 CT, volume profile | | |
 | ONTVAL | AUCTION_VALUE / VP | 24670.0 | inside | NT VP, overnight Mon Nov 17 17:00 - 08:10 CT, TPO profile | | |
-| T_DELTA_BUY_ON | DELTA / VP | 24650.0 - 24660.0 | overlaps | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24650.0-24660.0: BUY delta, each row in the top 20% of abs delta | | |
+| T_DELTA_BUY_ON | DELTA / VP | 24650.0 - 24660.0 | within 5.00 pts (below the zone; counts by the 5-pt family tolerance) | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24650.0-24660.0: BUY delta, each row in the top 20% of abs delta | | |
 
 **ONPOC_AREA_D_PDL_ONTPOC_ONPOC**: 24715.0 - 24755.0 (40.00 pts); families 3: STRUCTURE, DELTA, VOLUME; long=ANY short=ANY; stop 162 ticks
 
@@ -696,7 +700,7 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | PDL | STRUCTURE / VP | 24731.75 | inside | NT VP, Mon Nov 17 cash 08:30-15:00 CT, low | | |
 | ONPOC | VOLUME / VP | 24750.0 | inside | NT VP, overnight Mon Nov 17 17:00 - 08:10 CT, volume profile | | |
 | ONTPOC | VOLUME / VP | 24742.5 | inside | NT VP, overnight Mon Nov 17 17:00 - 08:10 CT, TPO profile | | |
-| T_DELTA_SELL_ON | DELTA / VP | 24820.0 - 24845.0 | overlaps | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_ON | DELTA / VP | 24700.0 - 24720.0 | overlaps; 2 delta bands share this label | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24700.0-24720.0: SELL delta, each row in the top 20% of abs delta | | |
 | ONPOC_AREA | VOLUME / VP | 24715.0 - 24755.0 | overlaps | NT VP, overnight Mon Nov 17 17:00 - 08:10 CT, 5-pt rows >= 70% of the peak row (24740.0) | | |
 
 **T_HTFPOC**: 24822.5 - 24832.5 (10.00 pts); families 2: DELTA, VOLUME; long=ANY short=ANY; stop 42 ticks
@@ -704,8 +708,8 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | level | type | value | inside zone / distance | check against | hand | match |
 |---|---|---|---|---|---|---|
 | HTFPOC | VOLUME / VP | 24827.5 | inside | NT VP over the packet's window (HTF composite (packet htf_composite window)) | | |
-| T_DELTA_SELL_WK | DELTA / VP | 24820.0 - 24845.0 | overlaps | NT VP with delta, WK profile (developing week Sun Nov 16 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
-| T_DELTA_SELL_ON | DELTA / VP | 24820.0 - 24845.0 | overlaps | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_WK | DELTA / VP | 24820.0 - 24845.0 | overlaps; 2 delta bands share this label | NT VP with delta, WK profile (developing week Sun Nov 16 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_ON | DELTA / VP | 24820.0 - 24845.0 | overlaps; 2 delta bands share this label | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
 
 **D_ONVAH_WKVAL_ONTVAH**: 24846.25 - 24864.75 (18.50 pts); families 3: AUCTION_VALUE, DELTA, VWAP; long=INITIATION short=ANY; stop 76 ticks
 
@@ -716,8 +720,8 @@ No candidate: market_context is NONE, so the rule has no direction to look in an
 | VWAPU1 | VWAP / VWAP | 24856.0 | inside | the +1 sigma band: NT VWAP (Order Flow VWAP), session, reset at 17:00 CT (Mon Nov 17 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
 | WKVAL | AUCTION_VALUE / VP | 24856.0 | inside | NT VP, developing week Sun Nov 16 17:00 - 08:10 CT, volume profile | | |
 | VWAP_SD1_UP | VWAP / VWAP | 24856.07 | inside | the +1 sigma band: NT VWAP (Order Flow VWAP), session, reset at 17:00 CT (Mon Nov 17 17:00), ETH (all hours), 1 standard deviation band; read the bar stamped 08:10 on a 1-minute chart (= trades 08:09:00-08:09:59.999; the last bar included) | | |
-| T_DELTA_SELL_WK | DELTA / VP | 24820.0 - 24845.0 | overlaps | NT VP with delta, WK profile (developing week Sun Nov 16 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
-| T_DELTA_SELL_ON | DELTA / VP | 24820.0 - 24845.0 | overlaps | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_WK | DELTA / VP | 24820.0 - 24845.0 | within 1.25 pts (below the zone; counts by the 5-pt family tolerance); 2 delta bands share this label | NT VP with delta, WK profile (developing week Sun Nov 16 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
+| T_DELTA_SELL_ON | DELTA / VP | 24820.0 - 24845.0 | within 1.25 pts (below the zone; counts by the 5-pt family tolerance); 2 delta bands share this label | NT VP with delta, ON profile (overnight Mon Nov 17 17:00 - 08:10 CT), 5-pt rows 24820.0-24845.0: SELL delta, each row in the top 20% of abs delta | | |
 
 ### Weekly double distribution: frozen criteria values (ours: PD rule applied to weekly, weekly-dd-v1.1)
 
