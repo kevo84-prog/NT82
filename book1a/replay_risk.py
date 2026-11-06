@@ -38,6 +38,22 @@ V2_LEDGER_COLUMNS = ["risk_impl_version", "risk_decision_time", "risk_ref_source
 TK = fills.TICK
 
 
+def valid_quote(bid, ask) -> bool:
+    """risk-c3-v2 valid quote (Kyron, Nov 6, 2026): bid > 0, ask > 0 and bid < ask, both finite; no staleness
+    threshold (the quote is the one that came with the last trade at or before the decision). Anything else is
+    RISK_REJECT:NO_QUOTE: missing (no trade yet, NaN), zero / empty, locked (bid = ask) or crossed (bid > ask)."""
+    try:
+        b, a = float(bid), float(ask)
+    except (TypeError, ValueError):
+        return False
+    return bool(np.isfinite(b) and np.isfinite(a) and b > 0 and a > 0 and b < a)
+
+
+def ref_at_or_past_stop(side: int, ref: float, stop: float) -> bool:
+    """RISK_REJECT:REF_AT_OR_PAST_STOP, direction-aware: long ask <= stop; short bid >= stop."""
+    return ref <= stop if side > 0 else ref >= stop
+
+
 def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Optional[dict] = None, fill: str = "v3.5",
            stop_slip: int = 1, risk_cfg: RK.RiskConfig = RK.DEFAULT, risk_impl: str = RK.C3_V2) -> dict:
     if risk_impl not in RK.C3_IMPLS:
@@ -114,9 +130,9 @@ def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Op
                 v2_row = dict(risk_impl_version=risk_impl, risk_decision_time=t.strftime("%H:%M:%S.%f")[:12],
                               risk_ref_source="BEST_ASK" if side > 0 else "BEST_BID", risk_entry_ref=ref,
                               signal_entry_ref=signal_ref)
-                if not np.isfinite(ref) or ref <= 0:
+                if not valid_quote(qb, qa):
                     reasons.append("RISK_REJECT:NO_QUOTE")
-                elif (ref - tr["stop"]) * side <= 0:
+                elif ref_at_or_past_stop(side, ref, tr["stop"]):
                     reasons.append("RISK_REJECT:REF_AT_OR_PAST_STOP")
                 else:
                     decision = state.pre_trade_check(RK.price_ticks(ref, tr["stop"]))

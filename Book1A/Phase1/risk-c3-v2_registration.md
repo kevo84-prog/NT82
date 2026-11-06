@@ -27,9 +27,13 @@ trade is evaluated against it. Written Nov 6, 2026.
   250 ms later (fill model v3.5, unchanged).
 - Stop ticks = |reference - stop| / 0.25. The 2-tick allowance and every other U3 rule are unchanged ($1,000 per
   trade, $2,000 daily, NQ only, whole contracts, minimum 1 NQ, RISK_REJECT never shrunk, 3 trades, 2-loss halt).
-- Guards (mechanical, no threshold):
-  - no usable quote at the decision (bid / ask 0 or missing) -> RISK_REJECT:NO_QUOTE;
-  - the reference at or beyond the stop -> RISK_REJECT:REF_AT_OR_PAST_STOP.
+- Guards (mechanical, no threshold; approved as part of risk-c3-v2 by Kyron, Nov 6, 2026):
+  - RISK_REJECT:NO_QUOTE unless the decision quote is valid: bid > 0, ask > 0, bid < ask, both finite, with no
+    staleness threshold (`replay_risk.valid_quote`). So a missing quote (no trade yet), a zero side, a locked
+    (bid = ask) or a crossed (bid > ask) quote is rejected. (The first version, a9ea9d0, checked only the side
+    used: finite and > 0. Tightened Nov 6, 2026, per Kyron, before Phase 1b.)
+  - RISK_REJECT:REF_AT_OR_PAST_STOP, direction-aware (`replay_risk.ref_at_or_past_stop`): long when ask <= stop;
+    short when bid >= stop.
 - Known limitation: partial fills are not modelled. Fill model v3.5 fills the whole order at one price, so
   "filled contracts" = N.
 

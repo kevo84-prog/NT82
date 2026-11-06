@@ -202,5 +202,48 @@ class TestReplayV2(unittest.TestCase):
             run(*self.long_case(), impl="risk-c3-v9")
 
 
+class TestGuards(unittest.TestCase):
+    """RISK_REJECT:NO_QUOTE and RISK_REJECT:REF_AT_OR_PAST_STOP (approved with risk-c3-v2, Kyron Nov 6, 2026)."""
+
+    def test_valid_quote_rule(self):
+        self.assertTrue(RR.valid_quote(24000.0, 24000.25))
+        for b, a in ((0.0, 24000.25), (24000.0, 0.0), (0.0, 0.0), (24000.25, 24000.0),      # zero, crossed
+                     (24000.0, 24000.0), (float("nan"), float("nan")), (None, 24000.0), (-1.0, 24000.0)):   # locked, missing
+            self.assertFalse(RR.valid_quote(b, a), (b, a))
+
+    def test_ref_past_stop_direction_aware(self):
+        self.assertTrue(RR.ref_at_or_past_stop(+1, 23990.00, 23990.00))       # long: ask = stop
+        self.assertTrue(RR.ref_at_or_past_stop(+1, 23989.75, 23990.00))       # long: ask below stop
+        self.assertFalse(RR.ref_at_or_past_stop(+1, 23990.25, 23990.00))
+        self.assertTrue(RR.ref_at_or_past_stop(-1, 24010.00, 24010.00))       # short: bid = stop
+        self.assertTrue(RR.ref_at_or_past_stop(-1, 24010.25, 24010.00))       # short: bid above stop
+        self.assertFalse(RR.ref_at_or_past_stop(-1, 24009.75, 24010.00))
+
+    def _one(self, direction, stop, quote, entry_ref=24000.00, target=None):
+        target = target if target is not None else (24100.00 if direction == "Long" else 23900.00)
+        c = [cand("G-1", "09:03", direction, entry_ref, stop, target)]
+        t = ([("09:02:59.9",) + quote] if quote else []) + [("09:03:00.1", 24000.0, 23999.75, 24000.0), ("14:55:00", 24000.0, 23999.75, 24000.0)]
+        return att(run(c, t), "G-1")
+
+    def test_long_equality_at_stop_and_one_tick_inside(self):
+        self.assertEqual(self._one("Long", 23990.00, (23990.0, 23989.75, 23990.00))["reasons"], "RISK_REJECT:REF_AT_OR_PAST_STOP")
+        a = self._one("Long", 23990.00, (23990.25, 23990.00, 23990.25))
+        self.assertEqual((a["reasons"], a["risk_stop_ticks"]), ("", 1))
+
+    def test_short_equality_at_stop_and_one_tick_inside(self):
+        self.assertEqual(self._one("Short", 24010.00, (24010.0, 24010.00, 24010.25))["reasons"], "RISK_REJECT:REF_AT_OR_PAST_STOP")
+        a = self._one("Short", 24010.00, (24009.75, 24009.75, 24010.00))
+        self.assertEqual((a["reasons"], a["risk_ref_source"], a["risk_stop_ticks"]), ("", "BEST_BID", 1))
+
+    def test_missing_quote(self):
+        for d, stop in (("Long", 23990.00), ("Short", 24010.00)):
+            self.assertEqual(self._one(d, stop, None)["reasons"], "RISK_REJECT:NO_QUOTE")         # no trade before the decision
+
+    def test_invalid_quote_crossed_locked_or_zero(self):
+        for d, stop in (("Long", 23990.00), ("Short", 24010.00)):
+            for q in ((24000.0, 24000.25, 24000.00), (24000.0, 24000.0, 24000.0), (24000.0, 0.0, 24000.25), (24000.0, 24000.0, 0.0)):
+                self.assertEqual(self._one(d, stop, q)["reasons"], "RISK_REJECT:NO_QUOTE", (d, q))
+
+
 if __name__ == "__main__":
     unittest.main()
