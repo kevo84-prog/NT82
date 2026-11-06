@@ -1,0 +1,13 @@
+[
+ "K:\\Databento_BackTesting\\jeron_harness\\build\\JeronHarness.exe",
+ "--from=2025-10-20 17:00",
+ "--to=2025-11-04 16:15",
+ "--es=K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\runs\\phase1\\es_1m.csv",
+ "--instrument=NQ DEC25",
+ "K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\runs\\phase1_r4\\tape_strategy.csv.gz",
+ "K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\runs\\phase1_r4\\plans",
+ "K:\\Databento_BackTesting\\Book1A\\code\\book1a\\Phase0\\runs\\phase1_r4\\strategy",
+ "EvaluateFromDate=2025-10-22",
+ "WarmupDays=1",
+ "EsInstrument=ES DEC25"
+]

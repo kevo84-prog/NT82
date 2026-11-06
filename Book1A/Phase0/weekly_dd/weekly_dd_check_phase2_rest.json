@@ -1,0 +1,2575 @@
+[
+ {
+  "day": "2025-11-05",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-02T17:00:00-06:00",
+   "window_end": "2025-11-05T08:10:00-06:00",
+   "last_trade_ct": "2025-11-05T08:09:59.077220-06:00",
+   "available_at": "2025-11-05T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    26266.0,
+    26266,
+    "OK"
+   ],
+   [
+    "week low",
+    25282.0,
+    25282,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25835.0204,
+    25835.0204,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    26100.0,
+    26100,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    26266.0,
+    26266,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25675.75,
+    25675.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    26082.5,
+    26082.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    26269.75,
+    26269.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25585.0,
+    25585,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25280.0,
+      25294.75
+     ],
+     [
+      25895.0,
+      25904.75
+     ],
+     [
+      26260.0,
+      26269.75
+     ]
+    ],
+    [
+     [
+      25280,
+      25294.75
+     ],
+     [
+      25895,
+      25904.75
+     ],
+     [
+      26260,
+      26269.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25540.0,
+      25569.75
+     ]
+    ],
+    [
+     [
+      25540,
+      25569.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     true,
+     [
+      25755.0,
+      25784.75
+     ],
+     [
+      25855.0,
+      25874.75
+     ],
+     "LVN",
+     25795.0,
+     25799.75,
+     6
+    ],
+    [
+     true,
+     [
+      25755,
+      25784.75
+     ],
+     [
+      25855,
+      25874.75
+     ],
+     "LVN",
+     25795,
+     25799.75,
+     6
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-02T17:00:00-06:00",
+    "2025-11-05T08:10:00-06:00"
+   ],
+   "trades_volume": 1300735,
+   "last_trade_ct": "2025-11-05T08:09:59.077220-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-06",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": true,
+   "lower_hvn": [
+    25855.0,
+    25864.75
+   ],
+   "upper_hvn": [
+    26080.0,
+    26114.75
+   ],
+   "separator": "LVN",
+   "separator_lo": 25880.0,
+   "separator_hi": 26059.75,
+   "hvn_blocks": 3,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-02T17:00:00-06:00",
+   "window_end": "2025-11-06T08:10:00-06:00",
+   "last_trade_ct": "2025-11-06T08:09:59.913459-06:00",
+   "available_at": "2025-11-06T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    26266.0,
+    26266,
+    "OK"
+   ],
+   [
+    "week low",
+    25282.0,
+    25282,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25802.6175,
+    25802.6175,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25700.0,
+    25700,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25891.0,
+    25891,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25427.75,
+    25427.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25727.5,
+    25727.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25894.75,
+    25894.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25350.0,
+    25350,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25280.0,
+      25294.75
+     ],
+     [
+      25895.0,
+      25904.75
+     ],
+     [
+      26260.0,
+      26269.75
+     ]
+    ],
+    [
+     [
+      25280,
+      25294.75
+     ],
+     [
+      25895,
+      25904.75
+     ],
+     [
+      26260,
+      26269.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25485.0,
+      25614.75
+     ]
+    ],
+    [
+     [
+      25485,
+      25614.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     true,
+     [
+      25690.0,
+      25709.75
+     ],
+     [
+      25775.0,
+      25779.75
+     ],
+     "LVN",
+     25725.0,
+     25729.75,
+     5
+    ],
+    [
+     true,
+     [
+      25690,
+      25709.75
+     ],
+     [
+      25775,
+      25779.75
+     ],
+     "LVN",
+     25725,
+     25729.75,
+     5
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-02T17:00:00-06:00",
+    "2025-11-06T08:10:00-06:00"
+   ],
+   "trades_volume": 1845212,
+   "last_trade_ct": "2025-11-06T08:09:59.913459-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-07",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": true,
+   "lower_hvn": [
+    25320.0,
+    25344.75
+   ],
+   "upper_hvn": [
+    25645.0,
+    25784.75
+   ],
+   "separator": "LVN",
+   "separator_lo": 25375.0,
+   "separator_hi": 25379.75,
+   "hvn_blocks": 5,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-02T17:00:00-06:00",
+   "window_end": "2025-11-07T08:10:00-06:00",
+   "last_trade_ct": "2025-11-07T08:09:59.882239-06:00",
+   "available_at": "2025-11-07T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    26266.0,
+    26266,
+    "OK"
+   ],
+   [
+    "week low",
+    25061.75,
+    25061.75,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25667.6082,
+    25667.6082,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25700.0,
+    25700,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25813.25,
+    25813.25,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25223.5,
+    25223.5,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25727.5,
+    25727.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25884.75,
+    25884.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25250.0,
+    25250,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25895.0,
+      25904.75
+     ],
+     [
+      26260.0,
+      26269.75
+     ]
+    ],
+    [
+     [
+      25895,
+      25904.75
+     ],
+     [
+      26260,
+      26269.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25550.0,
+      25689.75
+     ]
+    ],
+    [
+     [
+      25550,
+      25689.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-02T17:00:00-06:00",
+    "2025-11-07T08:10:00-06:00"
+   ],
+   "trades_volume": 2636429,
+   "last_trade_ct": "2025-11-07T08:09:59.882239-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-10",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": true,
+   "lower_hvn": [
+    25470.0,
+    25484.75
+   ],
+   "upper_hvn": [
+    25525.0,
+    25549.75
+   ],
+   "separator": "LVN",
+   "separator_lo": 25495.0,
+   "separator_hi": 25509.75,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-09T17:00:00-06:00",
+   "window_end": "2025-11-10T08:10:00-06:00",
+   "last_trade_ct": "2025-11-10T08:09:58.973838-06:00",
+   "available_at": "2025-11-10T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25569.5,
+    25569.5,
+    "OK"
+   ],
+   [
+    "week low",
+    25269.0,
+    25269,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25458.3573,
+    25458.3573,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25520.25,
+    25520.25,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25568.5,
+    25568.5,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25426.0,
+    25426,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25537.5,
+    25537.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25569.75,
+    25569.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25405.0,
+    25405,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25265.0,
+      25294.75
+     ],
+     [
+      25560.0,
+      25569.75
+     ]
+    ],
+    [
+     [
+      25265,
+      25294.75
+     ],
+     [
+      25560,
+      25569.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      24705.0,
+      24714.75
+     ],
+     [
+      25130.0,
+      25174.75
+     ]
+    ],
+    [
+     [
+      24705,
+      24714.75
+     ],
+     [
+      25130,
+      25174.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-09T17:00:00-06:00",
+    "2025-11-10T08:10:00-06:00"
+   ],
+   "trades_volume": 113537,
+   "last_trade_ct": "2025-11-10T08:09:58.973838-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-11",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": true,
+   "lower_hvn": [
+    25615.0,
+    25654.75
+   ],
+   "upper_hvn": [
+    25710.0,
+    25719.75
+   ],
+   "separator": "LVN",
+   "separator_lo": 25680.0,
+   "separator_hi": 25694.75,
+   "hvn_blocks": 3,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-09T17:00:00-06:00",
+   "window_end": "2025-11-11T08:10:00-06:00",
+   "last_trade_ct": "2025-11-11T08:09:59.601265-06:00",
+   "available_at": "2025-11-11T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25768.75,
+    25768.75,
+    "OK"
+   ],
+   [
+    "week low",
+    25269.0,
+    25269,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25596.0526,
+    25596.0526,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25712.0,
+    25712,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25753.25,
+    25753.25,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25537.75,
+    25537.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25537.5,
+    25537.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25749.75,
+    25749.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25505.0,
+    25505,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25265.0,
+      25294.75
+     ]
+    ],
+    [
+     [
+      25265,
+      25294.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25450.0,
+      25469.75
+     ],
+     [
+      25730.0,
+      25764.75
+     ]
+    ],
+    [
+     [
+      25450,
+      25469.75
+     ],
+     [
+      25730,
+      25764.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     true,
+     [
+      25625.0,
+      25654.75
+     ],
+     [
+      25710.0,
+      25719.75
+     ],
+     "LVN",
+     25680.0,
+     25699.75,
+     2
+    ],
+    [
+     true,
+     [
+      25625,
+      25654.75
+     ],
+     [
+      25710,
+      25719.75
+     ],
+     "LVN",
+     25680,
+     25699.75,
+     2
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-09T17:00:00-06:00",
+    "2025-11-11T08:10:00-06:00"
+   ],
+   "trades_volume": 702096,
+   "last_trade_ct": "2025-11-11T08:09:59.601265-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-12",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-09T17:00:00-06:00",
+   "window_end": "2025-11-12T08:10:00-06:00",
+   "last_trade_ct": "2025-11-12T08:09:54.701080-06:00",
+   "available_at": "2025-11-12T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25830.0,
+    25830,
+    "OK"
+   ],
+   [
+    "week low",
+    25269.0,
+    25269,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25606.8098,
+    25606.8098,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25650.0,
+    25650,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25679.5,
+    25679.5,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25500.25,
+    25500.25,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25627.5,
+    25627.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25764.75,
+    25764.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25520.0,
+    25520,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25265.0,
+      25294.75
+     ]
+    ],
+    [
+     [
+      25265,
+      25294.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25475.0,
+      25484.75
+     ]
+    ],
+    [
+     [
+      25475,
+      25484.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-09T17:00:00-06:00",
+    "2025-11-12T08:10:00-06:00"
+   ],
+   "trades_volume": 1222060,
+   "last_trade_ct": "2025-11-12T08:09:54.701080-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-13",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-09T17:00:00-06:00",
+   "window_end": "2025-11-13T08:10:00-06:00",
+   "last_trade_ct": "2025-11-13T08:09:59.711341-06:00",
+   "available_at": "2025-11-13T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25830.0,
+    25830,
+    "OK"
+   ],
+   [
+    "week low",
+    25269.0,
+    25269,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25603.6106,
+    25603.6106,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25600.0,
+    25600,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25670.5,
+    25670.5,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25515.75,
+    25515.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25627.5,
+    25627.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25724.75,
+    25724.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25515.0,
+    25515,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25265.0,
+      25294.75
+     ]
+    ],
+    [
+     [
+      25265,
+      25294.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25485.0,
+      25494.75
+     ],
+     [
+      25665.0,
+      25784.75
+     ]
+    ],
+    [
+     [
+      25485,
+      25494.75
+     ],
+     [
+      25665,
+      25784.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-09T17:00:00-06:00",
+    "2025-11-13T08:10:00-06:00"
+   ],
+   "trades_volume": 1860383,
+   "last_trade_ct": "2025-11-13T08:09:59.711341-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-14",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-09T17:00:00-06:00",
+   "window_end": "2025-11-14T08:10:00-06:00",
+   "last_trade_ct": "2025-11-14T08:09:59.847906-06:00",
+   "available_at": "2025-11-14T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25830.0,
+    25830,
+    "OK"
+   ],
+   [
+    "week low",
+    24657.0,
+    24657,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25462.0767,
+    25462.0767,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25600.0,
+    25600,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25761.0,
+    25761,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25379.75,
+    25379.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25627.5,
+    25627.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25814.75,
+    25814.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25330.0,
+    25330,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      24655.0,
+      24669.75
+     ],
+     [
+      24855.0,
+      24899.75
+     ]
+    ],
+    [
+     [
+      24655,
+      24669.75
+     ],
+     [
+      24855,
+      24899.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25000.0,
+      25009.75
+     ]
+    ],
+    [
+     [
+      25000,
+      25009.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-09T17:00:00-06:00",
+    "2025-11-14T08:10:00-06:00"
+   ],
+   "trades_volume": 2685839,
+   "last_trade_ct": "2025-11-14T08:09:59.847906-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-20",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-16T17:00:00-06:00",
+   "window_end": "2025-11-20T08:10:00-06:00",
+   "last_trade_ct": "2025-11-20T08:09:59.985397-06:00",
+   "available_at": "2025-11-20T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25361.25,
+    25361.25,
+    "OK"
+   ],
+   [
+    "week low",
+    24376.25,
+    24376.25,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    24815.402,
+    24815.402,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    24750.0,
+    24750,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    24945.75,
+    24945.75,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    24459.25,
+    24459.25,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    24697.5,
+    24697.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25064.75,
+    25064.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    24495.0,
+    24495,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      24375.0,
+      24429.75
+     ]
+    ],
+    [
+     [
+      24375,
+      24429.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      24505.0,
+      24569.75
+     ],
+     [
+      24970.0,
+      24989.75
+     ]
+    ],
+    [
+     [
+      24505,
+      24569.75
+     ],
+     [
+      24970,
+      24989.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     3
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     3
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-16T17:00:00-06:00",
+    "2025-11-20T08:10:00-06:00"
+   ],
+   "trades_volume": 2494327,
+   "last_trade_ct": "2025-11-20T08:09:59.985397-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-21",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-16T17:00:00-06:00",
+   "window_end": "2025-11-21T08:10:00-06:00",
+   "last_trade_ct": "2025-11-21T08:09:58.746264-06:00",
+   "available_at": "2025-11-21T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25361.25,
+    25361.25,
+    "OK"
+   ],
+   [
+    "week low",
+    23904.5,
+    23904.5,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    24736.9033,
+    24736.9033,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    24750.0,
+    24750,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25116.75,
+    25116.75,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    24390.0,
+    24390,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    24697.5,
+    24697.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25189.75,
+    25189.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    24445.0,
+    24445,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [],
+    [],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      24095.0,
+      24204.75
+     ],
+     [
+      24645.0,
+      24884.75
+     ],
+     [
+      24930.0,
+      25144.75
+     ],
+     [
+      25300.0,
+      25314.75
+     ]
+    ],
+    [
+     [
+      24095,
+      24204.75
+     ],
+     [
+      24645,
+      24884.75
+     ],
+     [
+      24930,
+      25144.75
+     ],
+     [
+      25300,
+      25314.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     true,
+     [
+      24270.0,
+      24319.75
+     ],
+     [
+      25180.0,
+      25239.75
+     ],
+     "LVN",
+     24530.0,
+     24544.75,
+     2
+    ],
+    [
+     true,
+     [
+      24270,
+      24319.75
+     ],
+     [
+      25180,
+      25239.75
+     ],
+     "LVN",
+     24530,
+     24544.75,
+     2
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-16T17:00:00-06:00",
+    "2025-11-21T08:10:00-06:00"
+   ],
+   "trades_volume": 3572857,
+   "last_trade_ct": "2025-11-21T08:09:58.746264-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-24",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-23T17:00:00-06:00",
+   "window_end": "2025-11-24T08:10:00-06:00",
+   "last_trade_ct": "2025-11-24T08:09:59.917475-06:00",
+   "available_at": "2025-11-24T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    24564.0,
+    24564,
+    "OK"
+   ],
+   [
+    "week low",
+    24361.75,
+    24361.75,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    24472.635,
+    24472.635,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    24500.0,
+    24500,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    24535.25,
+    24535.25,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    24424.0,
+    24424,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    24477.5,
+    24477.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    24524.75,
+    24524.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    24420.0,
+    24420,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [],
+    [],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      23925.0,
+      23934.75
+     ]
+    ],
+    [
+     [
+      23925,
+      23934.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     4
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-23T17:00:00-06:00",
+    "2025-11-24T08:10:00-06:00"
+   ],
+   "trades_volume": 122487,
+   "last_trade_ct": "2025-11-24T08:09:59.917475-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-25",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-23T17:00:00-06:00",
+   "window_end": "2025-11-25T08:10:00-06:00",
+   "last_trade_ct": "2025-11-25T08:09:59.479896-06:00",
+   "available_at": "2025-11-25T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    24993.5,
+    24993.5,
+    "OK"
+   ],
+   [
+    "week low",
+    24361.75,
+    24361.75,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    24779.9012,
+    24779.9012,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    24930.0,
+    24930,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    24992.0,
+    24992,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    24699.75,
+    24699.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    24927.5,
+    24927.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    24994.75,
+    24994.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    24490.0,
+    24490,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      24575.0,
+      24659.75
+     ]
+    ],
+    [
+     [
+      24575,
+      24659.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      24515.0,
+      24659.75
+     ],
+     [
+      24965.0,
+      24994.75
+     ]
+    ],
+    [
+     [
+      24515,
+      24659.75
+     ],
+     [
+      24965,
+      24994.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-23T17:00:00-06:00",
+    "2025-11-25T08:10:00-06:00"
+   ],
+   "trades_volume": 703411,
+   "last_trade_ct": "2025-11-25T08:09:59.479896-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-26",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": true,
+   "lower_hvn": [
+    24855.0,
+    24859.75
+   ],
+   "upper_hvn": [
+    24925.0,
+    24954.75
+   ],
+   "separator": "LVN",
+   "separator_lo": 24895.0,
+   "separator_hi": 24899.75,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-23T17:00:00-06:00",
+   "window_end": "2025-11-26T08:10:00-06:00",
+   "last_trade_ct": "2025-11-26T08:09:58.671387-06:00",
+   "available_at": "2025-11-26T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25235.75,
+    25235.75,
+    "OK"
+   ],
+   [
+    "week low",
+    24361.75,
+    24361.75,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    24847.8058,
+    24847.8058,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    24935.0,
+    24935,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25051.0,
+    25051,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    24693.25,
+    24693.25,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    24927.5,
+    24927.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25229.75,
+    25229.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    24610.0,
+    24610,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      24575.0,
+      24599.75
+     ],
+     [
+      25230.0,
+      25239.75
+     ]
+    ],
+    [
+     [
+      24575,
+      24599.75
+     ],
+     [
+      25230,
+      25239.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      24600.0,
+      24654.75
+     ],
+     [
+      24915.0,
+      24934.75
+     ],
+     [
+      25065.0,
+      25139.75
+     ]
+    ],
+    [
+     [
+      24600,
+      24654.75
+     ],
+     [
+      24915,
+      24934.75
+     ],
+     [
+      25065,
+      25139.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     true,
+     [
+      24840.0,
+      24864.75
+     ],
+     [
+      24990.0,
+      25044.75
+     ],
+     "LVN",
+     24880.0,
+     24939.75,
+     3
+    ],
+    [
+     true,
+     [
+      24840,
+      24864.75
+     ],
+     [
+      24990,
+      25044.75
+     ],
+     "LVN",
+     24880,
+     24939.75,
+     3
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-23T17:00:00-06:00",
+    "2025-11-26T08:10:00-06:00"
+   ],
+   "trades_volume": 1305223,
+   "last_trade_ct": "2025-11-26T08:09:58.671387-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-11-28",
+  "weekly_dd": {
+   "available": false,
+   "status": "UNAVAILABLE",
+   "reason": "map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT",
+   "profile": "WK",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-23T17:00:00-06:00",
+   "window_end": "2025-11-28T08:10:00-06:00",
+   "last_trade_ct": null,
+   "available_at": "2025-11-28T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "weekly profile",
+    "UNAVAILABLE",
+    "map left the weekly profile out: data gap 2025-11-27 20:44 CT to 2025-11-28 07:30 CT",
+    "SKIP"
+   ]
+  ]
+ },
+ {
+  "day": "2025-12-01",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 2,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-30T17:00:00-06:00",
+   "window_end": "2025-12-01T08:10:00-06:00",
+   "last_trade_ct": "2025-12-01T08:09:58.359700-06:00",
+   "available_at": "2025-12-01T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25546.0,
+    25546,
+    "OK"
+   ],
+   [
+    "week low",
+    25193.25,
+    25193.25,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25306.3768,
+    25306.3768,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25250.0,
+    25250,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25330.5,
+    25330.5,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25235.75,
+    25235.75,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25307.5,
+    25307.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25339.75,
+    25339.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25230.0,
+    25230,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25190.0,
+      25199.75
+     ],
+     [
+      25345.0,
+      25354.75
+     ],
+     [
+      25400.0,
+      25439.75
+     ],
+     [
+      25505.0,
+      25549.75
+     ]
+    ],
+    [
+     [
+      25190,
+      25199.75
+     ],
+     [
+      25345,
+      25354.75
+     ],
+     [
+      25400,
+      25439.75
+     ],
+     [
+      25505,
+      25549.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    "skipped: PD is a half day",
+    "",
+    "SKIP"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-30T17:00:00-06:00",
+    "2025-12-01T08:10:00-06:00"
+   ],
+   "trades_volume": 130906,
+   "last_trade_ct": "2025-12-01T08:09:58.359700-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-12-02",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-30T17:00:00-06:00",
+   "window_end": "2025-12-02T08:10:00-06:00",
+   "last_trade_ct": "2025-12-02T08:09:59.781939-06:00",
+   "available_at": "2025-12-02T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25546.0,
+    25546,
+    "OK"
+   ],
+   [
+    "week low",
+    25193.25,
+    25193.25,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25370.1457,
+    25370.1457,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25400.0,
+    25400,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25443.25,
+    25443.25,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25271.5,
+    25271.5,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25387.5,
+    25387.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25499.75,
+    25499.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25300.0,
+    25300,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25190.0,
+      25199.75
+     ],
+     [
+      25525.0,
+      25549.75
+     ]
+    ],
+    [
+     [
+      25190,
+      25199.75
+     ],
+     [
+      25525,
+      25549.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25205.0,
+      25264.75
+     ]
+    ],
+    [
+     [
+      25205,
+      25264.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     1
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-30T17:00:00-06:00",
+    "2025-12-02T08:10:00-06:00"
+   ],
+   "trades_volume": 647326,
+   "last_trade_ct": "2025-12-02T08:09:59.781939-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-12-03",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 4,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-30T17:00:00-06:00",
+   "window_end": "2025-12-03T08:10:00-06:00",
+   "last_trade_ct": "2025-12-03T08:09:59.961012-06:00",
+   "available_at": "2025-12-03T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25678.25,
+    25678.25,
+    "OK"
+   ],
+   [
+    "week low",
+    25193.25,
+    25193.25,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25467.3308,
+    25467.3308,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25600.0,
+    25600,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25664.0,
+    25664,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25385.25,
+    25385.25,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25637.5,
+    25637.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25674.75,
+    25674.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25365.0,
+    25365,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25190.0,
+      25199.75
+     ]
+    ],
+    [
+     [
+      25190,
+      25199.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25410.0,
+      25439.75
+     ],
+     [
+      25665.0,
+      25674.75
+     ]
+    ],
+    [
+     [
+      25410,
+      25439.75
+     ],
+     [
+      25665,
+      25674.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-30T17:00:00-06:00",
+    "2025-12-03T08:10:00-06:00"
+   ],
+   "trades_volume": 1209962,
+   "last_trade_ct": "2025-12-03T08:09:59.961012-06:00",
+   "rows_5pt": {}
+  }
+ },
+ {
+  "day": "2025-12-04",
+  "weekly_dd": {
+   "available": true,
+   "double_distribution": false,
+   "hvn_blocks": 1,
+   "profile": "WK",
+   "status": "AVAILABLE",
+   "rule": "ours: PD rule applied to weekly",
+   "version": "weekly-dd-v1.1",
+   "window_start": "2025-11-30T17:00:00-06:00",
+   "window_end": "2025-12-04T08:10:00-06:00",
+   "last_trade_ct": "2025-12-04T08:09:59.463868-06:00",
+   "available_at": "2025-12-04T08:10:00-06:00"
+  },
+  "checks": [
+   [
+    "week high",
+    25716.25,
+    25716.25,
+    "OK"
+   ],
+   [
+    "week low",
+    25193.25,
+    25193.25,
+    "OK"
+   ],
+   [
+    "weekly VWAP",
+    25500.1664,
+    25500.1664,
+    "OK"
+   ],
+   [
+    "WKPOC",
+    25600.0,
+    25600,
+    "OK"
+   ],
+   [
+    "WKVAH",
+    25681.0,
+    25681,
+    "OK"
+   ],
+   [
+    "WKVAL",
+    25423.25,
+    25423.25,
+    "OK"
+   ],
+   [
+    "WKTPOC",
+    25642.5,
+    25642.5,
+    "OK"
+   ],
+   [
+    "WKTVAH",
+    25674.75,
+    25674.75,
+    "OK"
+   ],
+   [
+    "WKTVAL",
+    25390.0,
+    25390,
+    "OK"
+   ],
+   [
+    "weekly single prints",
+    [
+     [
+      25190.0,
+      25199.75
+     ],
+     [
+      25695.0,
+      25719.75
+     ]
+    ],
+    [
+     [
+      25190,
+      25199.75
+     ],
+     [
+      25695,
+      25719.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD single prints",
+    [
+     [
+      25430.0,
+      25479.75
+     ]
+    ],
+    [
+     [
+      25430,
+      25479.75
+     ]
+    ],
+    "OK"
+   ],
+   [
+    "PD double distribution (port check)",
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     5
+    ],
+    [
+     false,
+     null,
+     null,
+     null,
+     null,
+     null,
+     5
+    ],
+    "OK"
+   ]
+  ],
+  "weekly_profile": {
+   "window": [
+    "2025-11-30T17:00:00-06:00",
+    "2025-12-04T08:10:00-06:00"
+   ],
+   "trades_volume": 1672220,
+   "last_trade_ct": "2025-12-04T08:09:59.463868-06:00",
+   "rows_5pt": {}
+  }
+ }
+]

@@ -1,0 +1,134 @@
+# Book 1A Phase 0: runbook for the PC (K:\Databento_BackTesting)
+
+Everything below runs from a fresh folder on the PC with the branch `book1a-phase0` checked out and the Book 1
+code reachable as `BOOK1_ROOT` (the frozen tag on the PC; `book1_ref/` is only the Drive mirror used here).
+No Book 1 result folder is read by any step. Order = checklist order. Each step writes into `Book1A\Phase0\`.
+
+```bat
+cd K:\Databento_BackTesting\Book1A
+git clone https://github.com/kevo84-prog/NT82 code && cd code && git checkout book1a-phase0
+set BOOK1_ROOT=K:\Databento_BackTesting
+python -m book1a.run_phase0_tests ..\Phase0\unit_tests
+```
+
+| Item | Command | Output |
+|---|---|---|
+| 0 (C1 source) | none: `book1_ref\C1_definition_no_results.md` is the only C1 source the runner reads (created Nov 1, session 2). Do not open `FROZEN_STRATEGY.md`. | - |
+| A2 | `python -m book1a.book1_ref_compare book1_ref\MANIFEST.md K:\Databento_BackTesting ..\Phase0\A2_book1_tag_compare.md --tag <frozen tag, e.g. phase4-result> --raw K:\Databento_BackTesting\raw` (run with the frozen tag checked out; the tool changes nothing) | A2_book1_tag_compare.md: every manifest file MATCH / DIFFERS / MISSING against the tag, plus HEAD and the tag commit. Report every DIFFERS / MISSING row to Kyron before P0.4 |
+| P0.2 | `python -m book1a.manifest build K:\Databento_BackTesting\raw ..\Phase0\manifest_block1.csv` then `python -m book1a.manifest compare ..\Phase0\manifest_block1.csv K:\Databento_BackTesting\data_integrity_2025-10-21_2026-10-02.csv ..\Phase0\P0.2_checksums.md` | checksum table + comparison (must be PASS; the gate 6 table has no sha256 column, so sizes and file names are compared and our sha256 list becomes the Book 1A reference) |
+| P0.3 | `python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out ..\Phase0\replay_diff\runA` ; same with `runB` ; `python -m book1a.replay_diff ..\Phase0\replay_diff\runA ..\Phase0\replay_diff\runB ..\Phase0\replay_diff\diff.md --ignore run_id generated` | diff.md (must say DIFF EMPTY) |
+| P0.4 | `python -m book1a.run_r1_r2 --phase phase1 --block1 K:\Databento_BackTesting --out ..\Phase0\runs\phase1 --map-first-utc <map_first_utc from backtest\phase2\phase2_config.json>` ; repeat for phase2, phase3, phase4 ; then copy `runs\phase*\checker_input\R1_A0.csv` and `R2_C1.csv` into `..\Phase0\checker_input\` as `R1_A0_<phase>.csv` / `R2_C1_<phase>.csv` | the hand-off to the checker; `r1_check_a0.json` must list 0 problems on the v3.4 phases |
+| P0.6 | `python -m book1a.hand_checks.vwap_hand_check K:\Databento_BackTesting\raw ..\Phase0\hand_checks` | vwap_hand_check.md (PASS) |
+| P0.7-P0.9 | `python -m book1a.hand_checks.plan_hand_check ..\Phase0\runs\phase1 K:\Databento_BackTesting ..\Phase0\hand_checks` | hand_check_<day>.md x 3 with the empty "hand" column to fill from the chart; the Book 1A plans and sidecars |
+| P0.11 | `python -m book1a.candidate_log ..\Phase0\runs\phase1 ..\Phase0\runs\phase1\tape_strategy.csv.gz ..\Phase0\P0.11_candidates_phase1.csv` (as a module: `book1a.candidate_log.build(run, tape, out, sessions=[...3 days...])`) | candidate log, every tag present |
+| P0.12 | the full ledgers written by P0.4 (`R1_A0_full.csv`, `R2_C1_full.csv`) and, for the sized strategies, `book1a.replay_risk.replay(...)` on the same run (see `book1a/replay_risk.py`) | ledger sample with theoretical R, realized net R and N |
+| P0.13 | `python -m book1a.audit_run ..\Phase0\runs\phase1 ..\Phase0\hand_checks ..\Phase0\runs\phase1\R1_A0_full.csv ..\Phase0\lookahead` | lookahead_audit.csv + summary (0 violations, 0 missing) |
+| P1.1 | `python -c "from book1a import gamma_ranks"` hooked to `gex_block1.py` per-strike net GEX (see the report, P1.1) | gamma1..5 per session, available_at D-1 23:00 ET |
+| P1.2 | `python -m book1a.gex_check K:\Databento_BackTesting\gex_levels_block1.csv ..\Phase0\P1.2_gex_levels.md` | coverage table (PASS expected: 124 / 124) |
+| P0.14 | only after every row above passes: `git tag book1a-phase0-freeze && git push origin book1a-phase0-freeze` | the freeze |
+
+Notes
+- `run_r1_r2.py` builds the daily-loop config from the Book 1 layout (`tapes\`, `bars\nq_1m.csv`, `bars\es_1m.csv`,
+  the calendar and GEX files). If the Book 1 phase folders used other paths or history windows, copy them from
+  `backtest\phase3\build_inputs.py` into `book1_cfg()` before running; they are inputs, not results.
+- Fill model for P0.4: default `book1` (v3.4 on Phases 1-2, v3.5 on Phases 3-4) = Book 1's published per-phase setting, kept
+  on Kyron's instruction (Nov 1, session 2). The exact v3.4 / v3.5 code difference is reported in `A1_fill_model_v34_v35_diff.md`.
+- Mono must be on PATH (the harness runs `mono JeronHarness.exe` outside Windows; on Windows the exe runs directly).
+
+## As run on the PC, Nov 2, 2026 (use these; they supersede the table where they differ)
+
+Setup: the Book 1 repo got the remote `origin = https://github.com/kevo84-prog/NT82.git`; the branch has no common
+history with Book 1, so it is a **git worktree** at `K:\Databento_BackTesting\Book1A\code` (a checkout in the Book 1
+folder would remove every tracked Book 1 file from it). On Windows rename the merged `Book1A` folder to `book1a`
+on disk once (case folding, ambiguities E6). Everything below runs from `Book1A\code` with
+`PYTHONUTF8=1` and `BOOK1_ROOT=K:\Databento_BackTesting`; outputs go to `Book1A\Phase0\` inside the worktree.
+Run the heavy steps one at a time (the PC has about 6 GB free; E11).
+
+```bat
+python -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+python -m book1a.book1_ref_compare book1_ref\MANIFEST.md K:\Databento_BackTesting Book1A\Phase0\A2_book1_tag_compare.md --tag phase4-result --raw K:\Databento_BackTesting\raw
+python -m book1a.manifest build K:\Databento_BackTesting\raw Book1A\Phase0\manifest_block1.csv
+python -m book1a.manifest build K:\Databento_BackTesting\NQ_MBO_2026-09 Book1A\Phase0\manifest_nq_mbo_2026-09.csv
+python -m book1a.manifest build K:\Databento_BackTesting\NQ_MBO_2026-10 Book1A\Phase0\manifest_nq_mbo_2026-10.csv
+rem merge the three into manifest_all.csv with paths prefixed raw/, NQ_MBO_2026-09/, NQ_MBO_2026-10/, then:
+python -m book1a.manifest compare Book1A\Phase0\manifest_all.csv K:\Databento_BackTesting\data_integrity_2025-10-21_2026-10-02.csv Book1A\Phase0\P0.2_checksums.md
+python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out Book1A\Phase0\replay_diff\runA
+python -m book1a.run_r1_r2 --sessions 2025-11-05 2025-12-15 --block1 K:\Databento_BackTesting --out Book1A\Phase0\replay_diff\runB
+python -m book1a.replay_diff_norm Book1A\Phase0\replay_diff\runA Book1A\Phase0\replay_diff\runB Book1A\Phase0\replay_diff\diff.md
+python -m book1a.hand_checks.vwap_hand_check K:\Databento_BackTesting\raw\block1 Book1A\Phase0\hand_checks
+for %p in (phase1 phase2 phase3 phase4) do python -m book1a.run_r1_r2 --phase %p --block1 K:\Databento_BackTesting --out Book1A\Phase0\runs\%p
+rem copy runs\<phase>\checker_input\R1_A0.csv / R2_C1.csv to checker_input\R1_A0_<phase>.csv / R2_C1_<phase>.csv
+python -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\hand_checks --days 2025-10-22 2025-10-28 2025-10-31 2025-11-04
+python -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\plans_phase1 --days <all 10 Phase 1 sessions>
+python -c "from pathlib import Path; from book1a import candidate_log as C; r=Path('Book1A/Phase0/runs/phase1'); C.build(r, r/'tape_strategy.csv.gz', Path('Book1A/Phase0/P0.11_candidates_phase1.csv'), sessions=['2025-10-22','2025-10-28','2025-11-04'])"
+rem P0.12: replay_risk.replay(log, tape, "R3", veto=FZ1|L1|T8, retest=RH1) and "R4" (veto=L1|T8), write_ledger -> P0.12\
+python -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1\R1_A0_full.csv Book1A\Phase0\lookahead
+python -m book1a.gamma_ranks_pc K:\Databento_BackTesting Book1A\Phase0      (needs scipy)
+```
+The daily-loop config no longer needs `--map-first-utc`: Book 1's 20250921 is the default (E3). Phase 3 uses the
+cut Feb 4 tape automatically (E4). Bars are built from raw on the first run of each folder.
+
+## As run on the PC, Nov 4, 2026 (branch book1a-phase0-pc; Book 1A venv)
+
+```bat
+set PYTHONUTF8=1
+set BOOK1_ROOT=K:\Databento_BackTesting
+set PY=..\.venv\Scripts\python.exe
+rem 1. C1 Phase 2 recheck with fill model v3.5 (reads runs\phase2 read-only)
+%PY% -m book1a.recheck_c1_v35 --block1 K:\Databento_BackTesting --run Book1A\Phase0\runs\phase2 --out Book1A\Phase0\runs\phase2_c1_v35
+rem copy runs\phase2_c1_v35\checker_input\R2_C1_phase2_v35.csv to K:\Book1A_checker\checker_input\ and checker_input\; append its sha256 to checker_input_sha256.txt
+rem 2. copy K:\Book1A_checker\checker_output\P0.4_result.md to Book1A\Phase0\checker_output\ (do not open)
+rem 3. Book 1A plans (plan-v2.4-book1a-v1.1), then R4 on them
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\plans_phase1 --days <all 10 Phase 1 sessions>
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase1 K:\Databento_BackTesting Book1A\Phase0\hand_checks --days 2025-10-22 2025-10-28 2025-10-31 2025-11-04
+%PY% -m book1a.run_r4 --block1 K:\Databento_BackTesting --a0-run Book1A\Phase0\runs\phase1 --plans Book1A\Phase0\plans_phase1 --phase phase1 --out Book1A\Phase0\runs\phase1_r4
+rem copy runs\phase1_r4\R4_candidates.csv -> P0.11_candidates_phase1.csv; R4_M0_ledger.csv -> P0.12\R4_M0_phase1_ledger.csv (+ plans\plan_manifest.json, run_manifest.json, strategy_args.json)
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1_r4 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1_r4\R4_M0_ledger.csv Book1A\Phase0\lookahead_R4
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\runs\phase1\R1_A0_full.csv Book1A\Phase0\lookahead
+%PY% -m book1a.audit_run Book1A\Phase0\runs\phase1 Book1A\Phase0\plans_phase1 Book1A\Phase0\P0.12\R3_M0_phase1_ledger.csv Book1A\Phase0\lookahead_R3
+rem 4. hand-check pack: Nov 17-19 plans from the Phase 2 run, then the pack (full command in hand_check_pack\command.txt)
+%PY% -m book1a.hand_checks.plan_hand_check Book1A\Phase0\runs\phase2 K:\Databento_BackTesting Book1A\Phase0\hand_check_pack\plans --days 2025-11-17 2025-11-18 2025-11-19
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+```
+R4 stops with R4PlanError if any session lacks its Book 1A plan; it never reads an A0 plan.
+
+## As run on the PC, Nov 4, 2026, second part (Kyron's Phase 0 decisions; code 31cebdb rule, cd9e9df checks)
+Same `%PY%` and environment. The plan, R4, audit and pack commands above were rerun unchanged (the old R4 run folder
+was moved to `runs\phase1_r4_prev_e17`, not in git). New commands:
+```
+rem E23 independent weekly-profile check (13 pack days; the rest of Phase 2 the same way into weekly_dd_check_phase2_rest.md)
+%PY% -m book1a.hand_checks.weekly_dd_check --out Book1A\Phase0\weekly_dd\weekly_dd_check.md --day 2025-10-22=Book1A\Phase0\runs\phase1 ... --day 2025-11-19=Book1A\Phase0\runs\phase2
+rem E24
+%PY% -m book1a.hand_checks.e24_reward_risk_check Book1A\Phase0\runs\phase1_r4 Book1A\Phase0\E24\E24_reward_risk_check.md
+rem E5: Book1A\e5_tapes\run_e5.py (mbo_tape.day_tape from book1_ref on the Nov 5 and Dec 15 raw files, no cutoff), then
+rem compare `gzip -dc <tape> | sha256sum` for tapes\ and Book1A\e5_tapes\ (E5_tape_rebuild.md)
+```
+
+## As run on the PC, Nov 4, 2026, third part (E26 / E25 code e9813f4; reports b414c98)
+Plans, R4, the three audits, E24, the weekly checks and the pack were rerun with the same commands as above (the
+previous R4 run folder moved to `runs\phase1_r4_prev_v12`, not in git). New commands (full lines in each folder's
+command.txt):
+```
+%PY% -m book1a.hand_checks.wide_zone_report --out Book1A\Phase0\wide_zones\wide_zone_report.md --day "<date>=<run>|<plans>[|<R4 run>]" ...
+%PY% -m book1a.hand_checks.hand_check_sheet --block1 K:\Databento_BackTesting --out Book1A\Phase0\hand_check_sheet\hand_check_sheet.md --day "<date>=<run>|<plans>" ...
+```
+
+## As run on the PC, Nov 5, 2026 (htf_acceptance; rule and tests commit 0e0210d before any real day)
+Spec re-exported first (`Book1A/specs/Book1A_2_context.md`). Then, with the same `%PY%` and environment: the three
+plan_hand_check commands (plans_phase1, hand_checks, hand_check_pack\plans), R4 (previous run folder moved to
+`runs\phase1_r4_prev_v13`, not in git) and its copies into P0.11 / P0.12, the three audit_run commands, E24, the pack
+(`hand_check_pack\command.txt`), the sheet (`hand_check_sheet\command.txt`), the draw report
+(`hand_check_sheet\draw_status_command.txt`), and:
+```
+rem before committing the rebuilt plans: sha256 of the old plan files -> plan_hashes_2026-11-05_before.txt, then
+%PY% book1a\hand_checks\plan_hashes_nov5.py . Book1A\Phase0\plan_hashes_2026-11-05.md Book1A\Phase0\plan_hashes_2026-11-05_before.txt
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests
+```
+
+## As run on the PC, Nov 5, 2026, second part (context clarification; rule 6998761, bug fix 8bd4005, before the rebuild)
+Spec re-exported first. Then the same chain as the Nov 5 entry above (plans, R4 with copies to P0.11 / P0.12, the three audit_run commands, E24, the pack, the draw report, the sheet; v1.4 R4 run moved to `runs\phase1_r4_prev_v14`, the intermediate v1.5 run to `runs\phase1_r4_v15_intermediate`, not in git), and:
+```
+rem before the rebuild: sha256 of the v1.4 plan files -> plan_hashes_2026-11-05b_before.txt, then
+%PY% book1a\hand_checks\plan_hashes_nov5b.py . Book1A\Phase0\plan_hashes_2026-11-05b.md Book1A\Phase0\plan_hashes_2026-11-05b_before.txt
+%PY% -m book1a.run_phase0_tests Book1A\Phase0\unit_tests   (log renamed unit_tests_2026-11-05_8bd4005.log)
+```
