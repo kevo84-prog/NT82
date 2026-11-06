@@ -1,0 +1,3 @@
+10127 files -> Book1A/Phase0/manifest_block1.csv
+{'reference': 155, 'ours': 1198, 'missing': 22, 'extra': 1065, 'differing': 0, 'hash_checked': 0}
+exit=0

@@ -1,0 +1,245 @@
+Book 1A Phase 0 unit tests  2026-11-05T05:24:34+00:00  commit 8bd4005  package book1a-phase0-v0.1
+module versions: risk=risk-v1.0, vwap=vwap-v1.0, families=families-v1.0, lookahead=lookahead-v1.0, map_v24=map-v2.4-book1a-v1.2, plan_fields=plan-fields-v1.3, ledger=ledger-v1.0, manifest=manifest-v1.0, replay_diff=replay-diff-v1.0
+python 3.14.7
+tests run 227, failures 0, errors 0, result PASS
+test_bar_end_rule_and_volumes (book1a.tests.test_bars.TestBars.test_bar_end_rule_and_volumes) ... ok
+test_large_trade (book1a.tests.test_bars.TestBars.test_large_trade) ... ok
+test_stacked_buy_imbalance (book1a.tests.test_bars.TestBars.test_stacked_buy_imbalance) ... ok
+test_string_times_and_bounds (book1a.tests.test_bars.TestBars.test_string_times_and_bounds) ... ok
+test_rows_and_tags_never_missing (book1a.tests.test_candidate_log.TestCandidateLog.test_rows_and_tags_never_missing) ... ok
+test_gex_tolerance_sensitivity (book1a.tests.test_families.TestCountFamilies.test_gex_tolerance_sensitivity) ... ok
+test_hand_built_jeron_nov18_zone (book1a.tests.test_families.TestCountFamilies.test_hand_built_jeron_nov18_zone) ... ok
+test_single_family_is_target (book1a.tests.test_families.TestCountFamilies.test_single_family_is_target) ... ok
+test_unknown_level_ignored (book1a.tests.test_families.TestCountFamilies.test_unknown_level_ignored) ... ok
+test_vwap_family_counts_once (book1a.tests.test_families.TestCountFamilies.test_vwap_family_counts_once) ... ok
+test_vwap_plus_gex_is_decision (book1a.tests.test_families.TestCountFamilies.test_vwap_plus_gex_is_decision) ... ok
+test_prefixes (book1a.tests.test_families.TestFamilyMapping.test_prefixes) ... ok
+test_band_level_any_overlap (book1a.tests.test_families.TestTolerances.test_band_level_any_overlap) ... ok
+test_gex_counts_inside_or_within_10_points (book1a.tests.test_families.TestTolerances.test_gex_counts_inside_or_within_10_points) ... ok
+test_other_families_5_points (book1a.tests.test_families.TestTolerances.test_other_families_5_points) ... ok
+test_commission_287_per_side_per_contract (book1a.tests.test_fills_v34.TestCommissionInNetR.test_commission_287_per_side_per_contract) ... ok
+test_latency_1000ms_stress (book1a.tests.test_fills_v34.TestEntry.test_latency_1000ms_stress) ... ok
+test_long_fills_at_ask_250ms_after_close (book1a.tests.test_fills_v34.TestEntry.test_long_fills_at_ask_250ms_after_close) ... ok
+test_short_fills_at_bid (book1a.tests.test_fills_v34.TestEntry.test_short_fills_at_bid) ... ok
+test_1455_flatten_long_at_bid_short_at_ask (book1a.tests.test_fills_v34.TestFlatten.test_1455_flatten_long_at_bid_short_at_ask) ... ok
+test_long_stop_1_tick_below (book1a.tests.test_fills_v34.TestStop.test_long_stop_1_tick_below) ... ok
+test_long_stop_stress_2_and_4 (book1a.tests.test_fills_v34.TestStop.test_long_stop_stress_2_and_4) ... ok
+test_short_stop_1_tick_above (book1a.tests.test_fills_v34.TestStop.test_short_stop_1_tick_above) ... ok
+test_stop_triggers_on_a_trade_through_not_a_touch_of_quote (book1a.tests.test_fills_v34.TestStop.test_stop_triggers_on_a_trade_through_not_a_touch_of_quote) ... ok
+test_v35_gap_fill_differs_only_on_gaps (book1a.tests.test_fills_v34.TestStop.test_v35_gap_fill_differs_only_on_gaps) ... ok
+test_long_target_needs_1_tick_through (book1a.tests.test_fills_v34.TestTarget.test_long_target_needs_1_tick_through) ... ok
+test_short_target_needs_1_tick_through (book1a.tests.test_fills_v34.TestTarget.test_short_target_needs_1_tick_through) ... ok
+test_same_timestamp_stop_and_target_is_stop (book1a.tests.test_fills_v34.TestTie.test_same_timestamp_stop_and_target_is_stop) ... ok
+test_long_gap_through (book1a.tests.test_fills_v34.TestV35GapThrough.test_long_gap_through) ... ok
+test_no_gap_v35_equals_v34 (book1a.tests.test_fills_v34.TestV35GapThrough.test_no_gap_v35_equals_v34) ... ok
+test_short_gap_through (book1a.tests.test_fills_v34.TestV35GapThrough.test_short_gap_through) ... ok
+test_acceptance_bearish_above_composite_val (book1a.tests.test_htf_acceptance.TestAcceptanceInvalidation.test_acceptance_bearish_above_composite_val) ... ok
+test_acceptance_bullish_below_composite_vah (book1a.tests.test_htf_acceptance.TestAcceptanceInvalidation.test_acceptance_bullish_below_composite_vah) ... ok
+test_base_context_unchanged (book1a.tests.test_htf_acceptance.TestAcceptanceInvalidation.test_base_context_unchanged) ... ok
+test_balanced_only_when_overlap_passes (book1a.tests.test_htf_acceptance.TestContextBase.test_balanced_only_when_overlap_passes)
+BALANCED is set only when the PD2 / PD / ON overlap test passed (never a fallback), and balance= is written ... ok
+test_bearish_read_but_weekly_accepted_above_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_bearish_read_but_weekly_accepted_above_is_conflict) ... ok
+test_both_reads_pass_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_both_reads_pass_is_conflict) ... ok
+test_bullish_read_but_weekly_accepted_below_is_conflict (book1a.tests.test_htf_acceptance.TestContextBase.test_bullish_read_but_weekly_accepted_below_is_conflict) ... ok
+test_conflict_with_balance_is_balanced (book1a.tests.test_htf_acceptance.TestContextBase.test_conflict_with_balance_is_balanced) ... ok
+test_no_directional_test_passed (book1a.tests.test_htf_acceptance.TestContextBase.test_no_directional_test_passed) ... ok
+test_same_as_oct31_rule_when_no_acceptance (book1a.tests.test_htf_acceptance.TestContextBase.test_same_as_oct31_rule_when_no_acceptance) ... ok
+test_59_minutes_by_0810_is_testing_even_with_later_bars (book1a.tests.test_htf_acceptance.TestCutoff0810.test_59_minutes_by_0810_is_testing_even_with_later_bars) ... ok
+test_60_minutes_by_0810_accepts (book1a.tests.test_htf_acceptance.TestCutoff0810.test_60_minutes_by_0810_accepts) ... ok
+test_bar_closing_after_0810_is_ignored (book1a.tests.test_htf_acceptance.TestCutoff0810.test_bar_closing_after_0810_is_ignored) ... ok
+test_bar_stamped_0810_is_used (book1a.tests.test_htf_acceptance.TestCutoff0810.test_bar_stamped_0810_is_used) ... ok
+test_thresholds_unchanged (book1a.tests.test_htf_acceptance.TestCutoff0810.test_thresholds_unchanged) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestPlanBuilder.test_check_f_logged_not_applied) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestPlanBuilder.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestPlanBuilder.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestPlanBuilder.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestPlanBuilder.test_s14_reads_only_book1_keys) ... ok
+test_acceptance_bullish_invalidates_below_composite_vah (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_acceptance_bullish_invalidates_below_composite_vah) ... ok
+test_balance_lines_equal_the_map_composite (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_balance_lines_equal_the_map_composite)
+BALANCED from the map's overlap test; balance= / balance_poc= are the packet's merged VAL-VAH / POC exactly. ... ok
+test_bars_after_0810_do_not_change_the_plan (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_bars_after_0810_do_not_change_the_plan) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_check_f_logged_not_applied) ... ok
+test_htf_inside_gives_none_acceptance (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_htf_inside_gives_none_acceptance) ... ok
+test_no_evidence_plus_above_is_bullish (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_no_evidence_plus_above_is_bullish) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_s14_reads_only_book1_keys) ... ok
+test_weekly_val_accepted_below_blocks_acceptance_bullish (book1a.tests.test_htf_acceptance.TestPlanHTFAcceptance.test_weekly_val_accepted_below_blocks_acceptance_bullish) ... ok
+test_balanced_stays_balanced (book1a.tests.test_htf_acceptance.TestPrecedence.test_balanced_stays_balanced) ... ok
+test_bearish_above_is_none_conflict (book1a.tests.test_htf_acceptance.TestPrecedence.test_bearish_above_is_none_conflict) ... ok
+test_bearish_below_is_bearish (book1a.tests.test_htf_acceptance.TestPrecedence.test_bearish_below_is_bearish) ... ok
+test_bullish_above_is_bullish (book1a.tests.test_htf_acceptance.TestPrecedence.test_bullish_above_is_bullish) ... ok
+test_bullish_below_is_none_conflict (book1a.tests.test_htf_acceptance.TestPrecedence.test_bullish_below_is_none_conflict) ... ok
+test_conflict_stays_none (book1a.tests.test_htf_acceptance.TestPrecedence.test_conflict_stays_none) ... ok
+test_no_acceptance_keeps_label (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_acceptance_keeps_label) ... ok
+test_no_evidence_above_is_bullish (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_evidence_above_is_bullish) ... ok
+test_no_evidence_below_is_bearish (book1a.tests.test_htf_acceptance.TestPrecedence.test_no_evidence_below_is_bearish) ... ok
+test_output_is_one_of_four_s14_values (book1a.tests.test_htf_acceptance.TestPrecedence.test_output_is_one_of_four_s14_values) ... ok
+test_states_to_acceptance (book1a.tests.test_htf_acceptance.TestPrecedence.test_states_to_acceptance) ... ok
+test_table_covers_every_pair (book1a.tests.test_htf_acceptance.TestPrecedence.test_table_covers_every_pair) ... ok
+test_unknown_values_raise (book1a.tests.test_htf_acceptance.TestPrecedence.test_unknown_values_raise) ... ok
+test_acceptance_bearish_but_weekly_vah_accepted_above_is_conflict (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_acceptance_bearish_but_weekly_vah_accepted_above_is_conflict) ... ok
+test_acceptance_bearish_guard_passes (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_acceptance_bearish_guard_passes) ... ok
+test_acceptance_bullish_but_weekly_val_accepted_below_is_conflict (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_acceptance_bullish_but_weekly_val_accepted_below_is_conflict) ... ok
+test_acceptance_bullish_guard_passes (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_acceptance_bullish_guard_passes) ... ok
+test_balanced_untouched_by_the_guard (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_balanced_untouched_by_the_guard) ... ok
+test_guard_on_every_bullish_and_bearish (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_guard_on_every_bullish_and_bearish) ... ok
+test_market_context_through_context_inputs (book1a.tests.test_htf_acceptance.TestWeeklyGuard.test_market_context_through_context_inputs) ... ok
+test_checker_and_full_ledger (book1a.tests.test_ledger.TestFiles.test_checker_and_full_ledger) ... ok
+test_long_stop_with_1_tick_slip (book1a.tests.test_ledger.TestR.test_long_stop_with_1_tick_slip) ... ok
+test_long_target_one_contract (book1a.tests.test_ledger.TestR.test_long_target_one_contract) ... ok
+test_short_mirror_and_size (book1a.tests.test_ledger.TestR.test_short_mirror_and_size) ... ok
+test_time_exit_counts (book1a.tests.test_ledger.TestR.test_time_exit_counts) ... ok
+test_zero_stop_is_none (book1a.tests.test_ledger.TestR.test_zero_stop_is_none) ... ok
+test_clean_entry_passes (book1a.tests.test_lookahead.TestAudit.test_clean_entry_passes) ... ok
+test_equal_timestamp_is_violation (book1a.tests.test_lookahead.TestAudit.test_equal_timestamp_is_violation) ... ok
+test_future_swing_flagged (book1a.tests.test_lookahead.TestAudit.test_future_swing_flagged) ... ok
+test_log_written (book1a.tests.test_lookahead.TestAudit.test_log_written) ... ok
+test_missing_available_at_fails (book1a.tests.test_lookahead.TestAudit.test_missing_available_at_fails) ... ok
+test_naive_timestamp_rejected (book1a.tests.test_lookahead.TestAudit.test_naive_timestamp_rejected) ... ok
+test_gex_d_minus_1_11pm_et (book1a.tests.test_lookahead.TestRules.test_gex_d_minus_1_11pm_et) ... ok
+test_l2_second (book1a.tests.test_lookahead.TestRules.test_l2_second) ... ok
+test_swing_known_15_bars_later (book1a.tests.test_lookahead.TestRules.test_swing_known_15_bars_later) ... ok
+test_accepted_above_mirror (book1a.tests.test_map_v24.TestAcceptance.test_accepted_above_mirror) ... ok
+test_accepted_below_after_60_minutes (book1a.tests.test_map_v24.TestAcceptance.test_accepted_below_after_60_minutes) ... ok
+test_inside_and_failed_reclaim (book1a.tests.test_map_v24.TestAcceptance.test_inside_and_failed_reclaim) ... ok
+test_testing_when_too_recent (book1a.tests.test_map_v24.TestAcceptance.test_testing_when_too_recent) ... ok
+test_added_dropped_moved (book1a.tests.test_map_v24.TestCompare.test_added_dropped_moved) ... ok
+test_far_distribution_near_edge (book1a.tests.test_map_v24.TestDDEdge.test_far_distribution_near_edge) ... ok
+test_bands_top_20_percent_adjacent_same_sign (book1a.tests.test_map_v24.TestDeltaBands.test_bands_top_20_percent_adjacent_same_sign) ... ok
+test_opposite_sign_breaks_band_and_buy_band_below_price (book1a.tests.test_map_v24.TestDeltaBands.test_opposite_sign_breaks_band_and_buy_band_below_price) ... ok
+test_single_top_row_is_not_a_band (book1a.tests.test_map_v24.TestDeltaBands.test_single_top_row_is_not_a_band) ... ok
+test_no_flip_without_acceptance (book1a.tests.test_map_v24.TestFlip.test_no_flip_without_acceptance) ... ok
+test_support_accepted_through_then_resisted (book1a.tests.test_map_v24.TestFlip.test_support_accepted_through_then_resisted) ... ok
+test_area_70_percent_of_peak (book1a.tests.test_map_v24.TestMap4.test_area_70_percent_of_peak) ... ok
+test_area_capped_40_centred (book1a.tests.test_map_v24.TestMap4.test_area_capped_40_centred) ... ok
+test_narrow_area_keeps_pad (book1a.tests.test_map_v24.TestMap4.test_narrow_area_keeps_pad) ... ok
+test_two_per_side_nearest_first_and_traded_through_dropped (book1a.tests.test_map_v24.TestSelection.test_two_per_side_nearest_first_and_traded_through_dropped) ... ok
+test_merge_keeps_newer_swing_index (book1a.tests.test_map_v24.TestSwingAndRejection.test_merge_keeps_newer_swing_index)
+E22: the merged zone keeps the newer swing's index and the more extreme swing price. ... ok
+test_merge_within_5_points (book1a.tests.test_map_v24.TestSwingAndRejection.test_merge_within_5_points) ... ok
+test_merged_confirmation_compares_times_across_dst (book1a.tests.test_map_v24.TestSwingAndRejection.test_merged_confirmation_compares_times_across_dst)
+Oct 31 (-05:00) vs Nov 3 (-06:00): the later time wins, not the larger string. ... ok
+test_merged_zone_confirmed_at_its_last_component (book1a.tests.test_map_v24.TestSwingAndRejection.test_merged_zone_confirmed_at_its_last_component)
+Kyron, Nov 4: a merged zone is available at the later of its components' confirmation times. ... ok
+test_min_width_padding (book1a.tests.test_map_v24.TestSwingAndRejection.test_min_width_padding) ... ok
+test_no_zone_without_arrival_aggression (book1a.tests.test_map_v24.TestSwingAndRejection.test_no_zone_without_arrival_aggression) ... ok
+test_no_zone_without_fast_departure (book1a.tests.test_map_v24.TestSwingAndRejection.test_no_zone_without_fast_departure) ... ok
+test_session_tags (book1a.tests.test_map_v24.TestSwingAndRejection.test_session_tags) ... ok
+test_swing_found_and_zone_drawn (book1a.tests.test_map_v24.TestSwingAndRejection.test_swing_found_and_zone_drawn) ... ok
+test_swing_not_known_before_15_bars_closed (book1a.tests.test_map_v24.TestSwingAndRejection.test_swing_not_known_before_15_bars_closed) ... ok
+test_window_start (book1a.tests.test_map_v24.TestSwingAndRejection.test_window_start) ... ok
+test_hand_ranking (book1a.tests.test_p1.TestGammaRanks.test_hand_ranking) ... ok
+test_coverage_table (book1a.tests.test_p1.TestGexCheck.test_coverage_table) ... ok
+test_expected_blank_0dte_after_roll (book1a.tests.test_p1.TestGexCheck.test_expected_blank_0dte_after_roll) ... ok
+test_balance_written_exactly (book1a.tests.test_plan_fields.TestContext.test_balance_written_exactly)
+Bug fix, Nov 5, 2026: balance= and balance_poc= equal the map's merged VAL / VAH / POC to the tick ... ok
+test_balanced (book1a.tests.test_plan_fields.TestContext.test_balanced) ... ok
+test_bearish (book1a.tests.test_plan_fields.TestContext.test_bearish) ... ok
+test_bullish (book1a.tests.test_plan_fields.TestContext.test_bullish) ... ok
+test_bullish_blocked_by_accepted_below_is_none (book1a.tests.test_plan_fields.TestContext.test_bullish_blocked_by_accepted_below_is_none) ... ok
+test_draw_status_separate_from_context (book1a.tests.test_plan_fields.TestContext.test_draw_status_separate_from_context) ... ok
+test_edge_control_and_structure (book1a.tests.test_plan_fields.TestContext.test_edge_control_and_structure) ... ok
+test_gex_regime (book1a.tests.test_plan_fields.TestContext.test_gex_regime) ... ok
+test_invalidation_edges (book1a.tests.test_plan_fields.TestContext.test_invalidation_edges) ... ok
+test_on_inventory_needed_values_are_none (book1a.tests.test_plan_fields.TestContext.test_on_inventory_needed_values_are_none) ... ok
+test_value_follows (book1a.tests.test_plan_fields.TestContext.test_value_follows) ... ok
+test_accepted_edge (book1a.tests.test_plan_fields.TestSides.test_accepted_edge) ... ok
+test_context_sides (book1a.tests.test_plan_fields.TestSides.test_context_sides) ... ok
+test_dd_edge (book1a.tests.test_plan_fields.TestSides.test_dd_edge) ... ok
+test_first_touch_tracker (book1a.tests.test_plan_fields.TestSides.test_first_touch_tracker) ... ok
+test_four_tests_favour_initiation_response_open (book1a.tests.test_plan_fields.TestSides.test_four_tests_favour_initiation_response_open) ... ok
+test_most_restrictive_wins_and_conflict_logged (book1a.tests.test_plan_fields.TestSides.test_most_restrictive_wins_and_conflict_logged) ... ok
+test_rejection_zone_both_any_on_balanced (book1a.tests.test_plan_fields.TestSides.test_rejection_zone_both_any_on_balanced) ... ok
+test_value_follows_divergent_up (book1a.tests.test_plan_fields.TestSides.test_value_follows_divergent_up) ... ok
+test_zone_fields_complete (book1a.tests.test_plan_fields.TestSides.test_zone_fields_complete) ... ok
+test_generic_form (book1a.tests.test_plan_v24.TestDDInputs.test_generic_form) ... ok
+test_no_split_or_flag_only (book1a.tests.test_plan_v24.TestDDInputs.test_no_split_or_flag_only) ... ok
+test_packet_form (book1a.tests.test_plan_v24.TestDDInputs.test_packet_form) ... ok
+test_balanced_or_none_context_has_no_candidate (book1a.tests.test_plan_v24.TestDrawStatusNone.test_balanced_or_none_context_has_no_candidate) ... ok
+test_bullish_with_a_candidate_is_active_not_none (book1a.tests.test_plan_v24.TestDrawStatusNone.test_bullish_with_a_candidate_is_active_not_none) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestDrawStatusNone.test_check_f_logged_not_applied) ... ok
+test_draw_state_never_none (book1a.tests.test_plan_v24.TestDrawStatusNone.test_draw_state_never_none) ... ok
+test_ladder_does_not_use_a_draw_when_none (book1a.tests.test_plan_v24.TestDrawStatusNone.test_ladder_does_not_use_a_draw_when_none)
+The ladder runner falls back to the draw only when a DrawState exists; NONE passes draw=None. ... ok
+test_none_only_when_no_candidate (book1a.tests.test_plan_v24.TestDrawStatusNone.test_none_only_when_no_candidate) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestDrawStatusNone.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestDrawStatusNone.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestDrawStatusNone.test_roll_day_and_half_day_log_only) ... ok
+test_s14_has_no_draw_key (book1a.tests.test_plan_v24.TestDrawStatusNone.test_s14_has_no_draw_key)
+S1.4 (the frozen NT strategy) does not parse draw= or draw_status= (logged-only Book 1A fields). ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestDrawStatusNone.test_s14_reads_only_book1_keys) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestPlanBuilder.test_check_f_logged_not_applied) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestPlanBuilder.test_plan_text_and_sidecar) ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestPlanBuilder.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestPlanBuilder.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestPlanBuilder.test_s14_reads_only_book1_keys) ... ok
+test_check_f_logged_not_applied (book1a.tests.test_plan_v24.TestWeeklyDD.test_check_f_logged_not_applied) ... ok
+test_no_weekly_input_means_no_weekly_zone (book1a.tests.test_plan_v24.TestWeeklyDD.test_no_weekly_input_means_no_weekly_zone) ... ok
+test_pd_and_weekly_dd_edges_count_structure_once (book1a.tests.test_plan_v24.TestWeeklyDD.test_pd_and_weekly_dd_edges_count_structure_once) ... ok
+test_plan_text_and_sidecar (book1a.tests.test_plan_v24.TestWeeklyDD.test_plan_text_and_sidecar) ... ok
+test_real_flip_raises_the_mandatory_review_flag (book1a.tests.test_plan_v24.TestWeeklyDD.test_real_flip_raises_the_mandatory_review_flag)
+E25 (Kyron, Nov 4): the first real FLIP must be reviewed; the plan says so (no gating change). ... ok
+test_rejection_zone_appears_with_structure_family (book1a.tests.test_plan_v24.TestWeeklyDD.test_rejection_zone_appears_with_structure_family) ... ok
+test_roll_day_and_half_day_log_only (book1a.tests.test_plan_v24.TestWeeklyDD.test_roll_day_and_half_day_log_only) ... ok
+test_s14_reads_only_book1_keys (book1a.tests.test_plan_v24.TestWeeklyDD.test_s14_reads_only_book1_keys) ... ok
+test_unavailable_weekly_is_noted_and_gives_no_zone (book1a.tests.test_plan_v24.TestWeeklyDD.test_unavailable_weekly_is_noted_and_gives_no_zone) ... ok
+test_r3_r4_default_fill_is_v35 (book1a.tests.test_replay_risk.TestReplayRisk.test_r3_r4_default_fill_is_v35) ... ok
+test_sizing_reject_and_ledger (book1a.tests.test_replay_risk.TestReplayRisk.test_sizing_reject_and_ledger) ... ok
+test_two_loss_halt_and_daily_budget (book1a.tests.test_replay_risk.TestReplayRisk.test_two_loss_halt_and_daily_budget) ... ok
+test_accept_and_reject_above_budget (book1a.tests.test_risk.TestDayState.test_accept_and_reject_above_budget) ... ok
+test_daily_budget_shrinks_size_then_rejects (book1a.tests.test_risk.TestDayState.test_daily_budget_shrinks_size_then_rejects) ... ok
+test_daily_dollar_limit_halts (book1a.tests.test_risk.TestDayState.test_daily_dollar_limit_halts) ... ok
+test_gains_do_not_restore_budget_by_default (book1a.tests.test_risk.TestDayState.test_gains_do_not_restore_budget_by_default) ... ok
+test_rejected_candidate_does_not_count_as_trade (book1a.tests.test_risk.TestDayState.test_rejected_candidate_does_not_count_as_trade) ... ok
+test_remaining_daily_budget_applied (book1a.tests.test_risk.TestDayState.test_remaining_daily_budget_applied) ... ok
+test_risk_breach_fill (book1a.tests.test_risk.TestDayState.test_risk_breach_fill) ... ok
+test_three_trade_cap (book1a.tests.test_risk.TestDayState.test_three_trade_cap) ... ok
+test_two_loss_halt_before_cap (book1a.tests.test_risk.TestDayState.test_two_loss_halt_before_cap) ... ok
+test_components (book1a.tests.test_risk.TestFormula.test_components) ... ok
+test_formula_example_60_ticks (book1a.tests.test_risk.TestFormula.test_formula_example_60_ticks) ... ok
+test_largest_stops_that_fit_1000 (book1a.tests.test_risk.TestFormula.test_largest_stops_that_fit_1000) ... ok
+test_16_tick_stop_sizes_to_10 (book1a.tests.test_risk.TestSizing.test_16_tick_stop_sizes_to_10) ... ok
+test_196_fits_197_rejects (book1a.tests.test_risk.TestSizing.test_196_fits_197_rejects) ... ok
+test_60_tick_stop_sizes_to_3 (book1a.tests.test_risk.TestSizing.test_60_tick_stop_sizes_to_3) ... ok
+test_a0_plan_under_the_book1a_name_stops (book1a.tests.test_run_r4.TestR4Plans.test_a0_plan_under_the_book1a_name_stops) ... ok
+test_loads_book1a_plan_with_version_and_sha (book1a.tests.test_run_r4.TestR4Plans.test_loads_book1a_plan_with_version_and_sha) ... ok
+test_main_stops_before_the_harness_when_a_plan_is_missing (book1a.tests.test_run_r4.TestR4Plans.test_main_stops_before_the_harness_when_a_plan_is_missing) ... ok
+test_missing_plan_stops_even_with_an_a0_plan_present (book1a.tests.test_run_r4.TestR4Plans.test_missing_plan_stops_even_with_an_a0_plan_present) ... ok
+test_missing_sidecar_stops (book1a.tests.test_run_r4.TestR4Plans.test_missing_sidecar_stops) ... ok
+test_stage_copies_byte_for_byte (book1a.tests.test_run_r4.TestR4Plans.test_stage_copies_byte_for_byte) ... ok
+test_verify_rejects_a0_plan_loaded_by_s14 (book1a.tests.test_run_r4.TestR4Plans.test_verify_rejects_a0_plan_loaded_by_s14) ... ok
+test_zone_fields_from_the_sidecar (book1a.tests.test_run_r4.TestR4Plans.test_zone_fields_from_the_sidecar) ... ok
+test_half_days_in_roll_days_in_holidays_out (book1a.tests.test_sessions.TestSessions.test_half_days_in_roll_days_in_holidays_out) ... ok
+test_phase_counts_match_book1 (book1a.tests.test_sessions.TestSessions.test_phase_counts_match_book1) ... ok
+test_matches_book1_phase_config_keys (book1a.tests.test_tools.TestBook1Cfg.test_matches_book1_phase_config_keys) ... ok
+test_match_differ_missing (book1a.tests.test_tools.TestBook1RefCompare.test_match_differ_missing) ... ok
+test_build_and_compare (book1a.tests.test_tools.TestManifest.test_build_and_compare) ... ok
+test_gate6_table_joined_on_path (book1a.tests.test_tools.TestManifestSameNameTwice.test_gate6_table_joined_on_path) ... ok
+test_identical_and_differing (book1a.tests.test_tools.TestReplayDiff.test_identical_and_differing) ... ok
+test_clock_and_path_ignored_values_not (book1a.tests.test_tools.TestReplayDiffNorm.test_clock_and_path_ignored_values_not) ... ok
+test_empty_window (book1a.tests.test_vwap.TestHandCalc.test_empty_window) ... ok
+test_order_independent (book1a.tests.test_vwap.TestHandCalc.test_order_independent) ... ok
+test_roll_day_restart (book1a.tests.test_vwap.TestHandCalc.test_roll_day_restart) ... ok
+test_session_and_weekly_match_hand_calc (book1a.tests.test_vwap.TestHandCalc.test_session_and_weekly_match_hand_calc) ... ok
+test_tag_within_5_points (book1a.tests.test_vwap.TestTag.test_tag_within_5_points) ... ok
+test_dst_change_nov_2_2025 (book1a.tests.test_vwap.TestWindows.test_dst_change_nov_2_2025) ... ok
+test_monday_session_starts_sunday (book1a.tests.test_vwap.TestWindows.test_monday_session_starts_sunday) ... ok
+test_session_start_is_prev_day_1700 (book1a.tests.test_vwap.TestWindows.test_session_start_is_prev_day_1700) ... ok
+test_week_start_is_sunday_1700 (book1a.tests.test_vwap.TestWindows.test_week_start_is_sunday_1700) ... ok
+test_fewer_than_five_rows (book1a.tests.test_weekly_dd.TestRule.test_fewer_than_five_rows) ... ok
+test_one_block_is_not_a_split (book1a.tests.test_weekly_dd.TestRule.test_one_block_is_not_a_split) ... ok
+test_plan_inputs_and_family (book1a.tests.test_weekly_dd.TestRule.test_plan_inputs_and_family) ... ok
+test_settings_are_the_map_settings (book1a.tests.test_weekly_dd.TestRule.test_settings_are_the_map_settings) ... ok
+test_single_print_separator (book1a.tests.test_weekly_dd.TestRule.test_single_print_separator) ... ok
+test_two_blocks_with_lvn (book1a.tests.test_weekly_dd.TestRule.test_two_blocks_with_lvn) ... ok
+test_weekly_window_and_tpo_periods (book1a.tests.test_weekly_dd.TestRule.test_weekly_window_and_tpo_periods) ... ok
+test_map_exclusion_reason (book1a.tests.test_weekly_dd.TestUnavailable.test_map_exclusion_reason) ... ok
+test_plan_inputs_need_available (book1a.tests.test_weekly_dd.TestUnavailable.test_plan_inputs_need_available) ... ok
+test_unavailable_is_not_a_no_edge_profile (book1a.tests.test_weekly_dd.TestUnavailable.test_unavailable_is_not_a_no_edge_profile) ... ok
+
+----------------------------------------------------------------------
+Ran 227 tests in 1.645s
+
+OK
