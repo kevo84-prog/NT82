@@ -12,20 +12,20 @@ Replaces design v3.9 (Oct 25), v3.8 (Oct 25), v3.7 (Oct 25), v3.6 (Oct 25), v3.5
   - Code: `fills.simulate(gap_fill=True)` and `daily_loop` config `"fill_model": "v3.5"` for A0; `exit_replay` with `gap_fill=True, stop_delay_ms=250, crossed="live"` for stop-moving models. Both give the same A0 on Phase 2 (105 of 105 trade-cases).
 - **Live condition:** if a stop-moving exit model passes Phase 3, the live strategy must check the bid / ask before each stop move and not submit a crossed move, and a rejected stop CHANGE must keep the old stop. Only a rejected protective ORDER flattens (today's PROTECT_FLAT). Built and tested on Sim before any live use. S1.4 today never moves a stop after entry.
 - **Promotion meaning** (added to the promotion rule): passing Phase 3 shows improvement over A0 under the registered tests. It does not show profitability or authorize live trading. Combinations go through the final-combination replay, and live use needs the Phase 4 holdout.
-- **Exit replay engine built (step 9):** `jeron_engine\exit_replay.py`. Gate passed: M0 under v3.4 reproduces A0's 35 Phase 2 trades exactly at 1, 2 and 4 ticks (105 of 105).
+- **Exit replay engine built (step 9):** `jeron_engine\exit_replay.py`. Gate passed: M0 under v3.4 reproduces A0's Phase 2 trades exactly at 1, 2 and 4 ticks.
 - **Phase 2 exit first look** (Phase 2 first look, not promotion evidence; tags `phase2-exit-first-look`, `-v2`):
-  - A0 under v3.5: -6.55 R.
-  - M2E (v3.5 as frozen, live-equivalent timing; exit first look v3): -1.97 R, +0.218 R per session. Of 49 stop moves triggered, 26 were not submitted (crossed at the decision), 2 were rejected on arrival, 21 applied. (v2, arrival check only: -2.45 R, +0.195 R per session.)
-  - M2E report-only line (same decision check, market exit on arrival = today's PROTECT_FLAT): -3.46 R, +0.147 R per session; cost of keeping today's rejected-change handling: +1.49 R (superseded v2 figure, market exit on every crossed change: -4.34 R). Under v3.4, M2E showed +1.39 R, mostly from filling stops the market had already passed.
-  - M2: -8.20 R (gap-aware); the runner reached TP2 once.
-  - M1 fires on 10 trades (-7.71 R gap-aware), not 4.
-- **Bug fixed:** `change_list_checks.py` added 1 tick to each trade's risk (A0 -6.44 R vs the report card's -6.50 R). Logged in `backtest\bug_log.md`.
+  - [Book 1 result redacted]
+  - [Book 1 result redacted]
+  - [Book 1 result redacted]
+  - [Book 1 result redacted]
+  - [Book 1 result redacted]
+- **Bug fixed:** `change_list_checks.py` added 1 tick to each trade's risk ([Book 1 result redacted]). Logged in `backtest\bug_log.md`.
 
 **What changed in v3.9** (Kyron, Oct 25, late):
 - **Phase 1 passed.** The 3 hand-check days were checked against Databento's exchange-built NQ 1-minute bars (`chart_check.py`): 115 of 115 levels, entries, 15-bar outcomes and fills agree. RESPONSE entries sit at the confirmation bar's close, as the CONFIRM rows say.
 - **Phase 2 baseline run** (Nov 5 – Dec 4, 2025, 21 sessions, no rule changes; see the Phase 2 folder).
-  - A0: 15 APPROVED days, 35 trades, 9 wins, −6.5 R (base fills), max drawdown 12.3 R.
-  - 30 of the 35 trades are 08:30–09:30.
+  - [Book 1 result redacted]
+  - [Book 1 result redacted]
   - Half-day check (gate 4) passed.
   - Chart check: 762 of 763 agree.
 - **Rules-only plan bug fixed in Phase 2** (implementation vs the frozen definition, not a rule change). Check A now fails only on a data gap in the last 24 h, as the prompt says; the first version failed on any gap still listed in the packet. The Nov 28, 2025 CME outage (Nov 27 20:44 – Nov 28 07:30 CT) had made Dec 1–4 LOG_ONLY. Phase 1 plans are unchanged by the fix.
@@ -372,7 +372,7 @@ Source: "Jeron Rejected-Candidate Controlled Test, protocol v1.0" (Oct 22, 2026)
 | UNQUALIFIED_LOCATION | 21/80 = 26% |
 | POOR_REWARD_RISK | 35/55 = 64% (near targets are hit often; that doesn't mean profit) |
 
-- Weak delta blocks about 1.5 losers per winner. Whether that is good or bad depends on the size of the winners and losers, which the export doesn't show, so it can only be settled in net R over many sessions.
+- [Book 1 result redacted]. Whether that is good or bad depends on the size of the winners and losers, which the export doesn't show, so it can only be settled in net R over many sessions.
 - The counts overlap and are not deduplicated; many candidates failed several gates.
 
 ### Primary arms (pre-registered Oct 22–23)

@@ -12,7 +12,7 @@
 
 ## **Removed from Book 1A (not kept as research)**
 
-* **The Book 1 context formula.** Our own algorithm, not Jeron's. Phase 2 (Nov 5 – Dec 4, 2025): days it labelled Bullish, Bearish or Balanced lost −7.6 R on 19 trades; days it left as None made \+1.1 R on 16 trades. Small sample, no sign it helps.  
+* **The Book 1 context formula.** Our own algorithm, not Jeron's. Phase 2 (Nov 5 – Dec 4, 2025): [Book 1 result redacted].  
 * **The 1-hour "trend not down" filter.** Jeron reads hourly structure (input 7 below) but never uses a trend filter.  
 * **The Book 1 invalidation** (2 ticks beyond the outermost zone → Balanced). It depends on the removed formula.  
 * **"Macro note (or calendar) missing and context None → LOG\_ONLY".** Ours; no evidence it helps.

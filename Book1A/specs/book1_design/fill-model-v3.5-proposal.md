@@ -5,8 +5,8 @@
 
 ## Why
 v3.4 was written for A0, whose stop and target never move. Exit models that move the stop (M2E, M2, M3) hit two cases v3.4 does not cover:
-1. **A stop moved to a level the market has already passed.** In Phase 2, 28 of the 49 stop moves M2E triggered were already crossed: 26 at the bar close and 2 more by the time a change sent then would arrive. Some were 50-160 ticks through. v3.4 still filled them at the new stop price, a price the market had left. With rules 1-3 below, M2E falls from +1.39 R to -1.97 R on the same 35 trades.
-2. **Price jumping through a working stop.** v3.4 fills at stop -/+ slip even when the first trade at or beyond the stop is worse. On A0's fixed stops this changed 4 of 35 trades, by -0.05 R in total.
+1. **A stop moved to a level the market has already passed.** In Phase 2, some stop moves M2E triggered were already crossed. v3.4 still filled them at the new stop price, a price the market had left. [Book 1 result redacted].
+2. **Price jumping through a working stop.** v3.4 fills at stop -/+ slip even when the first trade at or beyond the stop is worse. On A0's fixed stops: [Book 1 result redacted].
 
 ## Rules (additions to v3.4; everything else unchanged)
 1. **Stop-change delay.** A stop change submitted at a bar close goes active **250 ms after that bar close** (the same latency as the entry). The previous stop keeps working until then, and can fill in that window.
@@ -20,14 +20,14 @@ v3.4 was written for A0, whose stop and target never move. Exit models that move
 4. **Unchanged:** entry 250 ms after the signal bar close at the bid / ask; targets fill 1 tick through; same-timestamp tie = stop; flatten 14:55 CT; commission $2.87 per contract per side.
 
 ## Effect on Phase 2 (35 A0 entries; Phase 2 first look, not promotion evidence)
-A0 rerun under v3.5 on Phase 2 (the reference for the Phase 3 pairing setup): -6.55 / -6.79 / -7.28 R at 1 / 2 / 4 ticks of stop slippage. Rule 3 changes 4 trades; rules 1-2 never apply to A0 (its stop never moves). The fills code (`fills.simulate(gap_fill=True)`, `daily_loop` with `fill_model: "v3.5"`) and the exit engine give the same A0 trade by trade (105 of 105). Source: `backtest\phase2\exit_first_look\v3\`.
+A0 rerun under v3.5 on Phase 2 (the reference for the Phase 3 pairing setup): [Book 1 result redacted]. Rule 3 changes A0 trades; rules 1-2 never apply to A0 (its stop never moves). The fills code (`fills.simulate(gap_fill=True)`, `daily_loop` with `fill_model: "v3.5"`) and the exit engine give the same A0 trade by trade. Source: `backtest\phase2\exit_first_look\v3\`.
 
 | | v3.4 | v3.5 |
 |---|---|---|
-| A0 (M0) | -6.50 R | -6.55 R (rule 3 on 4 trades) |
-| M2E | +1.39 R | -1.97 R (rules 1-3) |
-| M2E vs M0, per session | +0.375 R | +0.218 R |
-| M2E report-only market exit (same decision check; market exit on arrival) | | -3.46 R (+0.147 R per session). Superseded v2 figure (market exit on every crossed change): -4.34 R |
+| A0 (M0) | [Book 1 result redacted] | [Book 1 result redacted] |
+| M2E | [Book 1 result redacted] | [Book 1 result redacted] |
+| M2E vs M0, per session | [Book 1 result redacted] | [Book 1 result redacted] |
+| M2E report-only market exit (same decision check; market exit on arrival) | [Book 1 result redacted] | [Book 1 result redacted] |
 
 ## What the live strategy does today (JeronOrderFlowStrategy S1.4; code not changed)
 - It **never moves a stop after entry**. `SetStopLoss` is called once, before the entry (line 4788). Break-even and trailing exist only as logged exit models. So there is no price check before a stop change, because no change is ever made.
@@ -36,7 +36,7 @@ A0 rerun under v3.5 on Phase 2 (the reference for the Phase 3 pairing setup): -6
   - check the bid / ask before each stop move and not submit a crossed move;
   - treat a **rejected stop CHANGE** as "keep the old stop". Only a rejected protective **ORDER** (no working stop at all) flattens, as today's PROTECT_FLAT does.
   It is built and tested on the Sim account before any live use. No code change now.
-  - Cost of not changing the rejected-change handling on Phase 2: +1.49 R (M2E primary -1.97 R minus report-only -3.46 R).
+  - Cost of not changing the rejected-change handling on Phase 2: [Book 1 result redacted].
 
 ## Phase 3 use
 - A0 and every arm run under v3.5 (`daily_loop` config `"fill_model": "v3.5"`; the exit engine with `gap_fill=True, stop_delay_ms=250, crossed="live"`). A0 is rerun under v3.5 for the pairing, so both sides use the same fill model.

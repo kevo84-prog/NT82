@@ -13,7 +13,7 @@
 ## **Removed (not kept as research)**
 
 * **"Crossed both ways in the last day → NONE."** It switched off Jeron's Tuesday short zone (24,846–24,865) and all five Wednesday zones on Nov 18–19, 2025, and helped make Nov 12 and Nov 19 LOG\_ONLY. Part 1 says the opposite: a level that flipped matters more (00:12:08).  
-* **Lava band** (middle third of the balance, 15 points clear). Phase 2: 60 candidates blocked, winner ticks \+2,785 vs loser ticks −2,516: no measurable value. Jeron's own idea (skip the middle) is kept in a narrower form: zone rule 3\.  
+* **Lava band** (middle third of the balance, 15 points clear). Phase 2: [Book 1 result redacted]. Jeron's own idea (skip the middle) is kept in a narrower form: zone rule 3\.  
 * **"NONE off a zone tested 4+ times."** Ours, and it contradicts Jeron: he takes the response off a zone the testing side keeps failing at (Part 2, 00:42–00:43, "It's safe to take a short here"; Part 3, \~00:04 and \~00:14–00:16, two months of shorts at the same supply). The INITIATION-through part stays (side rule 2).  
 * **"Do not move, add or drop a zone because of a MenthorQ level."** Ours, and it contradicts Jeron, who counts gamma levels toward a zone's importance. Replaced by zone rule 2\.  
 * **"2+ independent periods."** Replaced by 2+ independent sources (zone rule 1).

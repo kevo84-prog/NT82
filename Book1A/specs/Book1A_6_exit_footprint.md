@@ -6,9 +6,9 @@
 
 ## **What Book 1 did**
 
-* **M0 (traded):** one stop beyond the zone, one target at the nearest qualified level (S1.4), flatten at 14:55 CT. Phase 2: −6.55 R.  
-* **Exit models tested against M0 (all lost):** M2 partials −8.20 R; M1 −7.71 R; M1a −11.22 R; fixed break-even at \+0.5 R −8.04 R; M3 never traded. In Phase 3 the zone-trail exit M2E lost −0.268 R per session and failed the 2-tick check.  
-* **Finding kept:** 16 of 26 losers were up 0.5 R or more before a full stop. This is why the exit question stays open, but the Book 1 fixes for it all lost.
+* **M0 (traded):** one stop beyond the zone, one target at the nearest qualified level (S1.4), flatten at 14:55 CT. Phase 2: [Book 1 result redacted].  
+* **Exit models tested against M0 ([Book 1 result redacted]):** M2 partials [Book 1 result redacted]; M1 [Book 1 result redacted]; M1a [Book 1 result redacted]; fixed break-even at \+0.5 R [Book 1 result redacted]; M3: [Book 1 result redacted]. In Phase 3 the zone-trail exit M2E: [Book 1 result redacted].  
+* **Finding kept:** [Book 1 result redacted]. This is why the exit question stays open.
 
 ## **Target ladder (P1)**
 
@@ -25,7 +25,7 @@
 * **Trail after TP1:** the stop moves beyond each new same-side footprint zone that forms after TP1 (Part 1, 01:14–01:17). Not from entry.  
 * **Balanced \+ positive gamma: no runner.** Only on days that are Balanced (Phase 2\) with positive gamma does the trade end at TP2; other positive-gamma days keep the runner (C5). "I'm not going to try to hold runners" inside a balanced range whose edges are gamma levels (Part 5, 00:13:45–00:14:03). Regime from the calculated gamma levels (Phase 2).  
 * **Counter-context: first target only, quick break-even.** A trade against the context targets only VWAP, the POC or at most the value edge (Part 2, 01:24:17–01:26:00). Tracker v2.4 already enforces the target. With the context, hold the runner to the higher-time-frame draw (Part 2, 01:27:02–01:27:22). The quick break-even trigger is ours (needed).  
-* **Book 1 warning:** M2 partials lost to M0 in Book 1 (−8.20 R vs −6.55 R). M-J differs (break-even and trail only after TP1, ladder targets, regime and context rules), but it has to beat M0 under the Book 1 promotion rule before it replaces it.  
+* **Book 1 warning:** M2 partials vs M0 in Book 1: [Book 1 result redacted]. M-J differs (break-even and trail only after TP1, ladder targets, regime and context rules), but it has to beat M0 under the Book 1 promotion rule before it replaces it.  
 * Nested steps (C5), order fixed in advance, each compared with the step before: M0 (single target, control) → M-J1 (ladder targets, single exit: the whole position exits at RUN, else TP2, else TP1; ours, frozen Nov 1, 2026\) → M-J2 (+ 1 NQ off at TP1 when 2 or more NQ are on, the rest to M-J1's target; stop unchanged after TP1; frozen Nov 1, 2026 from Jeron's two-mini example, Part 1, 00:17) → M-J3 (+ break-even and structural trail after TP1) → M-J4 (+ the Balanced-positive-gamma no-runner and counter-context first-target rules). The position split and target order are frozen before M-J2 runs. Moving to the next step is not automatic: the progression and comparison rules are written in the Book 1A replay plan, and the steps are diagnostics inside Book 1A, not separate strategies to promote. Break-even and trailing never move a stop to a less protective level. For the Block 1 replay (replay plan U4, U5, Nov 1, 2026): M-J1 and M-J2 are diagnostics only (same entry, initial stop, fills and commissions as M0; M-J2 not applicable to 1 NQ trades; reported by initial size 2, 3 and 4+ NQ); M-J3 and M-J4 are deferred until their settings are defined independently of results.
 
 ## **Logged variants (P3, P6)**
@@ -35,8 +35,8 @@
 
 ## **Removed (P4)**
 
-* **Fixed break-even at \+0.5 R.** Ours. Lost in Book 1 (−8.04 R vs M0 −6.55 R). Jeron moves to break-even after TP1, not at a fixed R.  
-* **Trail from entry (M1 / M1a, M2E).** Ours for this arm. Lost in Book 1 (M1 −7.71 R, M1a −11.22 R; M2E −0.268 R per session, failed the 2-tick check). Jeron trails from entry only on deep effort trades (see the E-Deep Effort Range Phase 6 doc).
+* **Fixed break-even at \+0.5 R.** Ours. [Book 1 result redacted]. Jeron moves to break-even after TP1, not at a fixed R.  
+* **Trail from entry (M1 / M1a, M2E).** Ours for this arm. [Book 1 result redacted]. Jeron trails from entry only on deep effort trades (see the E-Deep Effort Range Phase 6 doc).
 
 ## **Kept (P5, ours, needed)**
 
@@ -59,8 +59,8 @@
 | Counter-context: first target only | Part 2, 01:24:17–01:26:00 | Jeron (quick break-even ours) |
 | Exit when the other side is rewarded | Part 1, 00:53:26–00:53:44 | Jeron (logged variant) |
 | Add-ons into new zones | Part 2, \~00:51–00:53 | Jeron (logged only) |
-| Fixed break-even at \+0.5 R | Book 1: −8.04 R | Ours, failed: removed |
-| Trail from entry (M1, M1a, M2E) | Book 1: all lost | Ours, failed: removed |
+| Fixed break-even at \+0.5 R | Book 1: [Book 1 result redacted] | Ours: removed |
+| Trail from entry (M1, M1a, M2E) | Book 1: [Book 1 result redacted] | Ours: removed |
 | M0 baseline, 14:55 CT flatten | Engine rules | Ours (needed) |
 
 ## **Needed (Jeron gives the idea, no specifics)**
