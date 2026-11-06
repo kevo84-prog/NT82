@@ -5,6 +5,7 @@ r"""R3 = C1 + risk on a finished A0 run (Book 1A Phase 1 and later).
 The same call Phase 0 made inline for P0.12 (RUNBOOK_PC.md, P0.12 line), now as a script:
 R2's signals unchanged (veto = FZ1 or L1 or T8, RH1 retest 15 bars / 2 ticks, M0) through replay_risk.replay with
 the C3 pre-trade dollar risk check, U3 sizing, the dollar daily limit, fill model v3.5.
+--risk risk-c3-v2 (default; Phase1/risk-c3-v2_registration.md) or risk-c3-v1 (the Phase 0 / Phase 1 references).
 Reads the A0 run read-only; writes R3_M0_ledger.csv, R3_attempts.csv, R3_retests.csv, R3_risk_events.json and
 run_manifest.json into --out. Never summarizes a result.
 """
@@ -21,13 +22,15 @@ from pathlib import Path
 
 from book1a import ledger as L
 
-VERSION = "run-r3-v1.0"
+VERSION = "run-r3-v1.1"
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--block1", required=True); ap.add_argument("--a0-run", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--fill", choices=["v3.4", "v3.5"], default="v3.5")
+    ap.add_argument("--risk", choices=["risk-c3-v1", "risk-c3-v2"], default="risk-c3-v2",
+                    help="C3 implementation (Phase1/risk-c3-v2_registration.md); v1 reproduces the Phase 0 / Phase 1 references")
     a = ap.parse_args(argv)
     a0, out = Path(a.a0_run).resolve(), Path(a.out).resolve()
     os.environ["BOOK1_ROOT"] = str(Path(a.block1).resolve())
@@ -40,8 +43,9 @@ def main(argv=None):
     bars = A.MinuteBars(a0 / "tape_strategy.csv.gz")
     v_fz1, v_l1, v_t8 = A.fz1(log), A.l1(log), A.t8(log, bars)
     rep = RR.replay(log, tape, "R3", veto=lambda r: v_fz1(r) or v_l1(r) or v_t8(r),
-                    retest=dict(bars=bars, fail_ticks=2), fill=a.fill)
-    n_tr = L.write_ledger(str(out / "R3_M0_ledger.csv"), rep["trades"])
+                    retest=dict(bars=bars, fail_ticks=2), fill=a.fill, risk_impl=a.risk)
+    extra = RR.V2_LEDGER_COLUMNS if a.risk == "risk-c3-v2" else []
+    n_tr = L.write_ledger(str(out / "R3_M0_ledger.csv"), rep["trades"], extra_columns=extra)
     for name in ("attempts", "retests"):
         rows = rep[name]
         with open(out / f"R3_{name}.csv", "w", newline="") as f:
@@ -53,9 +57,13 @@ def main(argv=None):
     except Exception:
         commit = "n/a"
     sessions = json.loads((a0 / "daily_loop_config.json").read_text())["sessions"]
+    import hashlib
+    from book1a import risk as RK
     (out / "run_manifest.json").write_text(json.dumps(dict(
         version=VERSION, commit=commit, a0_run=str(a0), sessions=sessions, fill_model=a.fill, veto="FZ1|L1|T8",
-        retest="RH1 15 bars / 2 ticks", exit_model="M0", risk="C3 / U3", trades=n_tr,
+        retest="RH1 15 bars / 2 ticks", exit_model="M0", risk="C3 / U3", risk_impl_version=a.risk,
+        replay_risk_version=RR.VERSION, risk_version=RK.VERSION, ledger_version=L.VERSION,
+        ledger_sha256=hashlib.sha256((out / "R3_M0_ledger.csv").read_bytes()).hexdigest(), trades=n_tr,
         generated=dt.datetime.now().isoformat()), indent=1))
     print(f"R3 on {a0.name}: {len(sessions)} sessions, ledger rows written -> {out}")
     return 0

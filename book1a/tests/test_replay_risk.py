@@ -46,7 +46,7 @@ class TestReplayRisk(unittest.TestCase):
                      ("10:03:00.100", 24000.0), ("10:30:00", 24000.0), ("14:55:00", 24000.0)]
             run, tape = make_run(d, cands, ticks)
             log = AR.Log(run); tp = fills.Tape(tape)
-            rep = RR.replay(log, tp, "R4", fill="v3.4")
+            rep = RR.replay(log, tp, "R4", fill="v3.4", risk_impl="risk-c3-v1")   # v1 reference path
             self.assertEqual(len(rep["trades"]), 1)
             tr = rep["trades"][0]
             self.assertEqual(tr.qty, 3)
@@ -72,7 +72,7 @@ class TestReplayRisk(unittest.TestCase):
                 ticks += [(f"{hh}:00.100", 24000.0), (f"{hh[:2]}:20:00", 23951.0)]
             ticks.append(("14:55:00", 24000.0))
             run, tape = make_run(d, cands, ticks)
-            rep = RR.replay(AR.Log(run), fills.Tape(tape), "R3", fill="v3.4")
+            rep = RR.replay(AR.Log(run), fills.Tape(tape), "R3", fill="v3.4", risk_impl="risk-c3-v1")
             self.assertEqual(len(rep["trades"]), 2)                    # third blocked by the 2-loss halt
             a3 = [a for a in rep["attempts"] if a["event"] == "E-2"][0]
             self.assertEqual(a3["reasons"], "HALT:LOSS_HALT")
@@ -88,7 +88,7 @@ class TestReplayRisk(unittest.TestCase):
                          ZoneLo="23985", ZoneHi="23995", EntryRef="24000.00", StopAnchor="23951.00", TargetPrice="24100.00", RewardRisk="2")]
             run, tape = make_run(d, cands, [("09:03:00.100", 24000.0), ("09:20:00", 23951.0), ("14:55:00", 24000.0)])
             for strat in ("R3", "R4"):
-                rep = RR.replay(AR.Log(run), fills.Tape(tape), strat)
+                rep = RR.replay(AR.Log(run), fills.Tape(tape), strat, risk_impl="risk-c3-v1")
                 self.assertEqual([t.fill_model for t in rep["trades"]], ["v3.5"])
 
 

@@ -14,7 +14,8 @@ Steps
      instrument, settings, EvaluateFromDate, WarmupDays=1), only the plan folder differs. The A0 run is read only.
   4. verify_plans_loaded: the strategy log must show one PLAN_LOADED per session with id <day>-b1a and the file from
      <out>/plans, and no plan problem row; every candidate on a plan zone must name the Book 1A plan. Else R4PlanError.
-  5. R4 = replay_risk.replay(veto = L1 or T8, RH1 retest 15 bars / 2 ticks, M0, v3.5, C3 risk check and sizing);
+  5. R4 = replay_risk.replay(veto = L1 or T8, RH1 retest 15 bars / 2 ticks, M0, v3.5, C3 risk check and sizing;
+     --risk risk-c3-v2 by default, risk-c3-v1 reproduces the Phase 0 / Phase 1 references);
      FZ1 is logged only. Ledger rows and candidate rows carry plan_version, plan_id, plan_sha256 and
      plan_sidecar_sha256; candidate rows on a plan zone also carry the zone's Book 1A families, sides and the day's
      market_context from the sidecar.
@@ -36,7 +37,7 @@ from typing import Dict, Iterable, List, Optional
 
 from book1a import ledger as L, sessions as S
 
-VERSION = "run-r4-v1.0"
+VERSION = "run-r4-v1.1"
 PLAN_COLUMNS = ["plan_version", "plan_id", "plan_sha256", "plan_sidecar_sha256"]
 ZONE_COLUMNS = ["plan_zone_label", "plan_zone_class", "plan_zone_families", "plan_zone_long", "plan_zone_short", "plan_market_context"]
 
@@ -146,13 +147,13 @@ def plan_cols(plan: dict) -> dict:
     return {k: plan[k] for k in PLAN_COLUMNS}
 
 
-def write_ledger(path: Path, trades, plans: Dict[str, dict]) -> int:
+def write_ledger(path: Path, trades, plans: Dict[str, dict], extra_columns: List[str] = ()) -> int:
     rows = []
     for t in sorted(trades, key=lambda t: (t.date, t.entry_time)):
         if t.date not in plans:
             raise R4PlanError(f"trade {t.trade_id} on {t.date}: no Book 1A plan")
-        rows.append({**t.as_ledger_row(), **plan_cols(plans[t.date])})
-    return L.write_csv(str(path), rows, L.LEDGER_COLUMNS + PLAN_COLUMNS)
+        rows.append({**t.as_ledger_row(), **plan_cols(plans[t.date]), **t.extra})
+    return L.write_csv(str(path), rows, L.LEDGER_COLUMNS + PLAN_COLUMNS + list(extra_columns))
 
 
 def run_strategy(a0_run: Path, out: Path, pdir: Path) -> Path:
@@ -179,6 +180,8 @@ def main(argv=None):
     ap.add_argument("--out", required=True); ap.add_argument("--phase", choices=list(S.PHASES)); ap.add_argument("--sessions", nargs="*")
     ap.add_argument("--candidate-days", nargs="*", default=["2025-10-22", "2025-10-28", "2025-11-04"])
     ap.add_argument("--fill", choices=["v3.4", "v3.5"], default="v3.5")
+    ap.add_argument("--risk", choices=["risk-c3-v1", "risk-c3-v2"], default="risk-c3-v2",
+                    help="C3 implementation (Phase1/risk-c3-v2_registration.md); v1 reproduces the Phase 0 / Phase 1 references")
     a = ap.parse_args(argv)
     block1, a0, out = Path(a.block1).resolve(), Path(a.a0_run).resolve(), Path(a.out).resolve()
     sess = [d.isoformat() for d in S.phase_sessions(a.phase)] if a.phase else list(a.sessions)
@@ -198,8 +201,10 @@ def main(argv=None):
     tape = fills.Tape(out / "tape_strategy.csv.gz")
     bars = A.MinuteBars(out / "tape_strategy.csv.gz")
     v_l1, v_t8 = A.l1(log), A.t8(log, bars)
-    rep = RR.replay(log, tape, "R4", veto=lambda r: v_l1(r) or v_t8(r), retest=dict(bars=bars, fail_ticks=2), fill=a.fill)
-    n_tr = write_ledger(out / "R4_M0_ledger.csv", rep["trades"], plans)
+    rep = RR.replay(log, tape, "R4", veto=lambda r: v_l1(r) or v_t8(r), retest=dict(bars=bars, fail_ticks=2), fill=a.fill,
+                    risk_impl=a.risk)
+    n_tr = write_ledger(out / "R4_M0_ledger.csv", rep["trades"], plans,
+                        extra_columns=RR.V2_LEDGER_COLUMNS if a.risk == "risk-c3-v2" else [])
     with open(out / "R4_attempts.csv", "w", newline="") as f:
         cols = list(dict.fromkeys(k for r in rep["attempts"] for k in r)) or ["event"]
         w = csv.DictWriter(f, fieldnames=cols + ["plan_id", "plan_sha256"]); w.writeheader()
@@ -222,7 +227,8 @@ def main(argv=None):
     (out / "run_manifest.json").write_text(json.dumps(dict(
         version=VERSION, commit=commit, phase=a.phase, sessions=sess, a0_run=str(a0), plans_dir=str(Path(a.plans).resolve()),
         plan_version=_plan_version(), fill_model=a.fill, veto="L1|T8 (FZ1 logged only)", retest="RH1 15 bars / 2 ticks", exit_model="M0",
-        trades=n_tr, candidate_rows=n_c, candidate_days=days, generated=dt.datetime.now().isoformat()), indent=1))
+        risk_impl_version=a.risk, replay_risk_version=RR.VERSION, ledger_version=L.VERSION,
+        ledger_sha256=_sha(out / "R4_M0_ledger.csv"), trades=n_tr, candidate_rows=n_c, candidate_days=days, generated=dt.datetime.now().isoformat()), indent=1))
     print(f"R4 on Book 1A plans: {len(sess)} sessions, {n_c} candidate rows, ledger rows written -> {out}")
     return 0
 

@@ -21,7 +21,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
-VERSION = "risk-v1.0"
+VERSION = "risk-v1.1"
+# C3 implementation identifiers (Phase1/risk-c3-v2_registration.md, Kyron Nov 5, 2026, Option B)
+C3_V1 = "risk-c3-v1"      # stop ticks from the signal-bar reference (Phase 0 / Phase 1 references; kept unchanged)
+C3_V2 = "risk-c3-v2"      # stop ticks from the best ask (long) / best bid (short) at the decision; execution breach
+C3_IMPLS = (C3_V1, C3_V2)
+TICK = 0.25
 
 
 @dataclass(frozen=True)
@@ -53,6 +58,26 @@ def estimate_risk_cents(stop_ticks: int, n: int, cfg: RiskConfig = DEFAULT) -> i
 def estimate_risk(stop_ticks: int, n: int, cfg: RiskConfig = DEFAULT) -> float:
     """Same as estimate_risk_cents, in dollars."""
     return estimate_risk_cents(stop_ticks, n, cfg) / 100.0
+
+
+def price_ticks(a: float, b: float) -> int:
+    """|a - b| in whole ticks; both prices must be on the 0.25 grid."""
+    x = abs(a - b) / TICK
+    k = int(round(x))
+    if abs(x - k) > 1e-6:
+        raise ValueError(f"price distance {a} - {b} is not a whole number of ticks")
+    return k
+
+
+def entry_risk_at_fill_cents(fill: float, stop: float, filled: int, cfg: RiskConfig = DEFAULT):
+    """risk-c3-v2 section 1: (|fill - stop| / 0.25 + 2) x $5 x filled + $5.74 x filled. Returns (ticks, cents)."""
+    t = price_ticks(fill, stop)
+    return t, estimate_risk_cents(t, filled, cfg)
+
+
+def is_execution_breach(entry_risk_cents: int, budget_cents: int) -> bool:
+    """Qualifying entry risk-budget breach: entry risk at fill > min($1,000, remaining daily at the decision)."""
+    return entry_risk_cents > budget_cents
 
 
 def largest_stop_that_fits(n: int, budget_cents: Optional[int] = None, cfg: RiskConfig = DEFAULT) -> int:

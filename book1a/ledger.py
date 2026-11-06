@@ -16,7 +16,7 @@ import csv
 from dataclasses import dataclass, asdict, field
 from typing import Iterable, List, Optional
 
-VERSION = "ledger-v1.0"
+VERSION = "ledger-v1.1"
 TICK = 0.25
 TICK_VALUE = 5.0
 COMMISSION_PER_SIDE = 2.87
@@ -53,7 +53,8 @@ class Trade:
     fill_model: str = "v3.4"
     stop_slippage_ticks: int = 1
     entry_latency_ms: int = 250
-    risk_breach_fill: bool = False
+    risk_breach_fill: bool = False     # realized loss overrun (never the Phase 4 gate)
+    extra: dict = field(default_factory=dict)   # extra ledger columns (risk-c3-v2); written only when asked for
 
     # ---- derived ---------------------------------------------------------------------------
     @property
@@ -125,6 +126,7 @@ def write_checker_ledger(path: str, trades: Iterable[Trade]) -> int:
     return write_csv(path, rows, CHECKER_COLUMNS)
 
 
-def write_ledger(path: str, trades: Iterable[Trade]) -> int:
-    rows = sorted((t.as_ledger_row() for t in trades), key=lambda r: (r["date"], r["entry_time"]))
-    return write_csv(path, rows, LEDGER_COLUMNS)
+def write_ledger(path: str, trades: Iterable[Trade], extra_columns: List[str] = ()) -> int:
+    """extra_columns empty = the original layout (byte for byte as ledger-v1.0)."""
+    rows = sorted(({**t.as_ledger_row(), **t.extra} for t in trades), key=lambda r: (r["date"], r["entry_time"]))
+    return write_csv(path, rows, LEDGER_COLUMNS + list(extra_columns))
