@@ -1,0 +1,21 @@
+{
+ "R3": {
+  "ledger": "K:\\Book1A_runner\\code\\book1a\\Phase1\\runs\\phase1_r3_c3v2\\R3_M0_ledger.csv",
+  "sha256": "f413d15f4dad259d908390f6fcff659490f61cd5c9ce5a0f14a1bbeb486e71d1",
+  "rows": 1,
+  "attempt_rows": 11,
+  "attempt_rows_without_impl": 0
+ },
+ "R4": {
+  "ledger": "K:\\Book1A_runner\\code\\book1a\\Phase1\\runs\\phase1_r4_c3v2\\R4_M0_ledger.csv",
+  "sha256": "b4510aabf2c750f6b3d0cb6f53de274989ed8acbc90d14c0dee9532a5ee5b409",
+  "rows": 8,
+  "attempt_rows": 42,
+  "attempt_rows_without_impl": 0
+ },
+ "p4_decision_mismatches": 0,
+ "p4_trade_mismatches": 0,
+ "p5_match": 9,
+ "p5_mismatch": 0,
+ "exec_breaches": 0
+}
