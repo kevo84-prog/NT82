@@ -135,6 +135,17 @@ only). Build only if the inputs are reachable (section 1).
 **Splits (fields, used at Phase 2 end):** gamma regime (positive, negative), time of day of entry
 (08:30-08:45, 08:45-10:00, 10:00-13:00, after 13:00 CT).
 
+## 5b. Addendum, Nov 6, 2026 (registered before Phase 2; results-free)
+
+**L1_PLAN_SIDE (per R4 candidate and trade from an intraday zone admitted by L1).** Finding from the Phase 1 P7 check:
+L1 admits an intraday zone within 10 points of a plan DECISION zone but does not take that plan zone's side rule. Log,
+for each such candidate and trade: the plan zone it was admitted by (label, lo, hi), the distance in points, the plan
+zone's `long=` and `short=` values, and `l1_side_inherited` = ALLOWED (the plan side for the trade's direction is ANY,
+RESPONSE or INITIATION and matches the setup), NONE (the plan side is NONE) or MISMATCH (the plan side allows only the
+other setup family). Logged only; L1 is not changed. At the end of Phase 2 the count is reported, and the outcomes by
+`l1_side_inherited` are part of the what-fails-and-why review. A rule that makes intraday zones inherit the plan side
+would be a separately registered variant for Block 2, never applied to this replay.
+
 ## 6. Already built (Phase 0), carried forward unchanged
 
 Wide-zone eligibility report; RISK_REJECT and RISK_BREACH_FILL logging; theoretical and realized net R fields.
