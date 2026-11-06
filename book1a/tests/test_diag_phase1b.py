@@ -205,5 +205,58 @@ class TestGex(unittest.TestCase):
         self.assertEqual(D.tod_bucket(dt.datetime.combine(DAY, dt.time(13, 0))), "after 13:00")
 
 
+class TestL1PlanSide(unittest.TestCase):
+    """Spec 5b: L1_PLAN_SIDE (logged only; arms.l1 unchanged)."""
+
+    def test_inherited_values(self):
+        self.assertEqual(D.l1_side_inherited("ANY", "RESPONSE"), "ALLOWED")
+        self.assertEqual(D.l1_side_inherited("RESPONSE", "RESPONSE"), "ALLOWED")
+        self.assertEqual(D.l1_side_inherited("INITIATION", "INITIATION"), "ALLOWED")
+        self.assertEqual(D.l1_side_inherited("NONE", "RESPONSE"), "NONE")
+        self.assertEqual(D.l1_side_inherited("INITIATION", "RESPONSE"), "MISMATCH")
+        self.assertEqual(D.l1_side_inherited("RESPONSE", "INITIATION"), "MISMATCH")
+        self.assertTrue(D.l1_side_inherited("", "RESPONSE").startswith("DATA_MISSING"))
+
+    def test_admitting_zone_and_plan_sides(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "PreopenPlan_2025-10-22.txt"
+            p.write_text("\n".join(["date=2025-10-22",
+                                    "zone=100.00-110.00|D_A|DECISION|long=INITIATION|short=ANY|alt_long=ANY",
+                                    "zone=130.00-140.00|D_B|DECISION|long=NONE|short=RESPONSE",
+                                    "zone=115.00-116.00|T_C|TARGET|long=ANY|short=ANY", "end=1", ""]), encoding="utf-8")
+            zs = D.plan_decision_zones(p)
+            self.assertEqual([z[2:] for z in zs], [("D_A", "INITIATION", "ANY"), ("D_B", "NONE", "RESPONSE")])   # TARGET zones not used
+            dist, z = D.l1_admitting_zone(zs, 112.0, 114.0)                   # 2 points above D_A
+            self.assertEqual((dist, z[2]), (2.0, "D_A"))
+            dist, z = D.l1_admitting_zone(zs, 125.0, 127.0)                   # 3 points below D_B, 15 above D_A
+            self.assertEqual((dist, z[2]), (3.0, "D_B"))
+            self.assertEqual(D.l1_admitting_zone(zs, 105.0, 106.0)[0], 0.0)   # overlap
+            self.assertGreater(D.l1_admitting_zone(zs, 150.25, 151.0)[0], 10.0)   # vetoed by L1 (not admitted)
+            self.assertEqual(D.l1_side_inherited(z[3], "RESPONSE"), "NONE")   # long into D_B
+
+
+class TestGexV3(unittest.TestCase):
+    def test_pin_zone_with_inputs(self):
+        pm = dt.datetime.combine(DAY, dt.time(13, 5))
+        g = dict(ok="True", hvl_nt="25230.0", call_resistance_nt="25400.0", put_support_nt="23750.0")
+        x = D.gex_tags(g, 25305.0, pm, dict(pin_strike_0dte_nt=25300.0, pc_gamma_ratio=0.8))
+        self.assertEqual((x["pin_zone"], x["pin_distance_pts"], x["pc_gamma_ratio"]), ("Y", 5.0, 0.8))
+        self.assertEqual(D.gex_tags(g, 25310.25, pm, dict(pin_strike_0dte_nt=25300.0, pc_gamma_ratio=0.8))["pin_zone"], "N")
+        self.assertEqual(D.gex_tags(g, 25310.0, pm, dict(pin_strike_0dte_nt=25300.0, pc_gamma_ratio=0.8))["pin_zone"], "Y")
+        self.assertTrue(D.gex_tags(g, 25305.0, pm, dict(pin_strike_0dte_nt=float("nan"), pc_gamma_ratio=0.8))["pin_zone"].startswith("DATA_MISSING"))
+
+    def test_flip_cross(self):
+        import pandas as pd
+        from book1a import gex_v3 as GV
+        p = pd.Series([-5.0, -3.0, 2.0, 10.0], index=[100.0, 110.0, 120.0, 130.0])   # cumsum -5, -8, -6, 4
+        x, n = GV.flip_cross(p, 125.0)
+        self.assertEqual(n, 1)
+        self.assertAlmostEqual(x, 120.0 + 6 * 10 / 10)                     # linear between 120 (-6) and 130 (+4)
+        p2 = pd.Series([5.0, -10.0, 10.0], index=[100.0, 110.0, 120.0])    # cumsum 5, -5, 5: two crossings
+        x2, n2 = GV.flip_cross(p2, 118.0)
+        self.assertEqual((n2, x2), (2, 115.0))                             # nearest the settlement
+        self.assertEqual(GV.flip_cross(pd.Series([1.0, 2.0], index=[1.0, 2.0]), 1.5)[1], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

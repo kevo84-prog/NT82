@@ -23,6 +23,7 @@ import datetime as dt
 import glob
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -56,8 +57,10 @@ OURS = [
     "a pair more than 60 minutes apart is EXCLUDED_60MIN (counted, case still logged as raw fields).",
     "POST_ENTRY CVD_DIV (trades only): the first same-type pair whose second swing is confirmed after the decision and "
     "at or before the M0 exit.",
-    "PROVISIONAL: the most recent confirmed swing vs the highest high (lowest low) of the bars after its confirmation bar up to the entry "
-    "bar; the pair window and location rule as for AT_ENTRY.",
+    "PROVISIONAL (accepted by Kyron, Nov 6): the most recent swing confirmed by the decision vs the highest high (lowest low) "
+    "of the bars after that swing's confirmation bar. Window: from the bar after the confirmation bar through the signal "
+    "bar. Cutoff: bar end <= the decision time (the signal bar closes at the decision; no tick after it is used). The pair "
+    "window (60 minutes) and the location rule as for AT_ENTRY.",
     "BREAKOUT_SPEED: volume per second over [t - 60 s, t); percentile = share of the earlier session bar closes (from "
     "17:00 CT) whose own 60 s value is <= the decision's, x 100; 3-bar CVD change = CVD(t) - CVD(t - 3 min), ticks "
     "strictly before each time.",
@@ -72,6 +75,13 @@ OURS = [
     "ref) per level in the order CR, PS, HVL, CR_0DTE, PS_0DTE, HVL_0DTE. ref_price = the last trade at or before "
     "08:10:00 CT. The P1.1 gamma-rank levels (GAMMA*) are not among the six and stay as they are in every twin set.",
     "hvl_side price = the last trade at or before the decision; AT = within 1 tick.",
+    "L1_PLAN_SIDE: the admitting plan zone = the DECISION zone of the R4 run's staged plan with the smallest distance by the "
+    "arms.l1 rule (first in file order on a tie); candidates before the plan as-of (08:25 CT) are NOT_APPLICABLE; a plan "
+    "side other than ANY / RESPONSE / INITIATION / NONE is DATA_MISSING.",
+    "pin_zone price = the last trade at or before the decision (the same as hvl_side); pin strike in the chart contract "
+    "(+ nt_shift_pts).",
+    "Volatility terciles: rank of atm_iv among the phase's sessions, tercile = ceil(3 x rank / n); a post-phase reporting "
+    "grouping only (POST_PHASE_GROUPING), never an AT_ENTRY field.",
 ]
 
 
@@ -383,8 +393,9 @@ PIN_NOT_RUN = ("NOT_RUN (inputs: no 0DTE open-interest strike in gex_levels_bloc
 PC_NOT_RUN = "NOT_RUN (inputs: put / call gamma of the replica calculation not reachable through K:\\Book1A_inputs)"
 
 
-def gex_tags(g: Optional[dict], px: float, t: dt.datetime) -> dict:
-    """Context GEX tags (AT_ENTRY): hvl_side, cr_ps_width, pin_zone, pc_gamma_ratio (spec section 5)."""
+def gex_tags(g: Optional[dict], px: float, t: dt.datetime, v3: Optional[dict] = None) -> dict:
+    """Context GEX tags (AT_ENTRY): hvl_side, cr_ps_width, pin_zone, pc_gamma_ratio (spec section 5).
+    v3 = the session's gex_v3 row (pin_strike_0dte_nt, pc_gamma_ratio); None -> NOT_RUN (inputs)."""
     out = {}
     if g and g.get("ok") == "True":
         hv = g.get("hvl_nt") or g.get("hvl")
@@ -393,9 +404,52 @@ def gex_tags(g: Optional[dict], px: float, t: dt.datetime) -> dict:
         out["cr_ps_width"] = float(cr) - float(ps) if cr and ps else "DATA_MISSING"
     else:
         out.update(hvl_side="NOT_APPLICABLE (gex_valid N)", cr_ps_width="NOT_APPLICABLE (gex_valid N)")
-    out["pin_zone"] = "NOT_APPLICABLE (before 13:00 CT)" if t.hour < 13 else PIN_NOT_RUN
-    out["pc_gamma_ratio"] = PC_NOT_RUN
+    if t.hour < 13:
+        out["pin_zone"] = "NOT_APPLICABLE (before 13:00 CT)"
+    elif v3 is None:
+        out["pin_zone"] = PIN_NOT_RUN
+    elif not np.isfinite(float(v3.get("pin_strike_0dte_nt", np.nan))):
+        out["pin_zone"] = "DATA_MISSING (no 0DTE open interest)"
+    else:
+        k = float(v3["pin_strike_0dte_nt"])
+        out.update(pin_strike_nt=k, pin_distance_pts=round(px - k, 2), pin_zone="Y" if abs(px - k) <= 10.0 + 1e-9 else "N")
+    out["pc_gamma_ratio"] = PC_NOT_RUN if v3 is None else float(v3["pc_gamma_ratio"])
     return out
+
+
+def l1_side_inherited(plan_side: str, setup_family: str) -> str:
+    """Spec 5b: ALLOWED (ANY, or the plan side names this setup family), NONE, MISMATCH (only the other family)."""
+    v = (plan_side or "").strip().upper()
+    if v == "ANY" or (v in ("RESPONSE", "INITIATION") and v == setup_family.upper()):
+        return "ALLOWED"
+    if v == "NONE":
+        return "NONE"
+    if v in ("RESPONSE", "INITIATION"):
+        return "MISMATCH"
+    return f"DATA_MISSING (plan side '{plan_side}')"
+
+
+def plan_decision_zones(plan_txt: Path) -> list:
+    """DECISION zones of a plan text in file order: (lo, hi, label, long, short) (arms.l1 reads the same lines)."""
+    out = []
+    for line in plan_txt.read_text(encoding="utf-8").splitlines():
+        if line.startswith("zone=") and "|DECISION|" in line:
+            p = line[5:].split("|")
+            lo, hi = (float(x) for x in p[0].split("-"))
+            kv = dict(x.split("=", 1) for x in p[3:] if "=" in x)
+            out.append((lo, hi, p[1], kv.get("long", ""), kv.get("short", "")))
+    return out
+
+
+def l1_admitting_zone(zones: list, lo: float, hi: float):
+    """The plan DECISION zone with the smallest distance (arms.l1.dist rule; first in file order on a tie)."""
+    best = None
+    for z in zones:
+        a, b = z[0], z[1]
+        x = 0.0 if (lo <= b and hi >= a) else (a - hi if hi < a else lo - b)
+        if best is None or x < best[0]:
+            best = (x, z)
+    return best
 
 
 def mj2_split(n: int) -> Optional[tuple]:
@@ -444,7 +498,8 @@ def tm(day: str, hms) -> Optional[dt.datetime]:
 
 
 # ------------------------------------------------------------------ main
-def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29")):
+def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29"),
+        inputs: Optional[Path] = None):
     import os
     from book1a.book1_import import jeron_engine  # noqa: F401
     from jeron_engine import arm_replay as AR, arms as A, exit_replay as XR
@@ -504,9 +559,56 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
             row["t8_overlap"] = "Y" if t8[lk](r) else "N"
             for k in keep:
                 row[f"log_{k}"] = r.get(k, "")
-            row["grade_without_cvd"] = "NOT_BUILT (the S1.4 grade is computed in the harness C# code; recomputing it needs a harness change, which is not allowed)"
+            row["grade_without_cvd"] = "NOT_RUN (harness: the S1.4 grade is computed in the harness C# code; recomputing it needs a harness change, which is not allowed)"
             cand_rows.append(row)
     O.csv("diag_cvd_candidates.csv", cand_rows)
+
+    # ---------- GEX inputs that need per-strike gamma (gex_v3; None -> NOT_RUN (inputs)) ----------
+    v3 = None
+    if inputs is not None:
+        from book1a import gex_v3 as GV
+        v3 = {r_["session"]: r_ for r_ in GV.run(Path(inputs), sessions, out)}
+        O.csv("diag_gex_v3_sessions.csv", list(v3.values()))
+        bad = [k_ for k_, r_ in v3.items() if r_["repro_all_match"] != "Y"]
+        if bad:
+            raise RuntimeError(f"gex_v3 does not reproduce gex_levels_block1.csv on {bad}; stop")
+
+    def v3_avail_ct(d_):
+        r_ = v3[d_]
+        mx = max(pd.Timestamp(r_["oi_max_ts_recv"]), pd.Timestamp(r_["settle_max_ts_recv"]))
+        return mx.tz_convert(CT).tz_localize(None).to_pydatetime(),             pd.Timestamp(r_["cutoff_utc"]).tz_convert(CT).tz_localize(None).to_pydatetime()
+
+    # ---------- L1_PLAN_SIDE (spec 5b): R4 candidates / trades from an intraday zone admitted by L1 ----------
+    l1rows = []
+    r4_trades = set(led["R4"].trade_id)
+    seen = set()
+    for r in logs["R4"].rows:
+        if r["RecordType"] != "CANDIDATE" or r["EventId"] in seen or r["EvidenceTimeCT"][:10] not in sessions:
+            continue
+        seen.add(r["EventId"])
+        if not A.intraday(r) or not r["ZoneLo"] or not r["ZoneHi"]:
+            continue
+        d_ = r["EvidenceTimeCT"][:10]
+        t = pd.Timestamp(r["EvidenceTimeCT"]).to_pydatetime()
+        zs = plan_decision_zones(r4 / "plans" / f"PreopenPlan_{d_}.txt")
+        best = l1_admitting_zone(zs, float(r["ZoneLo"]), float(r["ZoneHi"]))
+        if best is None or best[0] > 10.0 + 1e-9:
+            continue                                    # vetoed by L1: not admitted
+        dist, z = best
+        side = "long" if r["Direction"] == "Long" else "short"
+        asof = dt.datetime.combine(t.date(), dt.time(8, 25))
+        row = dict(strategy="R4", risk_impl_version=impl["R4"], ledger_sha256=hashes["R4"], session=d_, event=r["EventId"],
+                   is_trade="Y" if r["EventId"] in r4_trades else "N", decision_time=t, direction=r["Direction"],
+                   setup_family=r["SetupFamily"], status=r["CandidateStatus"], intraday_zone=r["LocationId"],
+                   intraday_lo=float(r["ZoneLo"]), intraday_hi=float(r["ZoneHi"]), plan_zone_label=z[2], plan_zone_lo=z[0],
+                   plan_zone_hi=z[1], distance_pts=round(dist, 2), plan_long=z[3], plan_short=z[4], timing="AT_ENTRY")
+        if t < asof:
+            row["l1_side_inherited"] = "NOT_APPLICABLE (before the plan as-of 08:25 CT)"
+        else:
+            row["l1_side_inherited"] = l1_side_inherited(z[3] if side == "long" else z[4], r["SetupFamily"])
+            O.time("diag_l1_plan_side.csv", f"R4:{r['EventId']}", "l1_plan_side", "AT_ENTRY", t, t, asof)
+        l1rows.append(row)
+    O.csv("diag_l1_plan_side.csv", l1rows)
 
     # ---------- per trade: CVD (AT_ENTRY / PROVISIONAL / POST_ENTRY), exits, sizing, GEX tags ----------
     gex = {r["session"]: r for r in csv.DictReader(open(gex_csv, newline="", encoding="utf-8-sig"))}
@@ -600,7 +702,11 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
             gt = dict(base, timing="AT_ENTRY", gex_report_date=g.get("report_date") if g else "", gex_available_at_ct=ga,
                       gex_valid="Y" if g and g.get("ok") == "True" else "N", gamma_regime=g.get("regime") if g else "DATA_MISSING",
                       time_of_day=tod_bucket(t), price_at_decision=px)
-            gt.update(gex_tags(g, px, t))
+            gt.update(gex_tags(g, px, t, v3.get(day_s) if v3 else None))
+            if v3:
+                dm3, cut3 = v3_avail_ct(day_s)
+                gt.update(gex_v3_data_max_ct=dm3, gex_v3_cutoff_ct=cut3)
+                O.time("diag_gex_trades.csv", key, "gex_v3_tags", "AT_ENTRY", t, t, max(dm3, cut3))
             gex_tr.append(gt)
             O.time("diag_gex_trades.csv", key, "gex_tags", "AT_ENTRY", t, t, max(ga, pxt) if pxt else ga)
     O.csv("diag_cvd_trades.csv", cvd_tr); O.csv("diag_exit_trades.csv", exit_tr)
@@ -645,8 +751,20 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
         g = gex.get(d)
         valid = bool(g and g.get("ok") == "True")
         ref, reft = tape.last_trade(dt.datetime.combine(dt.date.fromisoformat(d), dt.time(8, 10)))
-        srows.append(dict(session=d, gex_valid="Y" if valid else "N", report_date=g.get("report_date") if g else "",
-                          regime=g.get("regime") if g else "", ref_price_0810=ref, v3_flip="NOT_RUN (inputs)", volatility_control="NOT_RUN (inputs)"))
+        srow = dict(session=d, gex_valid="Y" if valid else "N", report_date=g.get("report_date") if g else "",
+                    regime=g.get("regime") if g else "", ref_price_0810=ref)
+        if v3 and d in v3:
+            x3 = v3[d]
+            dm3, cut3 = v3_avail_ct(d)
+            srow.update(available_at_ct=cut3, inputs_data_max_ct=dm3, flip_v3_nt=x3["flip_v3_nt"], hvl_nt=x3["hvl_nt"],
+                        regime_agree=x3["regime_agree"], flip_v3_minus_hvl_pts=x3["flip_v3_minus_hvl_pts"],
+                        flip_v3_crossings=x3["flip_v3_crossings"], pc_gamma_ratio=x3["pc_gamma_ratio"],
+                        atm_iv=x3["atm_iv"], atm_iv_expiry=x3["atm_iv_expiry"], atm_iv_dte_from_report=x3["atm_iv_dte_from_report"])
+            O.time("diag_gex_sessions.csv", d, "gex_v3", "AT_ENTRY", dt.datetime.combine(dt.date.fromisoformat(d), dt.time(8, 10)),
+                   cut3, dm3)
+        else:
+            srow.update(v3_flip="NOT_RUN (inputs)", volatility_control="NOT_RUN (inputs)")
+        srows.append(srow)
         sc = json.loads((plans / f"PreopenPlan_{d}_book1a.json").read_text(encoding="utf-8"))
         if not valid:
             for z in (sc.get("zones") or []) + (sc.get("targets") or []):
@@ -673,6 +791,13 @@ def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24"
                 row["twin_random_levels"] = ";".join(f"{k_}={v:.2f}({tw['random_side'][k_]})" for k_, v in tw["random"].items())
                 row["twin_round_levels"] = ";".join(f"{k_}={v:.2f}" for k_, v in tw["round"].items())
                 zrows.append(row)
+    if v3:
+        # volatility terciles: a post-phase reporting grouping (computed after the phase from this phase's sessions only)
+        ivs = sorted((float(x["atm_iv"]), x["session"]) for x in srows if "atm_iv" in x and np.isfinite(float(x["atm_iv"])))
+        n_ = len(ivs)
+        rank = {s_: i + 1 for i, (_, s_) in enumerate(ivs)}
+        for x in srows:
+            x["vol_tercile_POST_PHASE_GROUPING"] = int(math.ceil(3 * rank[x["session"]] / n_)) if x["session"] in rank else "DATA_MISSING"
     O.csv("diag_gex_zones.csv", zrows); O.csv("diag_gex_sessions.csv", srows)
 
     # ---------- D5 CVD definition check days ----------
@@ -746,8 +871,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", required=True); ap.add_argument("--plans", required=True); ap.add_argument("--gex", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--inputs", default=None, help="K:\Book1A_inputs: builds GEX V3, volatility control, pc_gamma_ratio, pin_zone")
     a = ap.parse_args(argv)
-    res = run(Path(a.runs), Path(a.plans), Path(a.gex), Path(a.out))
+    res = run(Path(a.runs), Path(a.plans), Path(a.gex), Path(a.out), inputs=a.inputs)
     au = audit(Path(a.out))
     (Path(a.out) / "d2_lookahead_audit.json").write_text(json.dumps(au, indent=1, default=str))
     print(json.dumps(dict(hashes=res["hashes"], impl=res["impl"], audit={k: v for k, v in au.items() if k != "bad"}), indent=1))
