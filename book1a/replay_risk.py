@@ -43,6 +43,7 @@ def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Op
     if risk_impl not in RK.C3_IMPLS:
         raise ValueError(risk_impl)
     v2 = risk_impl == RK.C3_V2
+    impl_col = dict(risk_impl_version=risk_impl) if v2 else {}     # v1 rows keep the original layout
     kw = dict(gap_fill=True, stop_delay_ms=250, crossed="live") if fill == "v3.5" else {}
     if fill not in ("v3.4", "v3.5"):
         raise ValueError(fill)
@@ -85,7 +86,7 @@ def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Op
             retests.append(dict(event=a["event"], time=t, outcome=p["outcome"], at=p["at"]))
             busy_until = p["at"]
             if p["outcome"] != "RETEST_ENTERED":
-                attempts.append(dict(event=a["event"], time=t, reasons="RH1_" + p["outcome"], px=px)); continue
+                attempts.append(dict(event=a["event"], time=t, reasons="RH1_" + p["outcome"], px=px, **impl_col)); continue
             te = p["at"]; px2 = AR.decision_tick(tape, te)
             m_ = te.hour * 60 + te.minute
             blk = []
@@ -95,7 +96,7 @@ def replay(log, tape, strategy: str, veto: Optional[Callable] = None, retest: Op
                 if (px2 >= tr["target"] - TK) if side > 0 else (px2 <= tr["target"] + TK): blk.append("PRICE_PAST_TARGET")
                 if abs(px2 - p["entry"]) > AR.SLIPPAGE_TICKS * TK + 1e-9: blk.append("ENTRY_SLIPPAGE")
             if blk:
-                attempts.append(dict(event=a["event"], time=te, reasons="|".join(blk), px=px2)); continue
+                attempts.append(dict(event=a["event"], time=te, reasons="|".join(blk), px=px2, **impl_col)); continue
             tr = dict(side=side, signal_end=te, stop=p["stop"], target=tr["target"]); path = "retest"
             t = te
         v2_row = {}
