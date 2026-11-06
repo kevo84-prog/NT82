@@ -1,0 +1,64 @@
+day,check,status,detail
+2025-10-22,weekly profile starts Sunday 17:00 CT,OK,2025-10-19T17:00:00-05:00 vs 2025-10-19T17:00:00-05:00
+2025-10-22,weekly profile ends at the as-of,OK,2025-10-22T08:10:00-05:00
+2025-10-22,weekly profile last trade before the as-of,OK,2025-10-22T08:09:59.476763-05:00
+2025-10-23,REJ_LOW:24867.0-24907.0 has components,OK,1 components
+2025-10-23,REJ_LOW:24867.0-24907.0 confirmed_ct = latest component,OK,"zone 2025-10-22T11:49:00-05:00 latest 2025-10-22T11:49:00-05:00 (1 components, merged_from=1)"
+2025-10-23,REJ_LOW:24867.0-24907.0 component REJ_LOW 2025-10-22T11:34:00-05:00 confirmed <= as-of,OK,2025-10-22T11:49:00-05:00 vs 2025-10-23T08:10:00-05:00
+2025-10-23,weekly profile starts Sunday 17:00 CT,OK,2025-10-19T17:00:00-05:00 vs 2025-10-19T17:00:00-05:00
+2025-10-23,weekly profile ends at the as-of,OK,2025-10-23T08:10:00-05:00
+2025-10-23,weekly profile last trade before the as-of,OK,2025-10-23T08:09:59.897821-05:00
+2025-10-24,weekly profile starts Sunday 17:00 CT,OK,2025-10-19T17:00:00-05:00 vs 2025-10-19T17:00:00-05:00
+2025-10-24,weekly profile ends at the as-of,OK,2025-10-24T08:10:00-05:00
+2025-10-24,weekly profile last trade before the as-of,OK,2025-10-24T08:09:59.098544-05:00
+2025-10-27,weekly profile starts Sunday 17:00 CT,OK,2025-10-26T17:00:00-05:00 vs 2025-10-26T17:00:00-05:00
+2025-10-27,weekly profile ends at the as-of,OK,2025-10-27T08:10:00-05:00
+2025-10-27,weekly profile last trade before the as-of,OK,2025-10-27T08:09:50.922221-05:00
+2025-10-27,dd_edge_wk available at the as-of,OK,2025-10-27T08:10:00-05:00
+2025-10-28,weekly profile starts Sunday 17:00 CT,OK,2025-10-26T17:00:00-05:00 vs 2025-10-26T17:00:00-05:00
+2025-10-28,weekly profile ends at the as-of,OK,2025-10-28T08:10:00-05:00
+2025-10-28,weekly profile last trade before the as-of,OK,2025-10-28T08:09:59.829965-05:00
+2025-10-29,weekly profile starts Sunday 17:00 CT,OK,2025-10-26T17:00:00-05:00 vs 2025-10-26T17:00:00-05:00
+2025-10-29,weekly profile ends at the as-of,OK,2025-10-29T08:10:00-05:00
+2025-10-29,weekly profile last trade before the as-of,OK,2025-10-29T08:09:58.269853-05:00
+2025-10-29,dd_edge available at the as-of,OK,2025-10-29T08:10:00-05:00
+2025-10-29,dd_edge_wk available at the as-of,OK,2025-10-29T08:10:00-05:00
+2025-10-30,REJ_HIGH:26188.0-26228.0 has components,OK,1 components
+2025-10-30,REJ_HIGH:26188.0-26228.0 confirmed_ct = latest component,OK,"zone 2025-10-29T14:11:00-05:00 latest 2025-10-29T14:11:00-05:00 (1 components, merged_from=1)"
+2025-10-30,REJ_HIGH:26188.0-26228.0 component REJ_HIGH 2025-10-29T13:56:00-05:00 confirmed <= as-of,OK,2025-10-29T14:11:00-05:00 vs 2025-10-30T08:10:00-05:00
+2025-10-30,REJ_HIGH:26266.5-26306.5 has components,OK,2 components
+2025-10-30,REJ_HIGH:26266.5-26306.5 confirmed_ct = latest component,OK,"zone 2025-10-29T23:53:00-05:00 latest 2025-10-29T23:53:00-05:00 (2 components, merged_from=2)"
+2025-10-30,REJ_HIGH:26266.5-26306.5 component REJ_HIGH 2025-10-29T13:35:00-05:00 confirmed <= as-of,OK,2025-10-29T13:50:00-05:00 vs 2025-10-30T08:10:00-05:00
+2025-10-30,REJ_HIGH:26266.5-26306.5 component REJ_HIGH 2025-10-29T23:38:00-05:00 confirmed <= as-of,OK,2025-10-29T23:53:00-05:00 vs 2025-10-30T08:10:00-05:00
+2025-10-30,REJ_LOW:26049.25-26089.25 has components,OK,1 components
+2025-10-30,REJ_LOW:26049.25-26089.25 confirmed_ct = latest component,OK,"zone 2025-10-29T13:57:00-05:00 latest 2025-10-29T13:57:00-05:00 (1 components, merged_from=1)"
+2025-10-30,REJ_LOW:26049.25-26089.25 component REJ_LOW 2025-10-29T13:42:00-05:00 confirmed <= as-of,OK,2025-10-29T13:57:00-05:00 vs 2025-10-30T08:10:00-05:00
+2025-10-30,weekly profile starts Sunday 17:00 CT,OK,2025-10-26T17:00:00-05:00 vs 2025-10-26T17:00:00-05:00
+2025-10-30,weekly profile ends at the as-of,OK,2025-10-30T08:10:00-05:00
+2025-10-30,weekly profile last trade before the as-of,OK,2025-10-30T08:09:58.462857-05:00
+2025-10-31,REJ_HIGH:26266.5-26306.5 has components,OK,2 components
+2025-10-31,REJ_HIGH:26266.5-26306.5 confirmed_ct = latest component,OK,"zone 2025-10-29T23:53:00-05:00 latest 2025-10-29T23:53:00-05:00 (2 components, merged_from=2)"
+2025-10-31,REJ_HIGH:26266.5-26306.5 component REJ_HIGH 2025-10-29T13:35:00-05:00 confirmed <= as-of,OK,2025-10-29T13:50:00-05:00 vs 2025-10-31T08:10:00-05:00
+2025-10-31,REJ_HIGH:26266.5-26306.5 component REJ_HIGH 2025-10-29T23:38:00-05:00 confirmed <= as-of,OK,2025-10-29T23:53:00-05:00 vs 2025-10-31T08:10:00-05:00
+2025-10-31,REJ_HIGH:26339.75-26379.75 has components,OK,1 components
+2025-10-31,REJ_HIGH:26339.75-26379.75 confirmed_ct = latest component,OK,"zone 2025-10-29T15:18:00-05:00 latest 2025-10-29T15:18:00-05:00 (1 components, merged_from=1)"
+2025-10-31,REJ_HIGH:26339.75-26379.75 component REJ_HIGH 2025-10-29T15:03:00-05:00 confirmed <= as-of,OK,2025-10-29T15:18:00-05:00 vs 2025-10-31T08:10:00-05:00
+2025-10-31,REJ_HIGH:26142.5-26182.5 has components,OK,1 components
+2025-10-31,REJ_HIGH:26142.5-26182.5 confirmed_ct = latest component,OK,"zone 2025-10-30T09:16:00-05:00 latest 2025-10-30T09:16:00-05:00 (1 components, merged_from=1)"
+2025-10-31,REJ_HIGH:26142.5-26182.5 component REJ_HIGH 2025-10-30T09:01:00-05:00 confirmed <= as-of,OK,2025-10-30T09:16:00-05:00 vs 2025-10-31T08:10:00-05:00
+2025-10-31,REJ_LOW:26049.25-26089.25 has components,OK,1 components
+2025-10-31,REJ_LOW:26049.25-26089.25 confirmed_ct = latest component,OK,"zone 2025-10-29T13:57:00-05:00 latest 2025-10-29T13:57:00-05:00 (1 components, merged_from=1)"
+2025-10-31,REJ_LOW:26049.25-26089.25 component REJ_LOW 2025-10-29T13:42:00-05:00 confirmed <= as-of,OK,2025-10-29T13:57:00-05:00 vs 2025-10-31T08:10:00-05:00
+2025-10-31,weekly profile starts Sunday 17:00 CT,OK,2025-10-26T17:00:00-05:00 vs 2025-10-26T17:00:00-05:00
+2025-10-31,weekly profile ends at the as-of,OK,2025-10-31T08:10:00-05:00
+2025-10-31,weekly profile last trade before the as-of,OK,2025-10-31T08:09:59.662455-05:00
+2025-11-03,REJ_HIGH:26118.0-26158.0 has components,OK,1 components
+2025-11-03,REJ_HIGH:26118.0-26158.0 confirmed_ct = latest component,OK,"zone 2025-10-31T11:01:00-05:00 latest 2025-10-31T11:01:00-05:00 (1 components, merged_from=1)"
+2025-11-03,REJ_HIGH:26118.0-26158.0 component REJ_HIGH 2025-10-31T10:46:00-05:00 confirmed <= as-of,OK,2025-10-31T11:01:00-05:00 vs 2025-11-03T08:10:00-06:00
+2025-11-03,weekly profile starts Sunday 17:00 CT,OK,2025-11-02T17:00:00-06:00 vs 2025-11-02T17:00:00-06:00
+2025-11-03,weekly profile ends at the as-of,OK,2025-11-03T08:10:00-06:00
+2025-11-03,weekly profile last trade before the as-of,OK,2025-11-03T08:09:59.636488-06:00
+2025-11-03,dd_edge available at the as-of,OK,2025-11-03T08:10:00-06:00
+2025-11-04,weekly profile starts Sunday 17:00 CT,OK,2025-11-02T17:00:00-06:00 vs 2025-11-02T17:00:00-06:00
+2025-11-04,weekly profile ends at the as-of,OK,2025-11-04T08:10:00-06:00
+2025-11-04,weekly profile last trade before the as-of,OK,2025-11-04T08:09:56.420580-06:00

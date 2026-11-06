@@ -1,0 +1,11 @@
+{
+ "decisions": 7,
+ "inputs": 156,
+ "violations": 0,
+ "missing": 0,
+ "plan_build_checks": {
+  "checks": 63,
+  "failed": 0
+ },
+ "passed": true
+}
