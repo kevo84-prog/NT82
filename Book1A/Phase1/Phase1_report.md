@@ -5,6 +5,11 @@ of Nov 5). Controlling doc: Book 1A replay plan, sections 2, 3, 6, 7, 10 (local 
 **No P&L, net R, win rate, dollar result or pass / fail of a result is in this report.** P1-P8 below are mechanics rules
 written before the run. Phase 1 days are debug days and never count.
 
+**Update (Nov 5, after Kyron's review):** ledger paths added (section 1); P6 closest-approach table added; specs now
+come only from `K:\Book1A_runner\specs_no_results\` (checker-redacted), copied into `Book1A/specs/` in commit be85d5f
+(access log event 10). The rules and thresholds used in this run are unchanged by the redaction (only Book 1 result
+lines were replaced). Phase 1b not started.
+
 ## 0. Read first
 
 | Item | Status |
@@ -37,7 +42,19 @@ run (sha256 in section 8); then section 4.
 | Fill model | **v3.5 for all four** (`--fill v3.5` for R1 / R2; the run_r1_r2 default "book1" would have used v3.4 on Phase 1 days) |
 | Risk (R3, R4) | U3: $100,000, 1% = $1,000 per trade, $2,000 daily, NQ only, whole contracts, RISK_REJECT never shrinks; 3 trades and the 2-loss halt |
 | Bootstrap seed | 20251205 (no interval is computed in Phase 1) |
-| Ledgers | `book1a\Phase1\runs\` only (git-ignored), not committed, not aggregated, not sent to the checker |
+| Ledgers | `book1a\Phase1\runs\` only (git-ignored), not committed, not aggregated, not sent to the checker; full paths below |
+
+**Ledger paths** (paths only; the checker compares R3 and R4 with the Phase 0 references, the runner does not):
+
+| strategy | ledger |
+|---|---|
+| R1 A0 | `K:\Book1A_runner\code\book1a\Phase1\runs\phase1\R1_A0_full.csv` (checker columns: `K:\Book1A_runner\code\book1a\Phase1\runs\phase1\checker_input\R1_A0.csv`) |
+| R2 C1 | `K:\Book1A_runner\code\book1a\Phase1\runs\phase1\R2_C1_full.csv` (checker columns: `K:\Book1A_runner\code\book1a\Phase1\runs\phase1\checker_input\R2_C1.csv`) |
+| R3 C1 + risk | `K:\Book1A_runner\code\book1a\Phase1\runs\phase1_r3\R3_M0_ledger.csv` |
+| R4 Book 1A | `K:\Book1A_runner\code\book1a\Phase1\runs\phase1_r4\R4_M0_ledger.csv` |
+
+(`K:\Book1A_runner\code\book1a\Phase1\runs\phase1_r3_precommit\` holds the first R3 run, on the uncommitted script;
+its files are byte-identical to `phase1_r3\`.)
 
 **Plan hashes, checked before the run:** all 20 files in `Book1A/Phase0/plans_phase1/` (10 `.txt` + 10 `.json`) equal
 `plan_hashes_2026-11-05b.md` (plan .txt and sidecar .json columns): 0 differ. R4's own check: every PLAN_LOADED is
@@ -150,6 +167,23 @@ three days with a line (Oct 27, 29, 31, BULLISH, invalidate_below 25394.25): lon
 | Oct 31 | BULLISH | Bullish | HTF_ACCEPTANCE | ACTIVE | 25394.25 | 0 |
 | Nov 3 | BALANCED | Balanced | NONE | NONE | - | 0 |
 | Nov 4 | NONE | None | NONE | NONE | - | 0 |
+
+**Closest approach to the line (Kyron's check, Nov 5).** A context can switch only on a day whose plan has an
+`invalidate_below=` or `invalidate_above=` line. Of the 10 plans, only Oct 27, 29 and 31 have one; the other 7 have
+neither, so S1.4 has no counter to run (`UpdatePlanState` skips a NaN line). On the 3 days, the buffered line is
+`invalidate_below=25394.25` (composite VAH 25394.75 minus 2 ticks); a switch needs 3 consecutive 1-minute closes
+**strictly below** 25394.25 (a close on the line resets the count). Bars: the run's `nq_1m.csv` (CT, bar end time), from
+the first bar after PLAN_ACTIVE (08:26 CT) through 16:00 CT (455 bars a day; the 08:26-15:00 window gives the same values).
+
+| day | context | buffered line | lowest 1-minute close | at (CT) | distance above the line | closes strictly below | longest run below | qualifying 3-close sequence |
+|---|---|---|---|---|---|---|---|---|
+| Oct 27 | Bullish | below 25394.25 | 25808.50 | 08:36 | 414.25 pts | 0 | 0 | none |
+| Oct 29 | Bullish | below 25394.25 | 26068.00 | 13:43 | 673.75 pts | 0 | 0 | none |
+| Oct 31 | Bullish | below 25394.25 | 25892.50 | 12:37 | 498.25 pts | 0 | 0 | none |
+| Oct 22, 23, 28, 30, Nov 3 (Balanced); Oct 24, Nov 4 (None) | - | no line | - | - | - | - | - | cannot switch |
+
+**Confirmed: no qualifying 3-close sequence strictly beyond the buffered line occurred on any day where a context could
+switch**, which agrees with 0 `PLAN_CONTEXT_CHANGE` rows.
 
 ### P7 Day sheets: **PASS (produced); Kyron's chart check pending**
 `day_sheets/day_sheet_<day>.md` for all 10 sessions: plan context line; every zone (lo, hi, label, class, long, short);
