@@ -13,7 +13,7 @@ outcomes are not used for anything. Step B starts only after Kyron tags the comm
 | Code | the commit that adds this file, tagged `book1a-phase2-frozen` by Kyron (parent `604faa8` = `book1a-phase1-pass`). Step B runs from a clean checkout of that tag: before each run `git status` must be clean and `git rev-parse HEAD` must equal the tag's commit (both recorded in the report); every run manifest records the commit. |
 | Sessions | Nov 5 - Dec 4, 2025, Book 1 calendar: 21 sessions (no cash session Nov 27; Nov 28 half day included). 8 EXPOSED (Nov 17-21, Nov 24-26; replay plan section 8), 13 UNEXPOSED. |
 | Inputs | `BOOK1_ROOT = K:\Book1A_inputs` only; harness `K:\Book1A_inputs\jeron_harness\build\JeronHarness.exe`; front contract NQZ5 ("NQ DEC25", NinjaTrader roll Dec 15, 2025) on all 21 sessions. |
-| Plans | the 21 Book 1A plans built in Step A (`plan-v2.4-book1a-v1.6`, map v2.3 packets, frozen plan code), sha256 in `plan_hashes_phase2.md`. R4 loads exactly these files. |
+| Plans | the 21 Book 1A plans built in Step A (`plan-v2.4-book1a-v1.6`, map v2.3 packets, frozen plan code), sha256 in `plan_hashes_phase2.md`. R4 loads exactly these files. G1 compares `plan_hashes_phase2.md` by its git (LF) content, sha256 `5c1a913edcb9a37a4942ef19201a06774d990777686c41981b4721bca8341e74` (`git show <tag>:Book1A/Phase2/plan_hashes_phase2.md`); the Windows CRLF working copy hashes to `4ef6db95...` and is not the reference. |
 | R1 A0 | unchanged from Phase 1: Book 1 S1.4 defaults, map v2.3, rules-only plan, no veto, exit M0, qty 1. `python -m book1a.run_r1_r2 --phase phase2 --fill v3.5 --block1 K:\Book1A_inputs --out book1a\Phase2\runs\phase2` |
 | R2 C1 | unchanged: A0 + veto FZ1 or L1 or T8, RH1 retest 15 bars / 2 ticks, M0, qty 1 (same run). |
 | R3 C1 + risk | unchanged: R2 signals + C3 risk check **risk-c3-v2** (`Phase1/risk-c3-v2_registration.md`). `python -m book1a.run_r3 --block1 K:\Book1A_inputs --a0-run book1a\Phase2\runs\phase2 --out book1a\Phase2\runs\phase2_r3` |
@@ -25,6 +25,7 @@ outcomes are not used for anything. Step B starts only after Kyron tags the comm
 | Bootstrap | session bootstrap, seed **20251205** (section 2). |
 | Stress | `book1a/stress.py` (stress-v1.0) and `python -m book1a.run_stress ... --stress lat1000 / slip2 / slip4 --out book1a\Phase2\runs\phase2_stress_<setting>`: the same replays on the same strategy logs with entry at 1,000 ms, or stop slippage 2 / 4 ticks. `--stress base` reproduces the four Phase 1 controlling ledgers byte for byte (checked Nov 6, 2026). |
 | Review fields | `book1a/phase2_review_fields.py` (phase2-review-fields-v1.1), `compute("phase2", ...)` only. |
+| Report code | `book1a/phase2_report.py` (**phase2-report-v1.0**): the report card (section 2), the stopped-trade classes and tag counts (section 3), the Nov 28 exit fields (`exit_times`) and the overlap check; `run("phase2", ...)` only. Written and tested on synthetic ledgers only before any Phase 2 run (`tests/test_phase2_report.py`, `tests/test_phase2_cross_session.py`). |
 | Diagnostics | `python -m book1a.diag_phase1b --runs book1a\Phase2\runs --folders phase2 phase2_r3 phase2_r4 --d5-days --plans book1a\Phase2\plans_phase2 --gex K:\Book1A_inputs\gex_levels_block1.csv --inputs K:\Book1A_inputs --out book1a\Phase2\runs\phase2_diag` (diag-phase1b-v1.2; the D5 CVD video check is Phase 1 only). |
 | G4 draw | `book1a/g4_draw.py` (g4-draw-v1.0), run unchanged in Step B (section 6, G4). |
 | Labels | every result is "replay (in-sample)". Never "validation". |
@@ -56,6 +57,11 @@ Definitions (fixed now):
 - **Session net R** = the sum of the session's trade realized net R; a session with no trade counts with 0. **Net R
   per session** = the mean over the population's sessions (denominator 21 or 13, zero-trade sessions included). The
   same for theoretical R. **Trades per session** = trades / 21 or 13.
+- **Entry session** = the ledger `date` column, the trading session of the entry decision (both frozen replays write
+  the decision time's date). It controls attribution (daily table, populations, regime groups, drawdown order, review
+  windows) and all daily risk state.
+- **Session dollar P&L** = the sum of the session's trade realized net USD (ledger `net_usd`); 0 for a session with no
+  trade. In the daily table and the report card (total and per session) for all four strategies; R1 / R2 at 1 NQ.
 - **90% session-bootstrap CI** of net R per session: B = 10,000 resamples of the population's sessions with
   replacement (n = 21 or 13, zero-trade sessions included), statistic = mean session net R; interval = the 5th and
   95th percentiles (numpy `percentile`, linear). A new `numpy.random.default_rng(20251205)` per strategy and
@@ -64,7 +70,24 @@ Definitions (fixed now):
   **Average win R** = mean realized net R of trades > 0; **average loss R** = mean of trades < 0 (a negative number).
 - **Max drawdown** = the largest fall of cumulative realized net R from its running peak, over trades ordered by
   (session, entry time), the peak starting at 0. In R for all four; also in dollars (cumulative net USD) for R3 / R4.
-  UNEXPOSED: over the trades of those 13 sessions only, in the same order.
+  UNEXPOSED: over the trades of those 13 sessions only, in the same order. Reported beside it, labelled
+  SUPPLEMENTAL and never instead: the session-order drawdown, the same rule over the session net R series in session
+  order (zero-trade sessions included).
+- **Overlap** (code reading): a strategy cannot hold overlapping positions. Book 1 `arm_replay.replay` (R1 / R2) blocks
+  an attempt with ALREADY_IN_TRADE while the open trade's exit time (or the armed RH1 retest time) is not yet passed;
+  `replay_risk.replay` (R3 / R4) does the same and `DayRiskState.pre_trade_check` adds RISK_REJECT:IN_POSITION. So
+  entry order equals realization order inside a strategy. Trades are never reordered; `phase2_report.check_no_overlap`
+  asserts this on every ledger.
+- **Nov 28 early-close exits** (frozen trading code unchanged): a trade the FLATTEN branch closes after the 12:15 close
+  carries `entry_session` (Nov 28), `exit_time_raw` (the engine's stamp with its date, e.g. Nov 30 17:00 CT; the
+  ledger `exit_time` keeps only HH:MM:SS), `exit_time_model` (the timestamp of the last Nov 28 tick whose quote the
+  FLATTEN branch used: a simulated fill reference under the frozen fill model, not a market execution) and the flag
+  `EXIT_AFTER_SESSION_CLOSE` (`phase2_report.exit_times`, rebuilt from the replay tape). Exit price, USD and R are
+  reported as the engine produced them; nothing is corrected. Holding time uses `exit_time_model` and is labelled so.
+  The date each rule uses for such a trade (code reading and `tests/test_phase2_cross_session.py`, synthetic):
+  ledger session field, daily loss budget (R3 / R4 dollars; R1 / R2 400 ticks), 2-loss halt, 3-trade cap, daily
+  table, drawdown order and review windows all use the entry session. Both replays settle the open trade into the
+  entry session's state before the next session's state starts fresh; a Nov 28 loss reduces nothing on Dec 1.
 - **Exit-reason counts**: ledger `exit_reason` (TARGET_FIRST, STOP_FIRST, TIME_EXIT, other).
 - **Risk counts (R3 / R4)**: RISK_REJECT count by reason (attempt rows with a RISK_REJECT reason); **execution
   breaches** (risk-c3-v2 EXEC_RISK_BREACH: entry risk at fill > min($1,000, remaining daily budget at the decision)),
@@ -80,11 +103,13 @@ Definitions (fixed now):
 - **Time-of-day split**: by the trade's entry fill time (ledger `entry_time`, CT): 08:30-08:45, 08:45-10:00,
   10:00-13:00, after 13:00 (each bucket includes its start, excludes its end). Per bucket: trades, net R sum, net R per
   trade, win rate; net R per session = bucket net R / the population's session count.
-- **Daily table**: every session of the population (session, trades, session net R), zero-trade sessions included.
+- **Daily table**: every session of the population (session, trades, session net R, session dollar P&L), zero-trade
+  sessions included.
 
 Contents per strategy and population: trades; trades per session; net R per session (realized) and theoretical R per
 session; the 90% session-bootstrap CI of net R per session; win rate; average win R and average loss R; max
-drawdown (R; dollars for R3 / R4); exit-reason counts; RISK_REJECT count, execution breach count, RISK_BREACH_FILL
+drawdown (R; dollars for R3 / R4) and the supplemental session-order drawdown; session dollar P&L (total and per
+session); exit-reason counts; RISK_REJECT count, execution breach count, RISK_BREACH_FILL
 (realized overrun) count and the largest dollar overrun; stress at 1,000 ms and 2 / 4 ticks; the gamma regime and
 time-of-day splits; the daily table.
 
@@ -118,7 +143,13 @@ a prespecified descriptive threshold, not a trading or optimized threshold:
 R = ticks / stop ticks at the fill (|entry fill - stop| / 0.25). Trades that are not stopped are listed with their
 fields and class NOT_STOPPED. Counts per class per strategy, and the tags of each class as counts: categorical tags
 by value; the numeric GEX values (cr_ps_width, pc_gamma_ratio) by tercile of the 21 sessions' own values (cut-offs
-from those values only, never outcomes). Descriptive only.
+from those values only, never outcomes). Tercile cut-offs for the numeric GEX tags: one set from the 21 sessions'
+values, used for both populations (1/3 and 2/3 numpy linear quantiles, one value per session; T1 <= first cut-off <
+T2 <= second cut-off < T3; a missing value is NA). Descriptive only.
+
+A trade with `EXIT_AFTER_SESSION_CLOSE` (section 2, Nov 28 early-close exits) is reviewed in its entry session: every
+window is cut at that session's close, its fields carry `entry_session`, `exit_time_raw` and `exit_time_model`, and
+its holding time uses `exit_time_model`, labelled so.
 
 CVD_DIV is reported with this note: "fidelity to Jeron's CVD unproven (1 of 4 video examples reproduced;
 CVD_video_check, Nov 6)". Strict swing divergence (CVD_DIV) is never mixed with any broader exhaustion / absorption
