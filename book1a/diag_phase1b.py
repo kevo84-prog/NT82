@@ -34,7 +34,7 @@ from zoneinfo import ZoneInfo
 
 CT = ZoneInfo("America/Chicago")
 
-VERSION = "diag-phase1b-v1.1"
+VERSION = "diag-phase1b-v1.2"   # v1.2 (Nov 6, 2026): --folders and --d5-days options for the Phase 2 run (defaults = v1.1 behaviour)
 TICK = 0.25
 SWING_N = 15                     # AMT PO-1: strictly highest / lowest of the 15 bars before and the 15 after
 PAIR_MAX_MIN = 60                # CVD_DIV pair window (spec, research assumption)
@@ -531,13 +531,13 @@ def tm(day: str, hms) -> Optional[dt.datetime]:
 
 # ------------------------------------------------------------------ main
 def run(runs: Path, plans: Path, gex_csv: Path, out: Path, d5_days=("2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29"),
-        inputs: Optional[Path] = None):
+        inputs: Optional[Path] = None, folders=("phase1", "phase1_r3", "phase1_r4")):
     import os
     from book1a.book1_import import jeron_engine  # noqa: F401
     from jeron_engine import arm_replay as AR, arms as A, exit_replay as XR
     from book1a import lookahead as LA
     out.mkdir(parents=True, exist_ok=True)
-    a0, r3, r4 = runs / "phase1", runs / "phase1_r3", runs / "phase1_r4"
+    a0, r3, r4 = (runs / f for f in folders)            # A0 (R1 / R2) run, R3 run, R4 run inside --runs
     files = {"R1": a0 / "R1_A0_full.csv", "R2": a0 / "R2_C1_full.csv", "R3": r3 / "R3_M0_ledger.csv", "R4": r4 / "R4_M0_ledger.csv"}
     hashes = {k: sha(v) for k, v in files.items()}
     impl = {k: json.loads((d / "run_manifest.json").read_text()).get("risk_impl_version") for k, d in (("R3", r3), ("R4", r4))}
@@ -904,8 +904,12 @@ def main(argv=None):
     ap.add_argument("--runs", required=True); ap.add_argument("--plans", required=True); ap.add_argument("--gex", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--inputs", default=None, help="K:\Book1A_inputs: builds GEX V3, volatility control, pc_gamma_ratio, pin_zone")
+    ap.add_argument("--folders", nargs=3, default=["phase1", "phase1_r3", "phase1_r4"], metavar=("A0", "R3", "R4"),
+                    help="run folder names inside --runs (Phase 2: phase2 phase2_r3 phase2_r4)")
+    ap.add_argument("--d5-days", nargs="*", default=["2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29"],
+                    help="CVD definition-check days (D5, Phase 1 only); none for Phase 2")
     a = ap.parse_args(argv)
-    res = run(Path(a.runs), Path(a.plans), Path(a.gex), Path(a.out), inputs=a.inputs)
+    res = run(Path(a.runs), Path(a.plans), Path(a.gex), Path(a.out), d5_days=tuple(a.d5_days), inputs=a.inputs, folders=tuple(a.folders))
     au = audit(Path(a.out))
     (Path(a.out) / "d2_lookahead_audit.json").write_text(json.dumps(au, indent=1, default=str))
     print(json.dumps(dict(hashes=res["hashes"], impl=res["impl"], audit={k: v for k, v in au.items() if k != "bad"}), indent=1))

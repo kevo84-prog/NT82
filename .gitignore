@@ -25,3 +25,9 @@ book1a/Phase0/P0.12/R4_M0_phase1_ledger.csv
 # Book 1A Phase 1 run folders (ledgers; never committed, Kyron Nov 5, 2026). Both spellings.
 Book1A/Phase1/runs/
 book1a/Phase1/runs/
+
+# Book 1A Phase 2 run folders and the G4 checker pack (ledgers; never committed, Kyron Nov 5 / Nov 6, 2026). Both spellings.
+Book1A/Phase2/runs/
+book1a/Phase2/runs/
+Book1A/Phase2/checker_input/
+book1a/Phase2/checker_input/

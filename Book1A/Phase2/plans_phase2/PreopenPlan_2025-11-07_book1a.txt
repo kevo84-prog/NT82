@@ -1,0 +1,86 @@
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
+plan_id=2025-11-07-b1a
+date=2025-11-07
+asof=08:25
+packet_asof=08:10
+context=Bearish
+context_note=Book 1A context rule; htf_val=23940.0 htf_vah=26394.75 wk_val_state=ACCEPTED_BELOW wk_vah_state=INSIDE
+zone=25056.75-25070.00|T_ONL_ONVAL|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25180.00-25202.75|D_ONTVAL_PDL|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25280.25-25290.25|T_ONVAH|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=23935.00-23945.00|T_HTFVAL|TARGET
+zone=24822.50-24832.50|T_HTFPOC|TARGET
+zone=25095.00-25105.00|T_ONPOC|TARGET
+zone=25170.00-25180.00|T_DELTA_SELL_ON|TARGET
+zone=25218.50-25255.00|T_D_WKVAL_PDVAL_PDTVAL_PDSET_ONTPOC_WKTVAL|TARGET
+zone=25245.00-25265.00|T_PDPOC_AREA|TARGET
+zone=25285.00-25305.00|T_DELTA_SELL_WK|TARGET
+zone=25290.00-25305.00|T_DELTA_SELL_PD|TARGET
+zone=25420.00-25430.00|T_DELTA_SELL_PD|TARGET
+zone=25483.00-25493.00|T_PD2L|TARGET
+zone=25513.50-25547.00|T_REJ_HIGH_PD|TARGET
+zone=25539.00-25549.00|T_PD3L|TARGET
+zone=25579.25-25589.25|T_PD3VAL|TARGET
+zone=25595.00-25605.00|T_PD3TVAL|TARGET
+zone=25638.00-25648.00|T_PD2VAL|TARGET
+zone=25645.00-25655.00|T_DELTA_SELL_WK|TARGET
+zone=25783.50-25793.50|T_PD3VAH|TARGET
+zone=25839.75-25849.75|T_PD2VAH|TARGET
+zone=25845.00-25865.00|T_DELTA_SELL_WK|TARGET
+zone=25990.00-26000.00|T_PWKTVAL|TARGET
+zone=26095.00-26105.00|T_PWKPOC|TARGET
+zone=26172.50-26182.50|T_PWKTPOC|TARGET
+zone=26255.00-26265.00|T_PWKVAH|TARGET
+zone=26304.75-26314.75|T_PWKTVAH|TARGET
+zone=26389.75-26404.00|T_D_HTFVAH_PWKH|TARGET
+balance=25211.50-25440.75
+balance_poc=25250.00
+invalidate_above=25813.75|Balanced
+macro=not verified (backtest)
+news=not used (backtest)
+# --- Book 1A fields (logged by S1.4, not read) ---
+market_context=BEARISH
+draw_status=ACTIVE
+context_base=BEARISH
+htf_acceptance=NONE
+# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=BASE
+weekly_guard=PASS
+htfval_state=accept=INSIDE|failed_reclaim=0
+htfvah_state=accept=INSIDE|failed_reclaim=0
+draw=24995.00-25005.00|PS_0DTE
+value_follows=WITH_PRICE
+on_inventory=NET_SHORT
+on_vs_settle=-147.5
+htf_structure=BALANCE
+gex_regime=NEG
+vwap_0810=25217.58
+wkvwap_0810=25667.61
+vwap_vs_price=-120.83
+wkval_state=accept=BELOW|failed_reclaim=0
+wkvah_state=accept=INSIDE|failed_reclaim=0
+zone_meta=T_ONL_ONVAL|families=2|AUCTION_VALUE,STRUCTURE|levels=2|ONVAL,ONL|first_touch=YES|tests=1|edge_control=None|accept=None|stop_ticks=55
+ladder=T_ONL_ONVAL|long|TP1=25513.50-25547.00|TP2=25645.00-25655.00|RUN=25808.25-25818.25|R_TP1=32.25|R_TP2=41.82|R_RUN=53.69
+ladder=T_ONL_ONVAL|short|TP1=24822.50-24832.50|TP2=|RUN=24995.00-25005.00|R_TP1=16.31|R_TP2=|R_RUN=3.76
+zone_meta=D_ONTVAL_PDL|families=3|AUCTION_VALUE,STRUCTURE,DELTA|levels=3|PDL,ONTVAL,T_DELTA_SELL_ON|first_touch=YES|tests=4|edge_control=SELLERS|accept=None|stop_ticks=93
+ladder=D_ONTVAL_PDL|long|TP1=25513.50-25547.00|TP2=25645.00-25655.00|RUN=25808.25-25818.25|R_TP1=13.37|R_TP2=19.02|R_RUN=26.04
+ladder=D_ONTVAL_PDL|short|TP1=25095.00-25105.00|TP2=|RUN=24995.00-25005.00|R_TP1=3.23|R_TP2=|R_RUN=7.53
+zone_meta=T_ONVAH|families=2|AUCTION_VALUE,DELTA|levels=3|ONVAH,T_DELTA_SELL_WK,T_DELTA_SELL_PD|first_touch=YES|tests=6|edge_control=SELLERS|accept=None|stop_ticks=42
+ladder=T_ONVAH|long|TP1=25513.50-25547.00|TP2=25645.00-25655.00|RUN=25808.25-25818.25|R_TP1=21.26|R_TP2=33.79|R_RUN=49.33
+ladder=T_ONVAH|short|TP1=25242.50-25252.50|TP2=25170.00-25180.00|RUN=25218.50-25228.50|R_TP1=2.64|R_TP2=9.55|R_RUN=4.93
+research_check_b=pass
+research_check_f=none
+research_1adr_would_drop=DD_EDGE_WK_D_PD3TPOC_PD2POC_PD3POC_PD2TVAL_PDH_PWKL_P1_WKPOC,T_WKTPOC,D_PD3TVAH_WKVAH_PD2TPOC,D_PD2TVAH_PD2H_WKTVAH_PD3H,T_PWKVAL
+research_60pt_would_cut=DD_EDGE_WK_D_PD3TPOC_PD2POC_PD3POC_PD2TVAL_PDH_PWKL_P1_WKPOC
+gex_model=MQ_REPLICA
+gex_source=EOD_PRIOR
+mq_cr=27500.00
+mq_ps=24000.00
+mq_hvl=25375.00
+mq_cr_0dte=25400.00
+mq_ps_0dte=25000.00
+mq_hvl_0dte=25375.00
+# --- review ---
+review=APPROVED
+review_note=Z3: D_WKVAL_PDVAL_PDTVAL_PDSET_ONTPOC_WKTVAL at the balance POC: TARGET only
+end=1

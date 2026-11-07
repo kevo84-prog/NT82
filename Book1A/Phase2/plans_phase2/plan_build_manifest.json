@@ -1,0 +1,240 @@
+{
+ "version": "build-plans-phase-v1.0",
+ "sessions": [
+  "2025-11-05",
+  "2025-11-06",
+  "2025-11-07",
+  "2025-11-10",
+  "2025-11-11",
+  "2025-11-12",
+  "2025-11-13",
+  "2025-11-14",
+  "2025-11-17",
+  "2025-11-18",
+  "2025-11-19",
+  "2025-11-20",
+  "2025-11-21",
+  "2025-11-24",
+  "2025-11-25",
+  "2025-11-26",
+  "2025-11-28",
+  "2025-12-01",
+  "2025-12-02",
+  "2025-12-03",
+  "2025-12-04"
+ ],
+ "rows": [
+  {
+   "session": "2025-11-05",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-05.json",
+   "packet_sha256": "64fdb0e18d67cf25f21684c4063cf28bcf0afb5ef1daaec734dae1b3835c46a9",
+   "plan_sha256": "55fb333c1fce69fdc9a8d29e466d12c7686ee25f0f7889366d05ce2ed9bcd54a",
+   "sidecar_sha256": "6ff093f2caeb7a7ba72db8cb08b44ad6aa5b1149176a83278a0f8955d58385ae",
+   "market_context": "NONE",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-06",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-06.json",
+   "packet_sha256": "a4367d6348e475f137185e3b06eb529435876165b13fe75da0b4e241809918ae",
+   "plan_sha256": "cbce9b10e54ac39fe1b47da604395a64bf6d1ffe198c49df639c0b96081248f9",
+   "sidecar_sha256": "96a0b42e4f7cf54dda5262d1d2a46c2459bf7e0df33df17f376495f6a1793c8f",
+   "market_context": "BEARISH",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-07",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-07.json",
+   "packet_sha256": "a73c811071e7c1a4e1b00be584665f1970b91423deb303ff9061ac02ea64e1d4",
+   "plan_sha256": "024285588487403c1ddcae88b65e83a553abd8e485ff3552cfc9f64dde8beadf",
+   "sidecar_sha256": "30425fbc1e0082659897e751c0a2e7eb65cee0443d5b0e8f3e49fec01bd17134",
+   "market_context": "BEARISH",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-10",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-10.json",
+   "packet_sha256": "f8449203ac7a7ae8ebf659659697df1bab10fae205101d50031e07e51374d2ad",
+   "plan_sha256": "68f96466ddf9ca5e2ab79a8b9c9e90a1a3fce101db414674be41bb356ce2a77b",
+   "sidecar_sha256": "4d3d9960e90164a1a72d140515125189b36034e8a3949120502f279d13822647",
+   "market_context": "NONE",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-11",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-11.json",
+   "packet_sha256": "f2bdd9d4d2d270510e797c5b36987b4440bf0616fe59e7ae52577a42c088bdb1",
+   "plan_sha256": "6232e9640708fa2bb3f82cf2208e589b3b1fb3fbfd4ecfb38b3e7afba27e244b",
+   "sidecar_sha256": "73114630ff99fddef0aeefaf3bdb065c53ee2b8b57880435f6b58f41b2c3fb66",
+   "market_context": "BALANCED",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-12",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-12.json",
+   "packet_sha256": "e468259fc0df6ed1e080f14af9e7f65b0157f7646b24e016d5ad1492d69293e2",
+   "plan_sha256": "7ae0580fa2b5a3e9473493d32c42b1a27b1654fe34325d09dfc2026e6d633e45",
+   "sidecar_sha256": "23acdeb637866ec5700b85be991630967804da92d80f1b448cac2a3c93fc613e",
+   "market_context": "NONE",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-13",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-13.json",
+   "packet_sha256": "df73619ea29c2368e642aff93b79d93a55efb24752ccf3c8cf374245562e7426",
+   "plan_sha256": "3dbd9c7b231bcd874ed32bd60e2678e299c3c36273946c4ea0316a17900df54d",
+   "sidecar_sha256": "6cc6a197ec60596cc346dea993869b81feb54b0feb84423736a00f09665404b7",
+   "market_context": "BEARISH",
+   "decision_zones": 2,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-14",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-14.json",
+   "packet_sha256": "94ca1f96ae4beef307f892bda5f3c21a42adef323aa2bc6a0090d2282e82f614",
+   "plan_sha256": "a6d811c7dac2d9b94b77bf1d9865446895bc2dd94c285fa3ff3bc8343834e5ba",
+   "sidecar_sha256": "1bf375c4401a10ac05b078155f78186af656790f644f8f26dcd8ca3da61bafe7",
+   "market_context": "BEARISH",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-17",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-17.json",
+   "packet_sha256": "4530f7a3525052e70f454145407b985d298eb7ea2b693838334b9d6a03a793b7",
+   "plan_sha256": "d75a47530a28bcaa32e4998c7ee4f53ca5362b3188800ad21be787ae30f72fc6",
+   "sidecar_sha256": "76a207dad5ab9f0aaf10888e6fc061c3c7d72ce5b81fd169256885f108c905c9",
+   "market_context": "BALANCED",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-18",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-18.json",
+   "packet_sha256": "59ddf221381b9a998d337e4e256162af046b6d737dcd032dc3b4ad610f11125a",
+   "plan_sha256": "2fbb4760f4b804eff37441275194274f2cef06b458ca610a705438c6e8a8edc4",
+   "sidecar_sha256": "52804827a43c524a1cb472acbdd368a8197989e8949357c6c236b4072400d7e8",
+   "market_context": "NONE",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-19",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-19.json",
+   "packet_sha256": "b943b4ff3c1a248812890fb9d56c4d341cf396545b6d935589b030cebd8d0692",
+   "plan_sha256": "69489a0378fe8a46d635c47d2731b7d4f523d446b896424e6c9eee57805f46b0",
+   "sidecar_sha256": "6908531deb1ea2b6e2916b8a2aceb87b93012537291bc982fa8963514bf23dc5",
+   "market_context": "BULLISH",
+   "decision_zones": 5,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-20",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-20.json",
+   "packet_sha256": "58ab155c65a0a9399767c2afb5f35087a086278eea7e187ac8eeea7669dddb00",
+   "plan_sha256": "842b32a4468289092a82cc5a6e49d40fca9ceb41bc3ea7436d71b35cd2a2102f",
+   "sidecar_sha256": "7e6fc3a9965c756550d16a482ebc380c0cbb32068a43fd6596f7b5ef601c529b",
+   "market_context": "BULLISH",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-21",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-21.json",
+   "packet_sha256": "82120bec57de0778c2d07eab1679d6f48efa9d94a3973fb5e077df96c7381326",
+   "plan_sha256": "86a1a05b3e3b458d8a45da269023f3cd3a2d2237542cfad043c0ab80dcec6e2e",
+   "sidecar_sha256": "655492919393672e77390c59e88f6491ab200d3225dacf2cd662d485d7cdf9c7",
+   "market_context": "BEARISH",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-24",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-24.json",
+   "packet_sha256": "d413e211112c1090a7d1be90729c8f611eb5015ac9b5431f1dc6751a8dd241ce",
+   "plan_sha256": "bfa3038193ebd66f932ded2dca22e1b07a29aaf268deb7470f2b3bbbfb81c97b",
+   "sidecar_sha256": "54172340916cb980f43df7f2837d61af48721650ad301e8ee10e9bcb21ca1d01",
+   "market_context": "BULLISH",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-25",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-25.json",
+   "packet_sha256": "3d9c4d4e2fe5847fe9daff0c42da99e4af9a94c361842513a8f2d86b92c3c19b",
+   "plan_sha256": "bfd13195fdbaf1255824fcda6ee38fe2ae4611726ec776276cacf1b7a66eacdd",
+   "sidecar_sha256": "dd9a842420cffd02ba0fa82386dcb0f5691a9f0a498799678c1246e4651ea6b8",
+   "market_context": "BULLISH",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-26",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-26.json",
+   "packet_sha256": "de40c592dc9991998ed2e04b7d327ae4b0db8d1a2386fbf403acabf0326583b4",
+   "plan_sha256": "5e754696ac991ea5e7a955371f35d2d2cf2a9dec6e9628b02e5010140db354b3",
+   "sidecar_sha256": "4363d4300c329a7037abca74feb9a2da3ce4445fcd0639eaa43ca9abee558fa8",
+   "market_context": "BULLISH",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-11-28",
+   "packet": "PreopenPacket_NQ_DEC25_2025-11-28.json",
+   "packet_sha256": "c8d7f7a8980a4533b8afaa06bf550b7a0991221b7854c65d696fb872938119f7",
+   "plan_sha256": "a16c2dc7fb20e44ec5391b87938eabfd8eb9264c6300022e772fc42bcfbae587",
+   "sidecar_sha256": "3eb1b18b52f82f3bf5fad14624d585ae4583b223c18590454b8483b526511548",
+   "market_context": "BULLISH",
+   "decision_zones": 3,
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2025-12-01",
+   "packet": "PreopenPacket_NQ_DEC25_2025-12-01.json",
+   "packet_sha256": "d7a68e30f0353240f3fca8c200a7da33a403b1d80d827d3e3523a138b85380f4",
+   "plan_sha256": "1a88ff4e7286298f7d9395332f213ccc131ffcd558ef35abde48431cd167946f",
+   "sidecar_sha256": "b3ac49f0f3cbf8e37b875d1f558d48fdc3fc9a03b7fc54cfa1f0387aea575e48",
+   "market_context": "BEARISH",
+   "decision_zones": 4,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-02",
+   "packet": "PreopenPacket_NQ_DEC25_2025-12-02.json",
+   "packet_sha256": "8602de58cef3647a3f196a3f49f43e4e19c535436b1edb05e170b5fb6239bb98",
+   "plan_sha256": "e091c6113f5e5738e18e7161a6e761323a748dfc7a7e70e7eceb74ceaac105e4",
+   "sidecar_sha256": "aca01cef4937a1cfcaca002ff2ea3dd939d40936709ba42236aa1b7e13f7d51c",
+   "market_context": "BULLISH",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-03",
+   "packet": "PreopenPacket_NQ_DEC25_2025-12-03.json",
+   "packet_sha256": "86da76257066de9dcd203bf320fd3260b554b0df34af54c72f8b6c2d4478d72f",
+   "plan_sha256": "74000c7b5ab534e25d8ff6f9fc93aff4e545d8783a8f43c7426e32e93e116b67",
+   "sidecar_sha256": "5264e606bfdbe599046f2aa1e18299f975932e2d30b58e68ce6e6132c06bfd82",
+   "market_context": "BALANCED",
+   "decision_zones": 3,
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-04",
+   "packet": "PreopenPacket_NQ_DEC25_2025-12-04.json",
+   "packet_sha256": "610f41bd3dc1dd0e503370bb79808bea1350ad8ba6d3e46e39eb8c69cf0dee92",
+   "plan_sha256": "09572078dbe25884c4a6e79e3c41eba9241899283a36ad35cd66b93c5b5e3275",
+   "sidecar_sha256": "4eb5b279018ffd0ba53d96dcb9710fb5730209377db916c2428553632d2eb8f6",
+   "market_context": "BULLISH",
+   "decision_zones": 2,
+   "review": "APPROVED"
+  }
+ ],
+ "map_check": null,
+ "map_only_out": "K:\\Book1A_runner\\code\\book1a\\Phase2\\runs\\maps_phase2"
+}
