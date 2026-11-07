@@ -10,6 +10,7 @@ Trades (long, fill 24000, stop 23990 = 40 ticks = 1 R, target 24020, stop fill 2
   E-2 R4 Nov 7 14:30  STOP_THEN_TARGET in a TRUNCATED window (target trades at 14:50)
   E-7 R4 Nov 28 11:03 EXIT_AFTER_SESSION_CLOSE: stop 23951, target 24100, flattened, stamped Nov 30 17:00
 Each decision bar: 30 B at 24000 (decision - 30 s) and 10 S at 23999 (at the decision): delta 20, vol 40, 50 %, 4 ticks.
+v1.1: synthetic gex_levels (Nov 28 without valid GEX), 21 plan sidecars and their hash table (see CRPS, PREM).
 """
 import csv
 import datetime as dt
@@ -19,6 +20,8 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+
+import numpy as np
 
 from book1a import ledger as L, phase2_review_apply as A
 
@@ -30,6 +33,12 @@ SESS = ["2025-11-05", "2025-11-06", "2025-11-07", "2025-11-10", "2025-11-11", "2
         "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04"]
 PC = {d: float(i + 1) for i, d in enumerate(SESS)}
 PC["2025-11-07"], PC["2025-11-18"] = 10.0, 3.0            # values still 1..21: cut-offs 7.6667 / 14.3333
+# v1.1 cr_ps_width: CR - PS = 100 + 10 x session index; Nov 28 has no valid GEX (V5). The 20 valid values are
+# 100..250, 270..300: cut-offs at positions 19/3 and 38/3 -> 160 + 10/3 and 220 + 20/3. Nov 6 holds 5 trades and
+# Nov 7 one: the cut-offs come from session values, never trade counts.
+V5 = "2025-11-28"
+CRPS = {d: (None if d == V5 else 100.0 + 10 * i) for i, d in enumerate(SESS)}
+PREM = {D1: ("BEARISH", "ACTIVE"), D2: ("BALANCED", None), N28: ("BULLISH", "NONE")}   # None: no draw_status line
 
 # (label, event, day, decision hh:mm:ss, stop, target, exit hh:mm:ss.fff, exit price, reason)
 TRADES = [("R1", "E-1", D1, "09:00:00", 23990.0, 24020.0, "09:10:00.000", 23989.75, "STOP_FIRST"),
@@ -94,7 +103,8 @@ def base_diag(shas):
         base = dict(strategy=lab, risk_impl_version="x", ledger_sha256=shas[lab], session=day, trade_id=ev, side="LONG", qty=1,
                     decision_time=f"{day} {dec}")
         if ev != "E-6":
-            g.append(dict(base, gamma_regime="positive", hvl_side="ABOVE", cr_ps_width=400.0,
+            g.append(dict(base, gamma_regime="positive", hvl_side="ABOVE",
+                          cr_ps_width="NOT_APPLICABLE (gex_valid N)" if CRPS[day] is None else CRPS[day],
                           pin_zone="N" if dec >= "13:00" else "NOT_APPLICABLE (before 13:00 CT)", pc_gamma_ratio=PC[day]))
         e.append(dict(base, mj_alignment="PLAN_ALIGNED" if ev == "E-2" else "NOT_APPLICABLE (x)"))
         c.append(dict(base, atentry_high_case_cvd17="HIGH_EXHAUSTION" if ev == "E-1" else "NONE",
@@ -118,7 +128,33 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def make(root, mut=None, mut_diag=None):
+def write_refs(root, mut_plans=None, mut_hashes=None, mut_gex=None):
+    """gex_levels csv, 21 Book 1A plan sidecars and their hash table (v1.1 inputs)."""
+    gex = [dict(session=d, call_resistance_nt="" if v is None else 20000.0 + v, put_support_nt="" if v is None else 20000.0,
+                hvl_nt=20000.0, regime="positive", ok="False" if v is None else "True") for d, v in CRPS.items()]
+    if mut_gex:
+        mut_gex(gex)
+    write_csv(root / "gex_levels.csv", gex)
+    plans = {}
+    for d in SESS:
+        mc, ds = PREM.get(d, ("NONE", "NONE"))
+        lines = ["# plan", f"date={d}", f"market_context={mc}"] + ([f"draw_status={ds}"] if ds else []) + ["zone=a", "zone=b"]
+        plans[d] = dict(date=d, market_context=mc, plan=lines)
+    if mut_plans:
+        mut_plans(plans)
+    pd_ = root / "plans"; pd_.mkdir()
+    for d, x in plans.items():
+        (pd_ / f"PreopenPlan_{d}_book1a.json").write_text(json.dumps(x, indent=1), encoding="utf-8")
+    hashes = {d: sha(pd_ / f"PreopenPlan_{d}_book1a.json") for d in SESS}
+    if mut_hashes:
+        mut_hashes(hashes)
+    tbl = ["# plan hashes", "", "| session | plan_sha256 | sidecar_sha256 |", "|---|---|---|"]
+    tbl += [f"| {d} | x | {h} |" for d, h in hashes.items()]
+    (root / "plan_hashes.md").write_text("\n".join(tbl) + "\n", encoding="utf-8")
+    return dict(gex=root / "gex_levels.csv", plans=pd_, plan_hashes=root / "plan_hashes.md")
+
+
+def make(root, mut=None, mut_diag=None, **refs):
     root = Path(root)
     data = base_data()
     if mut:
@@ -147,11 +183,11 @@ def make(root, mut=None, mut_diag=None):
     for name, fn in (("gex", "diag_gex_trades.csv"), ("exit", "diag_exit_trades.csv"), ("cvd", "diag_cvd_trades.csv"),
                      ("l1", "diag_l1_plan_side.csv"), ("gex_sessions", "diag_gex_sessions.csv")):
         write_csv(dg / fn, diag[name], header_line=hdr)
-    return dict(a0=a0, r3=r3, r4=r4, diag=dg, out=root / "review")
+    return dict(a0=a0, r3=r3, r4=r4, diag=dg, out=root / "review", **write_refs(root, **refs))
 
 
-def run(p):
-    return A.run("phase2", p["a0"], p["r3"], p["r4"], p["diag"], p["out"])
+def run(p, phase="phase2"):
+    return A.run(phase, p["a0"], p["r3"], p["r4"], p["diag"], p["gex"], p["plans"], p["plan_hashes"], p["out"])
 
 
 class TestReviewApply(unittest.TestCase):
@@ -242,8 +278,8 @@ class TestReviewApply(unittest.TestCase):
         self.assertEqual((self.by[("R1", "E-1")]["bs_vol_per_sec_60s"], r["bs_vol_per_sec_60s"]), ("12.5", "NA"))
         self.assertEqual((self.by[("R4", "E-2")]["L1_PLAN_SIDE"], self.by[("R4", "E-7")]["L1_PLAN_SIDE"], r["L1_PLAN_SIDE"]),
                          ("ALLOWED", "NA", "NA"))
-        self.assertTrue(r["market_context"].startswith("NOT_RUN") and r["draw_status"].startswith("NOT_RUN"))
-        self.assertTrue(r["cr_ps_width_tercile"].startswith("NOT_RUN"))
+        self.assertTrue(r["market_context_at_entry"].startswith("NOT_RUN") and r["draw_status_at_entry"].startswith("NOT_RUN"))
+        self.assertEqual(r["cr_ps_width_tercile"], "T1")               # session value 110, not the (missing) diag row
         self.assertEqual(self.res["manifest"]["missing_diag_rows"], {"R1": {"gex": 1}, "R2": {}, "R3": {}, "R4": {"l1": 1}})
         t = self.res["classes"]["R1"]["ALL"]["tags"]
         self.assertEqual(t["NOT_STOPPED"]["gamma_regime"], {"NA": 1})
@@ -264,11 +300,45 @@ class TestReviewApply(unittest.TestCase):
     def test_inputs_unchanged_outputs_new(self):
         m = self.res["manifest"]
         self.assertEqual(m["inputs_sha256_before"], m["inputs_sha256_after"])
-        self.assertEqual(len(m["inputs_sha256_before"]), 19)   # 4 ledgers, 4 attempts, 2 retests, 2 logs, 2 tapes, 5 diag
+        self.assertEqual(len(m["inputs_sha256_before"]), 42)   # 4 ledgers, 4 attempts, 2 retests, 2 logs, 2 tapes, 5 diag,
+        #                                                        gex levels, plan hash table, 21 plan sidecars
         after = sorted(str(x.relative_to(self.tmp.name)) for x in Path(self.tmp.name).rglob("*"))
         self.assertEqual(sorted(set(after) - set(self.before)),
                          sorted(["review"] + [str(Path("review") / x) for x in m["outputs"]]))
         self.assertEqual(json.loads((self.p["out"] / "phase2_review_manifest.json").read_text())["version"], A.VERSION)
+
+    # ---- v1.1: cr_ps_width terciles from session values, V5 -> NA; premarket plan fields
+    def test_cr_ps_cutoffs_from_sessions_not_trades(self):
+        vals = [v for v in CRPS.values() if v is not None]
+        self.assertEqual(len(vals), 20)
+        q1, q2 = np.quantile(vals, [1 / 3, 2 / 3])
+        self.assertAlmostEqual(q1, 160 + 10 / 3); self.assertAlmostEqual(q2, 220 + 20 / 3)
+        weighted = [CRPS[day] for _, _, day, *_ in TRADES if CRPS[day] is not None]          # 5 x 110, 1 x 120
+        self.assertNotAlmostEqual(np.quantile(weighted, 1 / 3), q1)
+        for s in A.STRATEGIES:
+            for pop in ("ALL", "UNEXPOSED"):
+                c = self.res["classes"][s][pop]["tercile_cutoffs"]["cr_ps_width"]
+                self.assertAlmostEqual(c[0], q1); self.assertAlmostEqual(c[1], q2)
+        self.assertEqual(self.res["manifest"]["cr_ps_width_sessions_in_cutoffs"], 20)
+        self.assertEqual((self.by[("R1", "E-1")]["cr_ps_width_session_value"], self.by[("R1", "E-1")]["cr_ps_width_tercile"]),
+                         (110.0, "T1"))
+
+    def test_v5_session_na(self):
+        r = self.by[("R4", "E-7")]
+        self.assertEqual((r["cr_ps_width_session_value"], r["cr_ps_width_tercile"], r["cr_ps_width_trade_value"]),
+                         (None, "NA", "NOT_APPLICABLE (gex_valid N)"))
+        self.assertEqual(self.res["classes"]["R4"]["ALL"]["tags"]["NOT_STOPPED"]["cr_ps_width_tercile"], {"NA": 1})
+
+    def test_premarket_joined_by_entry_session(self):
+        got = {r["trade_id"]: (r["market_context_premarket"], r["draw_status_premarket"]) for r in self.res["rows"]}
+        self.assertEqual(got, {"E-1": ("BEARISH", "ACTIVE"), "E-3": ("BEARISH", "ACTIVE"), "E-5": ("BEARISH", "ACTIVE"),
+                               "E-6": ("BEARISH", "ACTIVE"), "E-4": ("BEARISH", "ACTIVE"),
+                               "E-2": ("BALANCED", "NA"),           # no draw_status line: NA, never inferred
+                               "E-7": ("BULLISH", "NONE")})         # Nov 28 entry session (exit stamped Nov 30)
+        self.assertTrue(all(r["premarket_label"] == "premarket (plan), not the state at entry" for r in self.res["rows"]))
+        t = self.res["classes"]["R4"]["ALL"]["tags"]
+        self.assertEqual(t["STOP_THEN_TARGET"]["market_context_premarket"], {"BALANCED": 1})
+        self.assertEqual(t["NOT_STOPPED"]["draw_status_premarket"], {"NONE": 1})
 
 
 class TestOverlapFlagged(unittest.TestCase):
@@ -284,9 +354,9 @@ class TestOverlapFlagged(unittest.TestCase):
 
 
 class TestHardErrors(unittest.TestCase):
-    def check(self, mut=None, mut_diag=None, exc=A.MappingError, prep=None):
+    def check(self, mut=None, mut_diag=None, exc=A.MappingError, prep=None, **refs):
         with tempfile.TemporaryDirectory() as t:
-            p = make(t, mut, mut_diag)
+            p = make(t, mut, mut_diag, **refs)
             if prep:
                 prep(p)
             with self.assertRaises(exc):
@@ -347,7 +417,26 @@ class TestHardErrors(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             p = make(t)
             with self.assertRaises(RuntimeError):
-                A.run("phase1", p["a0"], p["r3"], p["r4"], p["diag"], p["out"])
+                run(p, "phase1")
+
+    # ---- v1.1
+    def test_cr_ps_width_mismatch(self):
+        self.check(mut_diag=lambda g: g["gex"][0].update(cr_ps_width=999.0))
+
+    def test_cr_ps_width_v5_trade_with_value(self):
+        self.check(mut_diag=lambda g: [x.update(cr_ps_width=260.0) for x in g["gex"] if x["trade_id"] == "E-7"])
+
+    def test_plan_hash_mismatch(self):
+        self.check(mut_hashes=lambda h: h.__setitem__(D1, "0" * 64))
+
+    def test_plan_two_draw_status_lines(self):
+        self.check(mut_plans=lambda p: p[D1]["plan"].append("draw_status=REACHED"))
+
+    def test_plan_market_context_line_differs(self):
+        self.check(mut_plans=lambda p: p[D2].update(market_context="BULLISH"))
+
+    def test_duplicate_gex_session(self):
+        self.check(mut_gex=lambda g: g.append(dict(g[1])))
 
     def test_check_unchanged(self):
         A.check_unchanged({"a": "1"}, {"a": "1"})

@@ -12,7 +12,22 @@ trade's inputs, and calls the frozen functions unchanged:
 It adds no parameter, threshold, cut-off, filter or definition.
 
   python -m book1a.phase2_review_apply --phase phase2 --a0-run book1a/Phase2/runs/phase2 --r3-run book1a/Phase2/runs/phase2_r3 \
-      --r4-run book1a/Phase2/runs/phase2_r4 --diag book1a/Phase2/runs/phase2_diag --out book1a/Phase2/runs/phase2_review
+      --r4-run book1a/Phase2/runs/phase2_r4 --diag book1a/Phase2/runs/phase2_diag --gex K:/Book1A_inputs/gex_levels_block1.csv \
+      --plans book1a/Phase2/plans_phase2 --plan-hashes book1a/Phase2/plan_hashes_phase2.md --out book1a/Phase2/runs/phase2_review
+
+v1.1 (Nov 7, 2026, checker review of v1.0 and Kyron's approval; same amendment): the three v1.0 NOT_RUN items.
+  cr_ps_width tercile  session values from gex_levels_block1.csv through the frozen diag_phase1b.gex_tags (CR - PS);
+                       one value per session, never weighted by trade count; sessions without valid GEX (V5) or
+                       without a value are left out of the cut-offs and their trades are NA; one set of cut-offs from
+                       the 21 sessions for both populations (class_table, as for pc_gamma_ratio). Hard error if a
+                       trade's diag_gex_trades cr_ps_width differs from its session's value.
+  market_context_premarket, draw_status_premarket   copied verbatim from the trade's entry-session Book 1A plan
+                       sidecar (plans/PreopenPlan_<day>_book1a.json): market_context = its top-level key;
+                       draw_status = its `draw_status=` plan line (the sidecar's `plan` list, parsed key=value as
+                       phase2_plan_hashes does; the sidecar has no top-level draw_status key); a missing field is NA.
+                       The sidecar's sha256 must equal its sidecar_sha256 in plan_hashes_phase2.md, else a hard
+                       error. Labelled "premarket (plan), not the state at entry"; the state at entry stays NOT_RUN.
+  BREAKOUT_SPEED       unchanged (listed per trade, not counted).
 
 Inputs (opened read-only; sha256 of each recorded before and after the run, and they must be equal):
   ledgers    R1 <a0>/R1_A0_full.csv, R2 <a0>/R2_C1_full.csv, R3 <r3>/R3_M0_ledger.csv, R4 <r4>/R4_M0_ledger.csv
@@ -40,15 +55,15 @@ How each compute() input is taken (no new definition):
                  run (bar volume would then need a new definition).
 Tags (section 3): categorical by value via class_table; joined on (strategy, trade_id) (R4 L1_PLAN_SIDE on the R4
 event id = trade_id), never on row position. A missing diagnostics row or field is NA. pc_gamma_ratio by tercile of
-the 21 sessions' own values (diag_gex_sessions). Not computed here, reported NOT_RUN until Kyron names a source:
-market_context and draw_status (no diagnostics file holds them), the cr_ps_width tercile (no file holds the 21
-sessions' values; the per-trade value is listed). BREAKOUT_SPEED raw values are listed per trade, not counted
+the 21 sessions' own values (diag_gex_sessions); cr_ps_width and the premarket plan fields as in v1.1 above.
+market_context and draw_status at entry: NOT_RUN. BREAKOUT_SPEED raw values are listed per trade, not counted
 (section 3 gives a count rule only for categorical tags and the numeric GEX tags).
 
 Hard errors (stop and report, never a choice): a duplicate trade_id or diagnostics key; a diagnostics row whose
 session, side, qty, decision_time or ledger_sha256 differs from the ledger; a diagnostics trade key not in the ledger;
 a trade outside the 21 sessions; no candidate row, conflicting candidate times, or a decision time no attempt / retest
-row shows; U volume in a confirm bar; a trade without an exit time (overlap check undefined); an input whose sha256
+row shows; U volume in a confirm bar; a per-trade cr_ps_width unlike its session's; a plan sidecar whose sha256 is not
+the registered one, two draw_status lines, or a market_context line unlike the top-level key; a duplicate GEX session; a trade without an exit time (overlap check undefined); an input whose sha256
 changed during the run; a review count that differs from the ledger count. Outputs go only to a new --out folder.
 """
 from __future__ import annotations
@@ -67,11 +82,11 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from book1a import bars as BARS, phase2_report as RP, phase2_review_fields as F, sessions as S
+from book1a import bars as BARS, diag_phase1b as DG, phase2_report as RP, phase2_review_fields as F, sessions as S
 from book1a.book1_import import jeron_engine  # noqa: F401
 from jeron_engine import fills
 
-VERSION = "phase2-review-apply-v1.0"
+VERSION = "phase2-review-apply-v1.1"
 LABEL = "replay (in-sample), descriptive only"
 STRATEGIES = ("R1", "R2", "R3", "R4")
 GEX_CAT = ("gamma_regime", "hvl_side", "pin_zone")
@@ -79,11 +94,12 @@ EXIT_CAT = ("mj_alignment",)
 CVD_CAT = tuple(f"{p}_{k}_{f}_{r}" for p in ("atentry", "prov", "post") for k in ("high", "low")
                 for f in ("case", "with") for r in ("cvd17", "cvd0830"))
 L1_TAG = "L1_PLAN_SIDE"                                   # diag_l1_plan_side.l1_side_inherited
-SESSION_NUMERIC = ("pc_gamma_ratio",)                     # from diag_gex_sessions (one value per session)
+SESSION_NUMERIC = ("pc_gamma_ratio", "cr_ps_width")       # one value per session: diag_gex_sessions / gex_levels (v1.1)
 BS_FIELDS = ("bs_status", "bs_vol_per_sec_60s", "bs_percentile_session", "bs_n_earlier_bars", "bs_cvd_change_3bar")
-NOT_RUN_SOURCE = "NOT_RUN (no diagnostics file holds it; source not registered, Kyron to decide)"
-NOT_RUN_TAGS = {"market_context": NOT_RUN_SOURCE, "draw_status": NOT_RUN_SOURCE}
-NOT_RUN_NUMERIC = {"cr_ps_width": "NOT_RUN (no file holds the 21 sessions' values; per-trade value listed; Kyron to decide)"}
+PREMARKET = ("market_context_premarket", "draw_status_premarket")
+PREMARKET_LABEL = "premarket (plan), not the state at entry"
+NOT_RUN_AT_ENTRY = {"market_context_at_entry": "NOT_RUN (state at entry not registered)",
+                    "draw_status_at_entry": "NOT_RUN (state at entry not registered)"}
 # diag_phase1b writes decision_time = entry fill - 250 ms per trade and, in diag_l1_plan_side, the candidate's
 # EvidenceTimeCT; both must equal this script's decision_time / signal_time, or the run stops.
 
@@ -143,7 +159,7 @@ def fnum(x) -> Optional[float]:
     return v if np.isfinite(v) else None
 
 
-def input_paths(a0: Path, r3: Path, r4: Path, diag: Path) -> dict:
+def input_paths(a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path, plan_hashes: Path) -> dict:
     def jofs(run: Path) -> Path:
         x = sorted((run / "strategy").glob("JOFS_*.csv"))
         if len(x) != 1:
@@ -159,7 +175,59 @@ def input_paths(a0: Path, r3: Path, r4: Path, diag: Path) -> dict:
         tape=dict(R1=a0 / "tape_strategy.csv.gz", R2=a0 / "tape_strategy.csv.gz", R3=a0 / "tape_strategy.csv.gz",
                   R4=r4 / "tape_strategy.csv.gz"),
         diag=dict(gex=diag / "diag_gex_trades.csv", exit=diag / "diag_exit_trades.csv", cvd=diag / "diag_cvd_trades.csv",
-                  l1=diag / "diag_l1_plan_side.csv", gex_sessions=diag / "diag_gex_sessions.csv"))
+                  l1=diag / "diag_l1_plan_side.csv", gex_sessions=diag / "diag_gex_sessions.csv"),
+        ref=dict(gex=gex, plan_hashes=plan_hashes),
+        plan={d.isoformat(): plans / f"PreopenPlan_{d.isoformat()}_book1a.json" for d in S.phase_sessions("phase2")})
+
+
+# ------------------------------------------------------------------ v1.1: session cr_ps_width, premarket plan fields
+def cr_ps_sessions(gex_csv: Path, sessions) -> Dict[dt.date, object]:
+    """Each session's cr_ps_width from gex_levels_block1.csv through the frozen diag_phase1b.gex_tags (CR - PS; price,
+    time and gex_v3 do not enter it): a float, or the tag's own NOT_APPLICABLE / DATA_MISSING text."""
+    g = unique(read_rows(gex_csv, "utf-8-sig"), lambda r: r["session"], "gex_levels")
+    out = {}
+    for d in sessions:
+        x = DG.gex_tags(g.get(d.isoformat()), float("nan"), dt.datetime.combine(d, dt.time(8, 10)), None)
+        out[d] = x["cr_ps_width"]
+    return out
+
+
+def same_cr_ps(trade_value: str, session_value) -> bool:
+    if isinstance(session_value, float):
+        v = fnum(trade_value)
+        return v is not None and abs(v - session_value) <= 1e-9
+    return str(trade_value) == str(session_value)
+
+
+def registered_sidecar_hashes(table: Path) -> Dict[str, str]:
+    """session -> sidecar_sha256 from plan_hashes_phase2.md (the table phase2_plan_hashes wrote)."""
+    with open(table, "r", encoding="utf-8") as f:
+        lines = [l.strip() for l in f if l.startswith("|")]
+    head = [c.strip() for c in lines[0].strip("|").split("|")]
+    if "session" not in head or "sidecar_sha256" not in head:
+        raise MappingError(f"{table.name}: no session / sidecar_sha256 columns")
+    rows = [dict(zip(head, (c.strip() for c in l.strip("|").split("|")))) for l in lines[2:]]
+    return {k: v["sidecar_sha256"] for k, v in unique(rows, lambda r: r["session"], table.name).items()}
+
+
+def premarket(sidecar: Path, registered: Optional[str], actual: str) -> dict:
+    """market_context and draw_status of a Book 1A plan sidecar, verbatim; a missing field is NA."""
+    if registered is None or actual != registered:
+        raise MappingError(f"{sidecar.name}: sha256 {actual} is not the registered {registered}")
+    with open(sidecar, "r", encoding="utf-8") as f:
+        x = json.load(f)
+    lines = [l for l in (x.get("plan") or []) if isinstance(l, str) and "=" in l and not l.startswith("#")]
+    kv = {}
+    for l in lines:
+        k, v = l.split("=", 1)
+        if k in ("draw_status", "market_context") and k in kv:
+            raise MappingError(f"{sidecar.name}: two {k} lines")
+        kv.setdefault(k, v)
+    mc = x.get("market_context")
+    if mc is not None and "market_context" in kv and kv["market_context"] != mc:
+        raise MappingError(f"{sidecar.name}: market_context line {kv['market_context']!r} differs from the key {mc!r}")
+    val = lambda v: "NA" if v is None or v == "" else v
+    return dict(market_context_premarket=val(mc), draw_status_premarket=val(kv.get("draw_status")))
 
 
 def all_files(paths: dict) -> List[Path]:
@@ -290,13 +358,13 @@ def git_state(cwd: Path) -> dict:
         return dict(commit="n/a", status_lines=None)
 
 
-def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict:
+def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path, plan_hashes: Path, out: Path) -> dict:
     if phase != "phase2":
         raise RuntimeError(f"phase2_review_apply: Phase 2 only, not {phase!r}")
     out = Path(out)
     if out.exists() and any(out.iterdir()):
         raise MappingError(f"{out} exists and is not empty: outputs go only to a new folder")
-    paths = input_paths(Path(a0), Path(r3), Path(r4), Path(diag))
+    paths = input_paths(Path(a0), Path(r3), Path(r4), Path(diag), Path(gex), Path(plans), Path(plan_hashes))
     files = all_files(paths)
     before = {str(p): sha256(p) for p in files}
     sess = S.phase_sessions("phase2")
@@ -326,7 +394,16 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict
     gs = unique(read_diag(paths["diag"]["gex_sessions"]), lambda r: r["session"], "diag gex_sessions")
     if sorted(gs) != [d.isoformat() for d in sess]:
         raise MappingError(f"diag gex_sessions: sessions {sorted(gs)} are not the 21 registered sessions")
-    session_numeric = {k: {d: fnum(gs[d.isoformat()].get(k)) for d in sess} for k in SESSION_NUMERIC}
+    cr_sess = cr_ps_sessions(paths["ref"]["gex"], sess)
+    session_numeric = {"pc_gamma_ratio": {d: fnum(gs[d.isoformat()].get("pc_gamma_ratio")) for d in sess},
+                       "cr_ps_width": {d: (v if isinstance(v, float) else None) for d, v in cr_sess.items()}}
+    reg = registered_sidecar_hashes(paths["ref"]["plan_hashes"])
+    pre = {}
+    for r in (r for s in STRATEGIES for r in ledgers[s]):
+        ds = r["date"]
+        if ds not in pre:
+            p = paths["plan"][ds]
+            pre[ds] = premarket(p, reg.get(ds), before[str(p)])
 
     tapes: Dict[Path, TapeData] = {}
     cands: Dict[Path, dict] = {}
@@ -369,6 +446,9 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict
                     miss[name] += 1
                     continue
                 check_diag_row(f"diag {name}", dr, r, led_sha[s], dec)
+                if name == "gex" and not same_cr_ps(dr.get("cr_ps_width", ""), cr_sess[RP.entry_session(r)]):
+                    raise MappingError(f"diag gex {s} {tid}: cr_ps_width {dr.get('cr_ps_width')!r} differs from the session "
+                                       f"value {cr_sess[RP.entry_session(r)]!r}")
                 for c in cols:
                     tg[c] = dr.get(c, "")
             lr = l1.get(tid) if s == "R4" else None
@@ -378,10 +458,10 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict
                 tg[L1_TAG] = lr.get("l1_side_inherited", "")
             elif s == "R4":
                 miss["l1"] += 1
-            tg.update(NOT_RUN_TAGS)
+            tg.update(pre[r["date"]])
             tags[tid] = tg
         missing[s] = dict(miss)
-        cats = list(GEX_CAT) + list(EXIT_CAT) + [L1_TAG] + list(CVD_CAT) + list(NOT_RUN_TAGS)
+        cats = list(GEX_CAT) + list(EXIT_CAT) + [L1_TAG] + list(CVD_CAT) + list(PREMARKET)
         classes[s] = {p: RP.class_table(s, RP.in_pop(ledgers[s], ds), reviews, tags, session_numeric, cats)
                       for p, ds in pops.items()}
         all_tab = classes[s]["ALL"]
@@ -400,7 +480,8 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict
                 row[k + "_session_value"] = session_numeric[k].get(inp["session"])
                 row[k + "_tercile"] = by_cls[tid][k + "_tercile"]
             row["cr_ps_width_trade_value"] = tags[tid].get("cr_ps_width", "") or "NA"
-            row["cr_ps_width_tercile"] = NOT_RUN_NUMERIC["cr_ps_width"]
+            row["premarket_label"] = PREMARKET_LABEL
+            row.update(NOT_RUN_AT_ENTRY)
             for k in BS_FIELDS:
                 row[k] = tags[tid].get(k, "") or "NA"
             row["label"] = LABEL
@@ -429,8 +510,9 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, out: Path) -> dict
                script_sha256=sha256(Path(__file__)), git=git_state(Path(__file__).resolve().parents[1]),
                generated=dt.datetime.now().isoformat(timespec="seconds"), sessions=[d.isoformat() for d in sess],
                trades_per_strategy={s: len(ledgers[s]) for s in STRATEGIES}, review_rows=len(review_rows),
-               missing_diag_rows=missing, not_run=dict(**NOT_RUN_TAGS, **{k + "_tercile": v for k, v in NOT_RUN_NUMERIC.items()},
-                                                       BREAKOUT_SPEED="raw values listed per trade; not counted"),
+               missing_diag_rows=missing, not_run=dict(**NOT_RUN_AT_ENTRY, BREAKOUT_SPEED="raw values listed per trade; not counted"),
+               premarket_label=PREMARKET_LABEL, premarket_by_session=pre,
+               cr_ps_width_sessions_in_cutoffs=sum(1 for v in session_numeric["cr_ps_width"].values() if v is not None),
                inputs_sha256_before=before, inputs_sha256_after=after, inputs_unchanged=True,
                outputs=["phase2_review.csv", "phase2_review_classes.json", "phase2_review_manifest.json"])
     with open(out / "phase2_review_manifest.json", "x", encoding="utf-8") as f:
@@ -445,9 +527,13 @@ def main(argv=None):
     ap.add_argument("--r3-run", required=True)
     ap.add_argument("--r4-run", required=True)
     ap.add_argument("--diag", required=True)
+    ap.add_argument("--gex", required=True, help="K:/Book1A_inputs/gex_levels_block1.csv")
+    ap.add_argument("--plans", required=True, help="book1a/Phase2/plans_phase2")
+    ap.add_argument("--plan-hashes", required=True, help="book1a/Phase2/plan_hashes_phase2.md")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
-    r = run(a.phase, Path(a.a0_run), Path(a.r3_run), Path(a.r4_run), Path(a.diag), Path(a.out))
+    r = run(a.phase, Path(a.a0_run), Path(a.r3_run), Path(a.r4_run), Path(a.diag), Path(a.gex), Path(a.plans),
+            Path(a.plan_hashes), Path(a.out))
     print(f"review rows {len(r['rows'])} -> {a.out}")
     return 0
 
