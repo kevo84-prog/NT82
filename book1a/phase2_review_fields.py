@@ -30,7 +30,9 @@ import numpy as np
 
 from book1a import sessions as S
 
-VERSION = "phase2-review-fields-v1.1"   # v1.1 (Nov 6, 2026): session-close cut (Book 1 calendar), compute() wired for phase2
+VERSION = "phase2-review-fields-v1.2"   # v1.2 (Nov 8, 2026): phase argument, phase3 allowed (Phase 3 Step A6); phase2 unchanged
+                                        # v1.1 (Nov 6, 2026): session-close cut (Book 1 calendar), compute() wired for phase2
+PHASES = ("phase2", "phase3")           # the phases whose registration uses these fields
 TICK = 0.25
 WINDOW_MIN = 30
 
@@ -109,15 +111,15 @@ TRADE_KEYS = ("strategy", "trade_id", "session", "side", "signal_time", "decisio
 
 
 def compute(phase: str, trades, ticks_for, bars_for) -> list:
-    """Phase 2 review fields for every trade. Refuses every phase other than "phase2" (registered: computed in Phase 2 only).
+    """Review fields for every trade. Refuses every phase not in PHASES (phase2; phase3 from v1.2, Nov 8, 2026).
 
     trades     iterable of dicts with TRADE_KEYS: session (date), side (+1 / -1), the times as naive CT datetimes
                (exit_time None when the ledger has none), prices as floats (target None when the ledger has none);
     ticks_for  session -> (t, p): that session's trade times (np.datetime64[us], ascending) and prices;
     bars_for   session -> dict(end, o, h, l, c, vol, delta): that session's 1-minute bars (end = bar end time).
     Returns one dict per trade: strategy, trade_id, session, the session close used, then a), b) and c)."""
-    if phase != "phase2":
-        raise RuntimeError(f"phase2_review_fields: computed in Phase 2 only, not in {phase!r}")
+    if phase not in PHASES:
+        raise RuntimeError(f"phase2_review_fields: computed in {PHASES} only, not in {phase!r}")
     out = []
     for x in trades:
         missing = [k for k in TRADE_KEYS if k not in x]

@@ -1,0 +1,644 @@
+{
+ "version": "c2-vwap-tag-only-v1.0",
+ "phase": "phase3",
+ "variant": "C2: VWAP as a tag only (VWAP family not counted)",
+ "maps": "K:\\Book1A_runner\\code\\book1a\\Phase3\\runs\\maps_phase3",
+ "base_plans": "K:\\Book1A_runner\\code\\book1a\\Phase3\\plans_phase3",
+ "built_utc": "2026-11-08T21:28:22+00:00",
+ "rows": [
+  {
+   "session": "2025-12-05",
+   "base_plan_sha256": "331bb412c4987b6007a818910f18b63dec36fd73439ccbb528765a467a903c26",
+   "plan_sha256": "de4108f72df96c07e2aea0d8128e8521fa63b58afe2f5ad4676d960097237e5c",
+   "sidecar_sha256": "f1a02440bae3f29f4b1e4b34156aaeed204616dae20fa889930172a9b69142f5",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 4,
+   "zones_only_in_base": [
+    "25514.75-25530.0"
+   ],
+   "zones_only_in_c2": [
+    "25425.0-25470.0"
+   ],
+   "market_context": "BULLISH",
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2025-12-08",
+   "base_plan_sha256": "996bc4a0e23c3adbec3ef668eea34ba9bf51f2de82b44b66fd2128f985d3bd17",
+   "plan_sha256": "6401c500a22c6e4bcf0e67392e46056e5b4715ea2e1e35ecf93c8f03aea1af02",
+   "sidecar_sha256": "0e069b12830c097376aa0ef958977a2ccb708d5de5eecafe7064d697d70c56fb",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-09",
+   "base_plan_sha256": "e49204297ae7f088d038f470a239f908aae764ec10feb2cf6d6dceb71ebcfeef",
+   "plan_sha256": "dd8936ae2e83e049ed41edd1fc5246236006d9ccd816849541b240d7aa4aaed5",
+   "sidecar_sha256": "0b89c436f1c70cacf376e1ef488e239912ceb093a795fcd3c7bef122143e8018",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-10",
+   "base_plan_sha256": "d53fbc074c59964cb5bf0dbd7f0e11c8272e1dd30fd44433acd90bc9ed6b74b5",
+   "plan_sha256": "3a40bb646b783235790b15da296bd21c41939b310e4cc3215f65cfdf67bca72c",
+   "sidecar_sha256": "1b8f8a9ebb976a2d0a9b5d2a575fb92275f8f5a0bd7a39331680c53808787fb7",
+   "identical_to_base": false,
+   "base_decision_zones": 2,
+   "decision_zones": 2,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-11",
+   "base_plan_sha256": "fa86171857dbd7dc6fd7675bdb30bc0243fe4a38ab7ddade30ebe754761d7759",
+   "plan_sha256": "6ac9e9b7b2a31125046d495374980e2a7bb8d48b2ce70131862cb45d391a94a7",
+   "sidecar_sha256": "714d88060c00677f868380e5012e10be1c33bfef5dc738d5dbdaf5ddc68894f9",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 4,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-12",
+   "base_plan_sha256": "e14cc825e51cffdd4a468b79637ad66c560733643788c749c8a0404dd9696cc9",
+   "plan_sha256": "8646e05304f6ec3d7ea8da0d73445c5ca61973598fd35ba70637f2ae930b818a",
+   "sidecar_sha256": "2cbd983544a37463d2d9db07476760ceac41e3bcd88c98992b9a9e17e034ab4b",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-15",
+   "base_plan_sha256": "088fef8e130184f70579574146dc381253b10b6caea984d264272391b124050d",
+   "plan_sha256": "b51e5203ad1c6fa8ce29f80df71064f42b5cba86812f2e8ac0cc19dd20df5b35",
+   "sidecar_sha256": "fef995f595b0db531057738513e221c7c9a9e1e7d9c90e3612824579e42258dd",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [
+    "25544.75-25590.0"
+   ],
+   "zones_only_in_c2": [
+    "25359.75-25402.0"
+   ],
+   "market_context": "BULLISH",
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2025-12-16",
+   "base_plan_sha256": "3d778ced0d768e19da8a2edb9da932ee5471d4086f3d6f0ec27fc47e30a08648",
+   "plan_sha256": "eb61b13d2dd6ec746f3e6873d69c9a6cd3781b978499da894f7864bab037e31e",
+   "sidecar_sha256": "b4df50ed10f663621b74e67b9e7a06136ad8be7bddc604497eba082f1e871de8",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-17",
+   "base_plan_sha256": "47af84f12ca0a36f46dea3bedb193ea5636478b30ad246d829274161e636d1cd",
+   "plan_sha256": "84fbcf9426d4390dc0b42a468212707706453095af021632e6a2914d3e1d81fe",
+   "sidecar_sha256": "37a8eb9523e428a78ccf77203269813bc1aa4fef3d81a87204b9fb5dd7c3937c",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-18",
+   "base_plan_sha256": "b7164e59aa7753eedf389d3c1f8866f2005d1aadb837ec24a77894214787816b",
+   "plan_sha256": "91dd2381c55c4fd7e4541920b1de2060ea948d79c322f07e4e8a59236bdca8a2",
+   "sidecar_sha256": "d230f611de32d6510fd8dde223de1bf3fbe61ca6080b08e1599115f2960687b3",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-19",
+   "base_plan_sha256": "243458b94a84d00bb9cdf35b84d55abada0633b773ea912e934d45a50a4412b3",
+   "plan_sha256": "bccf7ecad85fa10dc6eddbc95242c0d099171f9496ea1382d62d7a17d3609906",
+   "sidecar_sha256": "62869e0a2317068e0dda51e93ef6331afaf86e4d0047075d36daf4587ecba06b",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "25407.5-25454.75"
+   ],
+   "zones_only_in_c2": [
+    "25407.75-25454.75"
+   ],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-22",
+   "base_plan_sha256": "5cc11e1489af947fd748ffd9763dc7c596f3df9aa63f10d6c5078892b512c4d2",
+   "plan_sha256": "e410ab9299e2138888e11c7ef3d2addd52e8cfe877f12f37a132efab1d23c07c",
+   "sidecar_sha256": "44facffdab075e3423d279e4c0b981db1c714218ab5743d797d062f8df0ab8e4",
+   "identical_to_base": false,
+   "base_decision_zones": 2,
+   "decision_zones": 2,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [
+    "25714.25-25724.75"
+   ],
+   "zones_only_in_c2": [
+    "25562.5-25605.25"
+   ],
+   "market_context": "BULLISH",
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2025-12-23",
+   "base_plan_sha256": "82262a18c50e36d30e12d33c54417a05930452ef2b0483086e53c914b7780b63",
+   "plan_sha256": "e10abb7fb313d91296e2c58915a9320ba747dbe785acaae86e54cde5eb74c664",
+   "sidecar_sha256": "6cda63efe4ad91cbc4e737df6aa8eea81b83fd0c247b2dcbdd95d69edb74346a",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-24",
+   "base_plan_sha256": "4010c548ec4403ec34f89b5b81b9d70c908dda7ed3e2e0737565dd0c13dd57b3",
+   "plan_sha256": "4f2258da4af66726813d509e34b3c71f7bfcbb9c4a63d9361a49f5ca6ab50905",
+   "sidecar_sha256": "410ce2b822937dbd35fe82796f956c7690d7917aec158e7a4c67350b73935d6b",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "25719.75-25729.75"
+   ],
+   "zones_only_in_c2": [
+    "25657.0-25718.5"
+   ],
+   "market_context": "BULLISH",
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2025-12-26",
+   "base_plan_sha256": "36f71f66ab0148df498d921cca9d9d816e5a30710665bbdac20b25d43bbc46a2",
+   "plan_sha256": "1a3750fe247258ed3484930feb0f6e1c79c94adfa3c40d6eee76c5ec8b6e91ff",
+   "sidecar_sha256": "d94154a3acd1180d8c61a9d0574bcd3efacc450dd4f62169ccf6da15f0c951ad",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-29",
+   "base_plan_sha256": "77edab989bd71c17fb81a5ddc1d38fd7ed2095a5792c6c8cb2a09e6e676e48d4",
+   "plan_sha256": "de70ab69554812c27fbdcaaee8dbde3aa1d60a792e854e8446c095574e9b84f9",
+   "sidecar_sha256": "011729fbf3e08a6fb0f9b3a7a68e07c3818744ca1044a2eb8741af8f9999bfb3",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-30",
+   "base_plan_sha256": "63616f87fd380d01199ab287a643bc9a8e63b8f3afac4d6235aa89854c9d12ef",
+   "plan_sha256": "aaa6e1c6501acdb6216a98410d1a13421105a420f3272f6dacc0cf086b06026b",
+   "sidecar_sha256": "6f8b5f8d598929d8e1c7d46234327f0729cecc4a58b6335c90979aaff211bc75",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2025-12-31",
+   "base_plan_sha256": "8f1636dd4195e54e978edeb39edc2ff30178c5c5d10a3d09185afa12c7875010",
+   "plan_sha256": "0e5ac4f3850933cc24a18c59b7ac297660f3b6c965bf38dc63407c18547f81ef",
+   "sidecar_sha256": "ce72ac8af50ebe5d99fdf7b863c839aa90caf0442e87793a3aac24b309fbd9b0",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "25570.0-25580.0"
+   ],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-02",
+   "base_plan_sha256": "57170c2fef2547788913b9def5407bc034f09cfe3d0c11a02e55cdf323283638",
+   "plan_sha256": "6735a66ee34196d6f7a897cc78326265bbde41913aee0ecff2e243342f856844",
+   "sidecar_sha256": "8195c42e7435cd48ab8efed5c6cb6bee83478f25e7d117c0fbe2ecd53a0da670",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-05",
+   "base_plan_sha256": "f89de701c600704b4d6922f5422d619299c4bc64b5a64b4d612e4402aead8fcf",
+   "plan_sha256": "bf1aa58969d978e0245285fc36485a0082188b754e10ff8f0c5d9d5ad32a25f8",
+   "sidecar_sha256": "2a356045d45a0d1ce403d1e3708073e4c0df2b20cf2a06c0b5d13ea9a4354650",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-06",
+   "base_plan_sha256": "a7635f72a2a5ff2fe743a4b565909b6e371808e3eecfd36a5cc0de826931a153",
+   "plan_sha256": "b9c37fd5f4fba63e1a1d73532f89b3805651a848fb6139f1ff2e482ec5b5daeb",
+   "sidecar_sha256": "cae84fafb0579488d0ffaa0b5338d23ff7457f57a65e613aba5cf7d91a17b400",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-07",
+   "base_plan_sha256": "9a2173cb9b0e0ae4bf13156ca58c1a8a1ce8cafe483036209bb45047498c0d51",
+   "plan_sha256": "04780bfc004b63a58fde49ff2b991a1b331a2687ae6237034e6b1dadacc44c0e",
+   "sidecar_sha256": "fe31b0c18073bdc465e18a16a047dcf10d91ed175dcd088e01facf00d66bf496",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-08",
+   "base_plan_sha256": "8da4888e1a4852f1ea127251f2d44f6e790bc9e2f098692e9dc9e09278c851a6",
+   "plan_sha256": "411d78978fc9f6ef432e9e7bb62ddacd8572523f57503902153cd7a8dbcfe5cd",
+   "sidecar_sha256": "656874efcdfd6a03f9b7061f25655c3e179daecad39c26a384e925958ca35257",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-09",
+   "base_plan_sha256": "d2e8d4459afea28ab0398e3835d49eac53d357fe3da5cf583d942641597edd92",
+   "plan_sha256": "dd251f114f08b58407430d0c26f64357b14f536ed939bb8d22c3d5355a73d9d5",
+   "sidecar_sha256": "c6838544482945b937d643727fae88d6e92ec3f435ff6b946e87b1664045c05d",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 4,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-12",
+   "base_plan_sha256": "c8c6352f999e4182a3fd5ab3131a50a69e73b6ff1e3016597e7b9e1cdd8f2f67",
+   "plan_sha256": "81c584fb7a325144700deb0ce21aab5fc71aa07ffb5a39a4f1a703874bb06ccc",
+   "sidecar_sha256": "73d7f56f67f8ffa7cc2ff617bf1622ae118b136fa2396b9985678e4542daf001",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [
+    "25794.0-25819.75"
+   ],
+   "zones_only_in_c2": [
+    "25884.75-25909.0"
+   ],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-13",
+   "base_plan_sha256": "9be6bb80ba8b1bb3722f624d6797ddf874496b09aa718867768235723a726274",
+   "plan_sha256": "182abcfa944f9c4b5758144d2ba040bfcfa8eeaef6a367fdfd84b444a3cf528f",
+   "sidecar_sha256": "2d5e3c424b6dad2448a66377d1408a1325b21d8ac57b75a0fa87bd44ed5861ba",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [
+    "25914.75-25929.75"
+   ],
+   "zones_only_in_c2": [
+    "25738.5-25775.0"
+   ],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-14",
+   "base_plan_sha256": "f712dfb60a42432de024b925f36b090af13bac572dc9f7c77f64528187d166c6",
+   "plan_sha256": "dcb0a85e3b5eeb73a77cd309a106d7dfab91b63a076a06020e4574ec05729e04",
+   "sidecar_sha256": "8aa365f39e210421adf39432be18e2cf6ceb4defd4348e48d7317fc219f0cc76",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-15",
+   "base_plan_sha256": "b9e4c075a417313b6479d789817034062dde2552a72619d9e35c18d73fde26dd",
+   "plan_sha256": "f8c548372a470c134520843840e35923155dcc1e510c440155d0076091e7e2a1",
+   "sidecar_sha256": "e7b1892e5125a36a606e95938d61e043fa4c28c9d4ef978d49f98fc482d5c45a",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 4,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-16",
+   "base_plan_sha256": "e63a5a7eeed1b77139ccc0106ef8ef644b79a6205542ef943fd1c1ebe026c2d3",
+   "plan_sha256": "1cdec5494ba2fc40852b414255edf04df5a1ff7e1940e9f070ab5562da64e907",
+   "sidecar_sha256": "bdcf638aa49f95206f3ae1b057a29d13d1024f4c0ca37bd7815b98ee84ca5d83",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-20",
+   "base_plan_sha256": "2b47276debc58b831532357b45f131705b545453280d6928df146ca1076d5404",
+   "plan_sha256": "47e37222c49bee3ac22472b8091599a0c9c11b86741a92fe816517ee738a7420",
+   "sidecar_sha256": "c42e43cebb7b5a100848c42a4f73e54ac1603f705c1fe3093ffb5fa331108597",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "25265.0-25275.0"
+   ],
+   "zones_only_in_c2": [
+    "25415.75-25446.0"
+   ],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-21",
+   "base_plan_sha256": "01bc0ae10096afa3c7636400c471ae43b937b6db871550a4b61a07aaab072ac3",
+   "plan_sha256": "e8336d067993f4be9548670cac903918b8d7596e1344d74000582fc94c500070",
+   "sidecar_sha256": "e70c873318c2561cd687a3e30bb3d6e966d42b2da827f4c633d1d0ee009baedc",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 4,
+   "zones_only_in_base": [
+    "25075.0-25085.0",
+    "25254.75-25294.75"
+   ],
+   "zones_only_in_c2": [
+    "25020.0-25030.0",
+    "25415.75-25434.75"
+   ],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-22",
+   "base_plan_sha256": "f6254159f73350aeadf4d50a95f1dcfb79935d38c6890364e620be979afff6dc",
+   "plan_sha256": "8f27506b01e57c76566a42ec8705602fc38d72ce87a77acbf5531542530535ef",
+   "sidecar_sha256": "455af114a24f3667f9d9f82b2c06785ec2c84eafd56221049285966f0fd9931f",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-23",
+   "base_plan_sha256": "a686f08608551f7a6de59e00c5f52fb4ade40094f09de06983495fa4a492339c",
+   "plan_sha256": "d1ab5435f1104599ed36f4c412606728bf55340ad68003a0d71472b6348c1c75",
+   "sidecar_sha256": "aeb408b45da99c3535e737aa3460d6843f77adaf1ca23c5679eab7ded1c250c3",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 2,
+   "zones_only_in_base": [
+    "25378.5-25417.0"
+   ],
+   "zones_only_in_c2": [
+    "25185.0-25225.0"
+   ],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-26",
+   "base_plan_sha256": "a69adfb6d47184a4d7e1fbe6dd53b6f93a05c15d72d99d6c0cf815c1c4ffd9a6",
+   "plan_sha256": "3b820ac10bf6a738630c1e256df0ccf596fa7a6df63d187059e37f3f10ecafd1",
+   "sidecar_sha256": "4bfe04bb82fd1e26b4702c0a5cb2212d99836c745b457bc5e0b4cb8dc388aa2e",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BULLISH",
+   "review": "LOG_ONLY"
+  },
+  {
+   "session": "2026-01-27",
+   "base_plan_sha256": "c1a7df04d90dfaa6c566a07f5cf77cd7c7c48eda1bab72162dc20fb9bb1630fe",
+   "plan_sha256": "888f51460d2de2d9f7d0c4651ff8e141cabd5cb5c1ba31d7735873214264357e",
+   "sidecar_sha256": "42e2c7049786bc3cf7cc63e9b448ecd9cf1303e3f18768dc3227eb0efa0cb943",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "25955.0-25972.25"
+   ],
+   "zones_only_in_c2": [
+    "25875.0-25910.0"
+   ],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-28",
+   "base_plan_sha256": "05221fe313940da10230433ed01a643dcb9dc78abcc653acff1699a779007209",
+   "plan_sha256": "966d68d1f4a57bf3714162914eb4135caee97046c8941aaf7bd7a372eec00060",
+   "sidecar_sha256": "0b8f24206dc6eeba98ce8e864607c7c191f26cbc1fa48f96a03e600226f154fd",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [
+    "26287.5-26332.5"
+   ],
+   "zones_only_in_c2": [],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-29",
+   "base_plan_sha256": "4b484911e9d295da376807544775b54a891cafb9ad833ec828593c5f5f23ad92",
+   "plan_sha256": "f2d8f9c7f831c94a7c5150e4e285f6f9881da52c74be3bda5e3fb1e56b820113",
+   "sidecar_sha256": "782d05d7bf9ca7d0f1408438d23b4b8b3ad07a2064cb243d1f8815b0778bd1dc",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [
+    "26035.0-26054.75",
+    "26190.0-26205.0"
+   ],
+   "zones_only_in_c2": [
+    "25972.5-26033.25",
+    "26194.75-26205.0"
+   ],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-01-30",
+   "base_plan_sha256": "e5c5774e88923ce17c82466e185e0fa35f03d78c0c027ca49f559a299907b250",
+   "plan_sha256": "8499a82e0c4174bf69057ccdabfb33c78819a95d19f5ae25b0f8bb6604d510ae",
+   "sidecar_sha256": "bcb6ea994dcc2eaf2ea0336a82e0861767dd4aeac94743652e5557e4d85de048",
+   "identical_to_base": false,
+   "base_decision_zones": 5,
+   "decision_zones": 5,
+   "base_zones_with_vwap": 3,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-02-02",
+   "base_plan_sha256": "3974527997fc1fb6d67de1d23ed7c0f5f93600ae1719c25396d07cd19d143160",
+   "plan_sha256": "d992f35635d3b77adb08892de78e377e5c6f8792e527cdadcf31e47d8397ef3c",
+   "sidecar_sha256": "64b216f9199572f8c4bd0e02ebb63d297860071562a1e3354f5bb04fbbd377a2",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [
+    "25373.75-25415.0"
+   ],
+   "zones_only_in_c2": [
+    "25373.75-25413.75"
+   ],
+   "market_context": "BEARISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-02-03",
+   "base_plan_sha256": "6f95eb5ac6806b4cddde37c3701489f5e2c6e1aa31384dfd3e12c98da76988d5",
+   "plan_sha256": "760ff5a242dd4c69959fcf7e082b877c290fc62e5562a1e5dd62aa2cb60bb95d",
+   "sidecar_sha256": "0d1cd8fc3cbbf17a1b365347a85bbde6ac8adc6f9ea085ac54de41bdba7139f2",
+   "identical_to_base": false,
+   "base_decision_zones": 3,
+   "decision_zones": 3,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BULLISH",
+   "review": "APPROVED"
+  },
+  {
+   "session": "2026-02-04",
+   "base_plan_sha256": "3c5bf5cf56753847f7a79caa735bf8abee4238709de0ca14de3c1c0bcda9c87c",
+   "plan_sha256": "2fc6c531fd60d970c9c7a86246cf671f494e6f80df4af356afb5063a2e000dad",
+   "sidecar_sha256": "68d933e3c62f3e4dc2ffde14af962def4d7a73ea62aa34bd723ee87dc280a263",
+   "identical_to_base": false,
+   "base_decision_zones": 4,
+   "decision_zones": 4,
+   "base_zones_with_vwap": 1,
+   "zones_only_in_base": [],
+   "zones_only_in_c2": [],
+   "market_context": "BALANCED",
+   "review": "APPROVED"
+  }
+ ]
+}

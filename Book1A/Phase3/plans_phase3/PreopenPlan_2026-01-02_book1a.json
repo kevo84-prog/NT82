@@ -1,0 +1,699 @@
+{
+ "plan": [
+  "# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)",
+  "plan_id=2026-01-02-b1a",
+  "date=2026-01-02",
+  "asof=08:25",
+  "packet_asof=08:10",
+  "context=Bearish",
+  "context_note=Book 1A context rule; htf_val=24905.0 htf_vah=25884.75 wk_val_state=INSIDE wk_vah_state=INSIDE",
+  "zone=25595.00-25617.00|D_WKTVAL_PWKL_WKVAL_ONVAL|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=25622.75-25653.00|D_PWKVAL_ONTPOC_PDVAH_PDTVAH_PWKTVAL_PD3L|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=25660.00-25722.50|D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=25725.00-25759.75|D_PD2POC_ONTVAH_ONVAH_PD2VAH_ONH_PD3VAH_P2|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=25769.75-25834.75|T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a",
+  "zone=24900.00-24910.00|T_HTFVAL|TARGET",
+  "zone=25439.50-25461.75|T_D_PDL_ONL_PDSET|TARGET",
+  "zone=25532.50-25545.00|T_PDVAL_PDTVAL|TARGET",
+  "zone=25575.00-25605.00|T_PDPOC_AREA|TARGET",
+  "zone=25625.00-25635.00|T_DELTA_BUY_WK|TARGET",
+  "zone=25625.00-25635.00|T_DELTA_BUY_ON|TARGET",
+  "zone=25715.00-25730.00|T_DELTA_SELL_WK|TARGET",
+  "zone=25788.75-25798.75|T_PD2H|TARGET",
+  "zone=25879.75-25889.75|T_HTFVAH|TARGET",
+  "zone=25930.25-25940.25|T_PWKH|TARGET",
+  "balance=25496.75-25644.00",
+  "balance_poc=25590.00",
+  "invalidate_above=25776.50|Balanced",
+  "macro=not verified (backtest)",
+  "news=not used (backtest)",
+  "# --- Book 1A fields (logged by S1.4, not read) ---",
+  "market_context=BEARISH",
+  "draw_status=ACTIVE",
+  "context_base=BEARISH",
+  "htf_acceptance=NONE",
+  "# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58",
+  "context_source=BASE",
+  "weekly_guard=PASS",
+  "htfval_state=accept=INSIDE|failed_reclaim=0",
+  "htfvah_state=accept=INSIDE|failed_reclaim=0",
+  "draw=25645.00-25655.00|CR_0DTE",
+  "value_follows=WITH_PRICE",
+  "on_inventory=NET_LONG",
+  "on_vs_settle=237.5",
+  "htf_structure=BALANCE",
+  "gex_regime=NEG",
+  "vwap_0810=25643.79",
+  "wkvwap_0810=25673.95",
+  "vwap_vs_price=50.46",
+  "wkval_state=accept=INSIDE|failed_reclaim=0",
+  "wkvah_state=accept=INSIDE|failed_reclaim=0",
+  "zone_meta=D_WKTVAL_PWKL_WKVAL_ONVAL|families=4|AUCTION_VALUE,DELTA,VOLUME,GEX|levels=8|ONVAL,WKVAL,HVL,PS_0DTE,HVL_0DTE,T_DELTA_SELL_WK,T_DELTA_SELL_PD,PDPOC_AREA|first_touch=YES|tests=9|edge_control=SELLERS|accept=INSIDE|stop_ticks=90",
+  "side_conflict=D_WKTVAL_PWKL_WKVAL_ONVAL|long|context=INITIATION,edge_control=ANY",
+  "ladder=D_WKTVAL_PWKL_WKVAL_ONVAL|long|TP1=25779.00-25819.00|TP2=|RUN=25771.00-25781.00|R_TP1=7.20|R_TP2=|R_RUN=6.84",
+  "ladder=D_WKTVAL_PWKL_WKVAL_ONVAL|short|TP1=25577.50-25587.50|TP2=25500.00-25510.00|RUN=25532.50-25542.50|R_TP1=0.33|R_TP2=3.78|R_RUN=2.33",
+  "zone_meta=D_PWKVAL_ONTPOC_PDVAH_PDTVAH_PWKTVAL_PD3L|families=6|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,GEX,VWAP|levels=13|PDVAH,PD3L,ONTPOC,VWAP,PWKVAL,VWAP,HVL,CR_0DTE,HVL_0DTE,T_DELTA_SELL_WK,T_DELTA_BUY_WK,T_DELTA_SELL_PD,T_DELTA_BUY_ON|first_touch=YES|tests=8|edge_control=MIXED|accept=None|stop_ticks=123",
+  "ladder=D_PWKVAL_ONTPOC_PDVAH_PDTVAH_PWKTVAL_PD3L|long|TP1=25779.00-25819.00|TP2=|RUN=25771.00-25781.00|R_TP1=4.10|R_TP2=|R_RUN=3.84",
+  "ladder=D_PWKVAL_ONTPOC_PDVAH_PDTVAH_PWKTVAL_PD3L|short|TP1=25607.00-25617.00|TP2=25575.00-25605.00|RUN=25605.75-25615.75|R_TP1=0.19|R_TP2=0.58|R_RUN=0.23",
+  "zone_meta=D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A|families=5|STRUCTURE,DELTA,VOLUME,GEX,VWAP|levels=15|PDH,PD2L,ONPOC,VWAPU1,WKPOC,PWKPOC,HTFPOC,VWAP_SD1_UP,WKVWAP,CR_0DTE,T_DELTA_SELL_WK,T_DELTA_SELL_WK,T_DELTA_SELL_ON,WKPOC_AREA,ONPOC_AREA|first_touch=YES|tests=8|edge_control=SELLERS|accept=None|stop_ticks=252",
+  "side_conflict=D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A|long|context=INITIATION,edge_control=ANY",
+  "zone_meta=D_PD2POC_ONTVAH_ONVAH_PD2VAH_ONH_PD3VAH_P2|families=5|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,VWAP|levels=9|ONVAH,ONTVAH,ONH,VWAPU1,VWAP_SD1_UP,WKVWAP_SD1_UP,T_DELTA_SELL_WK,T_DELTA_BUY_WK,WKPOC_AREA|first_touch=YES|tests=9|edge_control=MIXED|accept=None|stop_ticks=141",
+  "ladder=D_PD2POC_ONTVAH_ONVAH_PD2VAH_ONH_PD3VAH_P2|long|TP1=25779.00-25819.00|TP2=|RUN=25771.00-25781.00|R_TP1=0.55|R_TP2=|R_RUN=0.32",
+  "ladder=D_PD2POC_ONTVAH_ONVAH_PD2VAH_ONH_PD3VAH_P2|short|TP1=25695.00-25705.00|TP2=25625.00-25635.00|RUN=25605.75-25615.75|R_TP1=0.57|R_TP2=2.55|R_RUN=3.10",
+  "zone_meta=T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH|families=3|AUCTION_VALUE,STRUCTURE,DELTA|levels=5|PD2H,PD3H,WKVAH,PWKVAH,T_DELTA_BUY_WK|first_touch=YES|tests=9|edge_control=None|accept=INSIDE|stop_ticks=262",
+  "research_check_b=pass",
+  "research_check_f=none",
+  "research_1adr_would_drop=none",
+  "research_60pt_would_cut=D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A,T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH",
+  "gex_model=MQ_REPLICA",
+  "gex_source=EOD_PRIOR",
+  "mq_cr=26000.00",
+  "mq_ps=24500.00",
+  "mq_hvl=25625.00",
+  "mq_cr_0dte=25650.00",
+  "mq_ps_0dte=25600.00",
+  "mq_hvl_0dte=25625.00",
+  "# --- review ---",
+  "review=APPROVED",
+  "review_note=Z3: PDPOC_AREA at the balance POC: TARGET only; C: D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A long NONE: 1 NQ does not fit $1000 (stop 252 ticks); C: D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A short NONE: 1 NQ does not fit $1000 (stop 252 ticks); C: T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH long NONE: 1 NQ does not fit $1000 (stop 262 ticks); C: T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH short NONE: 1 NQ does not fit $1000 (stop 262 ticks)",
+  "end=1"
+ ],
+ "date": "2026-01-02",
+ "as_of": "2026-01-02T08:10:00-06:00",
+ "market_context": "BEARISH",
+ "context_base": "BEARISH",
+ "htf_acceptance": "NONE",
+ "context_source": "BASE",
+ "weekly_guard": "PASS",
+ "htf_acceptance_states": [
+  {
+   "level_name": "HTFVAL",
+   "level": 24905.0,
+   "state": "INSIDE",
+   "failed_reclaim": false,
+   "minutes_since_first_close": null,
+   "close_share": null,
+   "volume_share": null,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  },
+  {
+   "level_name": "HTFVAH",
+   "level": 25884.75,
+   "state": "INSIDE",
+   "failed_reclaim": false,
+   "minutes_since_first_close": null,
+   "close_share": null,
+   "volume_share": null,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  }
+ ],
+ "review": "APPROVED",
+ "fails": [],
+ "notes": [
+  "Z3: PDPOC_AREA at the balance POC: TARGET only",
+  "C: D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A long NONE: 1 NQ does not fit $1000 (stop 252 ticks)",
+  "C: D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A short NONE: 1 NQ does not fit $1000 (stop 252 ticks)",
+  "C: T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH long NONE: 1 NQ does not fit $1000 (stop 262 ticks)",
+  "C: T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH short NONE: 1 NQ does not fit $1000 (stop 262 ticks)"
+ ],
+ "research": {
+  "rej_zones_before_selection": 2,
+  "would_drop_1adr": [],
+  "would_cut_60pt": [
+   "D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A",
+   "T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH"
+  ],
+  "decision_zones_beyond_cap": [
+   "D_ONTVAL_PDPOC_PDTPOC"
+  ],
+  "check_b": "pass",
+  "check_f_would_set": []
+ },
+ "zones": [
+  {
+   "label": "D_WKTVAL_PWKL_WKVAL_ONVAL",
+   "lo": 25595.0,
+   "hi": 25617.0,
+   "long": "INITIATION",
+   "short": "ANY",
+   "families": [
+    "AUCTION_VALUE",
+    "DELTA",
+    "VOLUME",
+    "GEX"
+   ],
+   "levels": [
+    "ONVAL",
+    "WKVAL",
+    "HVL",
+    "PS_0DTE",
+    "HVL_0DTE",
+    "T_DELTA_SELL_WK",
+    "T_DELTA_SELL_PD",
+    "PDPOC_AREA"
+   ],
+   "ladder": {
+    "long": {
+     "TP1": "25779.00-25819.00",
+     "TP2": "",
+     "RUN": "25771.00-25781.00",
+     "R_TP1": "7.20",
+     "R_TP2": "",
+     "R_RUN": "6.84"
+    },
+    "short": {
+     "TP1": "25577.50-25587.50",
+     "TP2": "25500.00-25510.00",
+     "RUN": "25532.50-25542.50",
+     "R_TP1": "0.33",
+     "R_TP2": "3.78",
+     "R_RUN": "2.33"
+    }
+   },
+   "stop_ticks": 90,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  },
+  {
+   "label": "D_PWKVAL_ONTPOC_PDVAH_PDTVAH_PWKTVAL_PD3L",
+   "lo": 25622.75,
+   "hi": 25653.0,
+   "long": "INITIATION",
+   "short": "ANY",
+   "families": [
+    "AUCTION_VALUE",
+    "STRUCTURE",
+    "DELTA",
+    "VOLUME",
+    "GEX",
+    "VWAP"
+   ],
+   "levels": [
+    "PDVAH",
+    "PD3L",
+    "ONTPOC",
+    "VWAP",
+    "PWKVAL",
+    "VWAP",
+    "HVL",
+    "CR_0DTE",
+    "HVL_0DTE",
+    "T_DELTA_SELL_WK",
+    "T_DELTA_BUY_WK",
+    "T_DELTA_SELL_PD",
+    "T_DELTA_BUY_ON"
+   ],
+   "ladder": {
+    "long": {
+     "TP1": "25779.00-25819.00",
+     "TP2": "",
+     "RUN": "25771.00-25781.00",
+     "R_TP1": "4.10",
+     "R_TP2": "",
+     "R_RUN": "3.84"
+    },
+    "short": {
+     "TP1": "25607.00-25617.00",
+     "TP2": "25575.00-25605.00",
+     "RUN": "25605.75-25615.75",
+     "R_TP1": "0.19",
+     "R_TP2": "0.58",
+     "R_RUN": "0.23"
+    }
+   },
+   "stop_ticks": 123,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  },
+  {
+   "label": "D_ONPOC_PD2L_PD3VAL_PD3TVAL_PDH_PD2VAL_P9_WKPOC_AREA_ONPOC_A",
+   "lo": 25660.0,
+   "hi": 25722.5,
+   "long": "NONE",
+   "short": "NONE",
+   "families": [
+    "STRUCTURE",
+    "DELTA",
+    "VOLUME",
+    "GEX",
+    "VWAP"
+   ],
+   "levels": [
+    "PDH",
+    "PD2L",
+    "ONPOC",
+    "VWAPU1",
+    "WKPOC",
+    "PWKPOC",
+    "HTFPOC",
+    "VWAP_SD1_UP",
+    "WKVWAP",
+    "CR_0DTE",
+    "T_DELTA_SELL_WK",
+    "T_DELTA_SELL_WK",
+    "T_DELTA_SELL_ON",
+    "WKPOC_AREA",
+    "ONPOC_AREA"
+   ],
+   "ladder": {},
+   "stop_ticks": 252,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  },
+  {
+   "label": "D_PD2POC_ONTVAH_ONVAH_PD2VAH_ONH_PD3VAH_P2",
+   "lo": 25725.0,
+   "hi": 25759.75,
+   "long": "INITIATION",
+   "short": "ANY",
+   "families": [
+    "AUCTION_VALUE",
+    "STRUCTURE",
+    "DELTA",
+    "VOLUME",
+    "VWAP"
+   ],
+   "levels": [
+    "ONVAH",
+    "ONTVAH",
+    "ONH",
+    "VWAPU1",
+    "VWAP_SD1_UP",
+    "WKVWAP_SD1_UP",
+    "T_DELTA_SELL_WK",
+    "T_DELTA_BUY_WK",
+    "WKPOC_AREA"
+   ],
+   "ladder": {
+    "long": {
+     "TP1": "25779.00-25819.00",
+     "TP2": "",
+     "RUN": "25771.00-25781.00",
+     "R_TP1": "0.55",
+     "R_TP2": "",
+     "R_RUN": "0.32"
+    },
+    "short": {
+     "TP1": "25695.00-25705.00",
+     "TP2": "25625.00-25635.00",
+     "RUN": "25605.75-25615.75",
+     "R_TP1": "0.57",
+     "R_TP2": "2.55",
+     "R_RUN": "3.10"
+    }
+   },
+   "stop_ticks": 141,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  },
+  {
+   "label": "T_WKTVAH_WKVAH_REJ_HIGH_WK_D_PD3H_PWKVAH_PWKTVAH",
+   "lo": 25769.75,
+   "hi": 25834.75,
+   "long": "NONE",
+   "short": "NONE",
+   "families": [
+    "AUCTION_VALUE",
+    "STRUCTURE",
+    "DELTA"
+   ],
+   "levels": [
+    "PD2H",
+    "PD3H",
+    "WKVAH",
+    "PWKVAH",
+    "T_DELTA_BUY_WK"
+   ],
+   "ladder": {},
+   "stop_ticks": 262,
+   "available_at": "2026-01-02T08:10:00-06:00"
+  }
+ ],
+ "targets": [
+  {
+   "label": "T_HTFVAL",
+   "lo": 24900.0,
+   "hi": 24910.0
+  },
+  {
+   "label": "D_PDL_ONL_PDSET",
+   "lo": 25439.5,
+   "hi": 25461.75
+  },
+  {
+   "label": "T_PDVAL_PDTVAL",
+   "lo": 25532.5,
+   "hi": 25545.0
+  },
+  {
+   "label": "T_PD2H",
+   "lo": 25788.75,
+   "hi": 25798.75
+  },
+  {
+   "label": "T_HTFVAH",
+   "lo": 25879.75,
+   "hi": 25889.75
+  },
+  {
+   "label": "T_PWKH",
+   "lo": 25930.25,
+   "hi": 25940.25
+  },
+  {
+   "label": "PDPOC_AREA",
+   "lo": 25575.0,
+   "hi": 25605.0
+  },
+  {
+   "label": "T_DELTA_BUY_WK",
+   "lo": 25625.0,
+   "hi": 25635.0
+  },
+  {
+   "label": "T_DELTA_SELL_WK",
+   "lo": 25715.0,
+   "hi": 25730.0
+  },
+  {
+   "label": "T_DELTA_BUY_ON",
+   "lo": 25625.0,
+   "hi": 25635.0
+  }
+ ],
+ "rej_flip_zones": [
+  {
+   "lo": 25779.0,
+   "hi": 25819.0,
+   "kind": "REJ_HIGH",
+   "session": "WK",
+   "formed_ct": "2025-12-29T08:38:00-06:00",
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "IMB",
+   "departure_pts": 73.5,
+   "tags": "",
+   "stack": "WKVAH|PWKVAH",
+   "class": "TARGET",
+   "label": "",
+   "swing_price": 25819.0,
+   "swing_index": 6231,
+   "confirmed_ct": "2025-12-29T08:53:00-06:00",
+   "components": [
+    {
+     "kind": "REJ_HIGH",
+     "formed_ct": "2025-12-29T08:38:00-06:00",
+     "confirmed_ct": "2025-12-29T08:53:00-06:00"
+    }
+   ]
+  }
+ ],
+ "map4_areas": [
+  {
+   "lo": 25690.0,
+   "hi": 25720.0,
+   "kind": "MAP4_AREA",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "WKPOC_AREA",
+   "peak_row_lo": 25695.0,
+   "peak_volume": 49490
+  },
+  {
+   "lo": 25575.0,
+   "hi": 25605.0,
+   "kind": "MAP4_AREA",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "PDPOC_AREA",
+   "peak_row_lo": 25580.0,
+   "peak_volume": 16002
+  },
+  {
+   "lo": 25690.0,
+   "hi": 25705.0,
+   "kind": "MAP4_AREA",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "ONPOC_AREA",
+   "peak_row_lo": 25695.0,
+   "peak_volume": 5429
+  }
+ ],
+ "delta_bands": [
+  {
+   "lo": 25570.0,
+   "hi": 25580.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_WK",
+   "sign": "SELL",
+   "profile": "WK",
+   "delta_sum": -1512,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25615.0,
+   "hi": 25625.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_WK",
+   "sign": "SELL",
+   "profile": "WK",
+   "delta_sum": -1473,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25625.0,
+   "hi": 25635.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_BUY_WK",
+   "sign": "BUY",
+   "profile": "WK",
+   "delta_sum": 1388,
+   "role": "TARGET"
+  },
+  {
+   "lo": 25680.0,
+   "hi": 25695.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_WK",
+   "sign": "SELL",
+   "profile": "WK",
+   "delta_sum": -2599,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25715.0,
+   "hi": 25730.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_WK",
+   "sign": "SELL",
+   "profile": "WK",
+   "delta_sum": -2289,
+   "role": "TARGET"
+  },
+  {
+   "lo": 25755.0,
+   "hi": 25765.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_BUY_WK",
+   "sign": "BUY",
+   "profile": "WK",
+   "delta_sum": 1672,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25500.0,
+   "hi": 25510.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_PD",
+   "sign": "SELL",
+   "profile": "PD",
+   "delta_sum": -641,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25565.0,
+   "hi": 25580.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_PD",
+   "sign": "SELL",
+   "profile": "PD",
+   "delta_sum": -2069,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25615.0,
+   "hi": 25625.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_PD",
+   "sign": "SELL",
+   "profile": "PD",
+   "delta_sum": -1317,
+   "role": "TAG_ONLY"
+  },
+  {
+   "lo": 25625.0,
+   "hi": 25635.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_BUY_ON",
+   "sign": "BUY",
+   "profile": "ON",
+   "delta_sum": 737,
+   "role": "TARGET"
+  },
+  {
+   "lo": 25680.0,
+   "hi": 25695.0,
+   "kind": "DELTA_BAND",
+   "session": "",
+   "formed_ct": null,
+   "available_at": "2026-01-02T08:10:00-06:00",
+   "arrival_evidence": "",
+   "departure_pts": 0.0,
+   "tags": "",
+   "stack": "",
+   "class": "TARGET",
+   "label": "T_DELTA_SELL_ON",
+   "sign": "SELL",
+   "profile": "ON",
+   "delta_sum": -780,
+   "role": "TAG_ONLY"
+  }
+ ],
+ "dd_edge": null,
+ "dd_edge_wk": null,
+ "weekly_dd": {
+  "available": true,
+  "double_distribution": false,
+  "hvn_blocks": 1,
+  "profile": "WK",
+  "status": "AVAILABLE",
+  "rule": "ours: PD rule applied to weekly",
+  "version": "weekly-dd-v1.1",
+  "window_start": "2025-12-28T17:00:00-06:00",
+  "window_end": "2026-01-02T08:10:00-06:00",
+  "last_trade_ct": "2026-01-02T08:09:58.903344-06:00",
+  "available_at": "2026-01-02T08:10:00-06:00"
+ },
+ "vwap": {
+  "SESSION": {
+   "session_date": "2026-01-02",
+   "scope": "SESSION",
+   "window_start_ct": "2026-01-01T17:00:00-06:00",
+   "window_end_ct": "2026-01-02T08:10:00-06:00",
+   "n_trades": 49969,
+   "volume": 71054,
+   "vwap": 25643.786564,
+   "sd": 77.121283,
+   "sd1_up": 25720.907847,
+   "sd1_dn": 25566.665281,
+   "available_at_ct": "2026-01-02T08:10:00-06:00"
+  },
+  "WEEKLY": {
+   "session_date": "2026-01-02",
+   "scope": "WEEKLY",
+   "window_start_ct": "2025-12-28T17:00:00-06:00",
+   "window_end_ct": "2026-01-02T08:10:00-06:00",
+   "n_trades": 664131,
+   "volume": 1028614,
+   "vwap": 25673.953962,
+   "sd": 85.998522,
+   "sd1_up": 25759.952484,
+   "sd1_dn": 25587.95544,
+   "available_at_ct": "2026-01-02T08:10:00-06:00"
+  }
+ }
+}

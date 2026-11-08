@@ -1,0 +1,67 @@
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
+plan_id=2025-12-24-b1a
+date=2025-12-24
+asof=08:25
+packet_asof=08:10
+context=Bullish
+context_note=Book 1A context rule; htf_val=24630.0 htf_vah=25624.75 wk_val_state=INSIDE wk_vah_state=ACCEPTED_ABOVE
+zone=25657.00-25718.50|D_WKVAL_PDVAL_PWKH_PD2TVAL_PD2VAL_PDTVAL_P5_WKPOC_AREA|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25749.75-25817.50|D_WKTVAH_WKVAH_PDPOC_PDTPOC_ONL_PDVAH_P9_REJ_HIGH_WK_PDPOC_A|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25817.75-25836.75|D_PDH_ONH|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=24625.00-24635.00|T_HTFVAL|TARGET
+zone=24882.75-24892.75|T_PWKL|TARGET
+zone=25155.00-25165.00|T_PWKTVAL|TARGET
+zone=25173.00-25183.00|T_PWKVAL|TARGET
+zone=25305.00-25322.50|T_D_PWKPOC_PWKTPOC_HTFPOC|TARGET
+zone=25352.00-25362.00|T_PD3L|TARGET
+zone=25490.00-25500.00|T_PD3TVAL|TARGET
+zone=25514.00-25524.75|T_D_PD3VAL_PWKTVAH|TARGET
+zone=25532.00-25542.00|T_PWKVAH|TARGET
+zone=25562.50-25605.25|T_PD3TPOC_PD3POC_PD3TVAH_PD3VAH_PD3H|TARGET
+zone=25640.00-25650.00|T_WKTVAL|TARGET
+zone=25715.00-25725.00|T_DELTA_BUY_WK|TARGET
+zone=25719.75-25729.75|T_PD2TVAH|TARGET
+invalidate_below=25624.25|Balanced
+macro=not verified (backtest)
+news=not used (backtest)
+# --- Book 1A fields (logged by S1.4, not read) ---
+market_context=BULLISH
+draw_status=NONE
+context_base=NONE_NO_EVIDENCE
+htf_acceptance=ABOVE
+# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=HTF_ACCEPTANCE
+weekly_guard=PASS
+htfval_state=accept=INSIDE|failed_reclaim=0
+htfvah_state=accept=ABOVE|failed_reclaim=0
+value_follows=WITH_PRICE
+on_inventory=NET_LONG
+on_vs_settle=6.25
+htf_structure=BALANCE
+gex_regime=POS
+vwap_0810=25803.70
+wkvwap_0810=25717.86
+vwap_vs_price=14.80
+wkval_state=accept=INSIDE|failed_reclaim=0
+wkvah_state=accept=ABOVE|failed_reclaim=0
+zone_meta=D_WKVAL_PDVAL_PWKH_PD2TVAL_PD2VAL_PDTVAL_P5_WKPOC_AREA|families=3|AUCTION_VALUE,DELTA,VOLUME|levels=8|PDVAL,WKPOC,WKVAL,WKVWAP,WKVWAP_SD1_DN,T_DELTA_SELL_WK,T_DELTA_BUY_WK,WKPOC_AREA|first_touch=YES|tests=7|edge_control=MIXED|accept=INSIDE|stop_ticks=248
+zone_meta=D_WKTVAH_WKVAH_PDPOC_PDTPOC_ONL_PDVAH_P9_REJ_HIGH_WK_PDPOC_A|families=5|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,GEX|levels=28|PDVAH,PDPOC,PDTPOC,PDH,PD2H,ONVAH,ONPOC,ONVAL,ONTVAH,ONTPOC,ONTVAL,ONL,VWAP,VWAPU1,VWAPL1,WKVAH,VWAP,VWAP_SD1_UP,VWAP_SD1_DN,WKVWAP_SD1_UP,CR,HVL,CR_0DTE,PS_0DTE,HVL_0DTE,T_DELTA_BUY_ON,PDPOC_AREA,ONPOC_AREA|first_touch=YES|tests=5|edge_control=BUYERS|accept=ACCEPTED_ABOVE|stop_ticks=273
+zone_meta=D_PDH_ONH|families=3|AUCTION_VALUE,STRUCTURE,DELTA|levels=7|PDH,ONVAH,ONTVAH,ONH,VWAPU1,VWAP_SD1_UP,T_DELTA_BUY_ON|first_touch=YES|tests=4|edge_control=BUYERS|accept=None|stop_ticks=78
+ladder=D_PDH_ONH|long|TP1=|TP2=|RUN=|R_TP1=|R_TP2=|R_RUN=
+ladder=D_PDH_ONH|short|TP1=25754.75-25794.75|TP2=25715.00-25725.00|RUN=25657.00-25667.00|R_TP1=1.18|R_TP2=4.76|R_RUN=7.73
+research_check_b=would fail: no decision zone on each side (logged only)
+research_check_f=none
+research_1adr_would_drop=none
+research_60pt_would_cut=D_WKVAL_PDVAL_PWKH_PD2TVAL_PD2VAL_PDTVAL_P5_WKPOC_AREA,D_WKTVAH_WKVAH_PDPOC_PDTPOC_ONL_PDVAH_P9_REJ_HIGH_WK_PDPOC_A
+gex_model=MQ_REPLICA
+gex_source=EOD_PRIOR
+mq_cr=25800.00
+mq_ps=24500.00
+mq_hvl=25750.00
+mq_cr_0dte=25800.00
+mq_ps_0dte=25750.00
+mq_hvl_0dte=25770.00
+# --- review ---
+review=LOG_ONLY
+review_note=A: half day; C: D_WKVAL_PDVAL_PWKH_PD2TVAL_PD2VAL_PDTVAL_P5_WKPOC_AREA long NONE: 1 NQ does not fit $1000 (stop 248 ticks); C: D_WKVAL_PDVAL_PWKH_PD2TVAL_PD2VAL_PDTVAL_P5_WKPOC_AREA short NONE: 1 NQ does not fit $1000 (stop 248 ticks); C: D_WKTVAH_WKVAH_PDPOC_PDTPOC_ONL_PDVAH_P9_REJ_HIGH_WK_PDPOC_A long NONE: 1 NQ does not fit $1000 (stop 273 ticks); C: D_WKTVAH_WKVAH_PDPOC_PDTPOC_ONL_PDVAH_P9_REJ_HIGH_WK_PDPOC_A short NONE: 1 NQ does not fit $1000 (stop 273 ticks)
+end=1

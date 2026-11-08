@@ -23,3 +23,11 @@ Rule thresholds that look like results were kept on purpose: the +0.5 R break-ev
 lower bound of -0.1 R, and the sensitivity band of +/-0.10 R per session.
 
 New: `Phase1b_diagnostics_spec.md`, the results-free definitions and acceptance criteria for Phase 1b.
+
+Nov 8, 2026: Book1A_replay_plan.md updated by the checker to the Drive version of Nov 6 (Nov 4 wide-zone report and
+stop-model sentence in section 5; Nov 4 and Nov 6 change-log entries). Nothing else changed; no Book 1 result added.
+sha256 ba4a7d5f2801a78f36c6069c082240b72d577166d3a0d0c8b341ec1e6034848f.
+
+Nov 8, 2026 (runner, Phase 3 Step A, Kyron's instruction): Book1A_replay_plan.md section 8 Part 3 row (Unresolved ->
+Jan 12, Jan 14, Jan 16, 2026 EXPOSED) and a Nov 8 change-log row; Book1A_open_items.md item N7a (Block 2 go / no-go
+audit) beside N7. The checker applies the same text to the Drive docs. No Book 1 result added.

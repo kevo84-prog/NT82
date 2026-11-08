@@ -44,6 +44,8 @@ N6 (not needed before Phase 0; due before final validation). Exposure register: 
 
 N7 (not needed before Phase 0; due before Block 2 validation, only after a "go"). Jul–Aug check: confirm Jul 1 – Aug 31, 2026 has not shaped any Book 1A choice beyond the excluded video sessions. If it has, it becomes exploratory and final confirmation moves to later unseen data.
 
+N7a (added Nov 8, 2026, Kyron; for the Book 1A Block 2 go / no-go review; beside N7, which it does not replace). Audit whether the StrongCandidate export, the Strategy21F depth logs and the detector research covering May 29 – Aug 31, 2026 influenced any Book 1A design decision. Jul 1 – Aug 31, 2026 stays reserved for Book 1A Block 2 validation, subject to that audit. If the audit establishes that those sessions shaped Book 1A rules, the affected sessions become exploratory and final confirmation moves to later untouched data. Not part of Phase 3 Step A.
+
 N8. Block 2 go / no-go: rule written in the replay plan section 9, applied after the Phase 4 replay.
 
 ## **3\. Needed: our values (Jeron gives the idea, no number)**

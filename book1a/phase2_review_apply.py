@@ -65,6 +65,10 @@ a trade outside the 21 sessions; no candidate row, conflicting candidate times, 
 row shows; U volume in a confirm bar; a per-trade cr_ps_width unlike its session's; a plan sidecar whose sha256 is not
 the registered one, two draw_status lines, or a market_context line unlike the top-level key; a duplicate GEX session; a trade without an exit time (overlap check undefined); an input whose sha256
 changed during the run; a review count that differs from the ledger count. Outputs go only to a new --out folder.
+
+v1.2 (Nov 8, 2026, Phase 3 Step A6): generalized only by the phase argument. --phase phase3 runs the same code on the
+41 Phase 3 sessions (their exposure set in phase2_report.EXPOSED_BY_PHASE, their plans and plan hash table); outputs
+are named <phase>_review*.  --phase phase2 is unchanged (same rules, same output names).
 """
 from __future__ import annotations
 
@@ -86,7 +90,12 @@ from book1a import bars as BARS, diag_phase1b as DG, phase2_report as RP, phase2
 from book1a.book1_import import jeron_engine  # noqa: F401
 from jeron_engine import fills
 
-VERSION = "phase2-review-apply-v1.1"
+VERSION = "phase2-review-apply-v1.2"   # v1.2 (Nov 8, 2026): phase argument (phase3 allowed); phase2 unchanged
+PHASES = ("phase2", "phase3")
+AMENDMENT = {"phase2": "post-freeze reporting implementation amendment (Nov 7, 2026); not part of the frozen "
+                       "implementation; tag book1a-phase2-frozen stays on e1d37a1",
+             "phase3": "Phase 3 reporting code, registered in Phase3_registration.md (Step A, Nov 8, 2026) before any "
+                       "Phase 3 run; the same v1.1 rules, generalized only by the phase argument"}
 LABEL = "replay (in-sample), descriptive only"
 STRATEGIES = ("R1", "R2", "R3", "R4")
 GEX_CAT = ("gamma_regime", "hvl_side", "pin_zone")
@@ -159,7 +168,7 @@ def fnum(x) -> Optional[float]:
     return v if np.isfinite(v) else None
 
 
-def input_paths(a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path, plan_hashes: Path) -> dict:
+def input_paths(a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path, plan_hashes: Path, phase: str = "phase2") -> dict:
     def jofs(run: Path) -> Path:
         x = sorted((run / "strategy").glob("JOFS_*.csv"))
         if len(x) != 1:
@@ -177,7 +186,7 @@ def input_paths(a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path
         diag=dict(gex=diag / "diag_gex_trades.csv", exit=diag / "diag_exit_trades.csv", cvd=diag / "diag_cvd_trades.csv",
                   l1=diag / "diag_l1_plan_side.csv", gex_sessions=diag / "diag_gex_sessions.csv"),
         ref=dict(gex=gex, plan_hashes=plan_hashes),
-        plan={d.isoformat(): plans / f"PreopenPlan_{d.isoformat()}_book1a.json" for d in S.phase_sessions("phase2")})
+        plan={d.isoformat(): plans / f"PreopenPlan_{d.isoformat()}_book1a.json" for d in S.phase_sessions(phase)})
 
 
 # ------------------------------------------------------------------ v1.1: session cr_ps_width, premarket plan fields
@@ -359,17 +368,18 @@ def git_state(cwd: Path) -> dict:
 
 
 def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: Path, plan_hashes: Path, out: Path) -> dict:
-    if phase != "phase2":
-        raise RuntimeError(f"phase2_review_apply: Phase 2 only, not {phase!r}")
+    if phase not in PHASES:
+        raise RuntimeError(f"phase2_review_apply: {PHASES} only, not {phase!r}")
     out = Path(out)
     if out.exists() and any(out.iterdir()):
         raise MappingError(f"{out} exists and is not empty: outputs go only to a new folder")
-    paths = input_paths(Path(a0), Path(r3), Path(r4), Path(diag), Path(gex), Path(plans), Path(plan_hashes))
+    paths = input_paths(Path(a0), Path(r3), Path(r4), Path(diag), Path(gex), Path(plans), Path(plan_hashes), phase)
     files = all_files(paths)
     before = {str(p): sha256(p) for p in files}
-    sess = S.phase_sessions("phase2")
+    sess = S.phase_sessions(phase)
     sess_set = set(sess)
-    pops = RP.populations(sess)
+    pops = RP.populations(sess, phase)
+    nsess, pname = len(sess), {"phase2": "Phase 2", "phase3": "Phase 3"}[phase]
 
     # ledgers
     ledgers, led_sha = {}, {}
@@ -378,7 +388,7 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
         unique(rows, lambda r: r["trade_id"], f"{s} ledger")
         for r in rows:
             if RP.entry_session(r) not in sess_set:
-                raise MappingError(f"{s} {r['trade_id']}: session {r['date']} is not one of the 21 Phase 2 sessions")
+                raise MappingError(f"{s} {r['trade_id']}: session {r['date']} is not one of the {nsess} {pname} sessions")
         ledgers[s], led_sha[s] = rows, before[str(paths["ledger"][s])]
 
     # diagnostics, keyed on (strategy, trade_id)
@@ -393,7 +403,7 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
     l1 = unique([r for r in read_diag(paths["diag"]["l1"]) if r["strategy"] == "R4"], lambda r: r["event"], "diag l1_plan_side")
     gs = unique(read_diag(paths["diag"]["gex_sessions"]), lambda r: r["session"], "diag gex_sessions")
     if sorted(gs) != [d.isoformat() for d in sess]:
-        raise MappingError(f"diag gex_sessions: sessions {sorted(gs)} are not the 21 registered sessions")
+        raise MappingError(f"diag gex_sessions: sessions {sorted(gs)} are not the {nsess} registered sessions")
     cr_sess = cr_ps_sessions(paths["ref"]["gex"], sess)
     session_numeric = {"pc_gamma_ratio": {d: fnum(gs[d.isoformat()].get("pc_gamma_ratio")) for d in sess},
                        "cr_ps_width": {d: (v if isinstance(v, float) else None) for d, v in cr_sess.items()}}
@@ -428,7 +438,7 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
         if any(x["exit_time_raw"] is None for x in xs.values()):
             raise MappingError(f"{s}: a trade has no exit time; the overlap check is undefined")
         overlap[s] = RP.check_no_overlap(ledgers[s], lambda t: dt.datetime.fromisoformat(xs[t["trade_id"]]["exit_time_raw"]))
-        rev = F.compute("phase2", inputs, td.ticks_for, td.bars_for)
+        rev = F.compute(phase, inputs, td.ticks_for, td.bars_for)
         reviews = unique(rev, lambda r: r["trade_id"], f"{s} review")
         if sorted(reviews) != sorted(r["trade_id"] for r in ledgers[s]):
             raise MappingError(f"{s}: review trades differ from the ledger trades")
@@ -496,17 +506,16 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
 
     out.mkdir(parents=True, exist_ok=True)
     cols = list(dict.fromkeys(k for r in review_rows for k in r))
-    with open(out / "phase2_review.csv", "x", newline="", encoding="utf-8") as f:
+    with open(out / f"{phase}_review.csv", "x", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for r in review_rows:
             w.writerow({k: ("NA" if r.get(k) is None else r.get(k)) for k in cols})
     res = dict(version=VERSION, label=LABEL, review_fields_version=F.VERSION, report_version=RP.VERSION,
                classes=classes, overlap=overlap, overlap_ok=all(not v for v in overlap.values()))
-    with open(out / "phase2_review_classes.json", "x", encoding="utf-8") as f:
+    with open(out / f"{phase}_review_classes.json", "x", encoding="utf-8") as f:
         f.write(json.dumps(res, indent=1, default=str))
-    man = dict(version=VERSION, amendment="post-freeze reporting implementation amendment (Nov 7, 2026); not part of the "
-               "frozen implementation; tag book1a-phase2-frozen stays on e1d37a1",
+    man = dict(version=VERSION, phase=phase, amendment=AMENDMENT[phase],
                script_sha256=sha256(Path(__file__)), git=git_state(Path(__file__).resolve().parents[1]),
                generated=dt.datetime.now().isoformat(timespec="seconds"), sessions=[d.isoformat() for d in sess],
                trades_per_strategy={s: len(ledgers[s]) for s in STRATEGIES}, review_rows=len(review_rows),
@@ -514,8 +523,8 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
                premarket_label=PREMARKET_LABEL, premarket_by_session=pre,
                cr_ps_width_sessions_in_cutoffs=sum(1 for v in session_numeric["cr_ps_width"].values() if v is not None),
                inputs_sha256_before=before, inputs_sha256_after=after, inputs_unchanged=True,
-               outputs=["phase2_review.csv", "phase2_review_classes.json", "phase2_review_manifest.json"])
-    with open(out / "phase2_review_manifest.json", "x", encoding="utf-8") as f:
+               outputs=[f"{phase}_review.csv", f"{phase}_review_classes.json", f"{phase}_review_manifest.json"])
+    with open(out / f"{phase}_review_manifest.json", "x", encoding="utf-8") as f:
         f.write(json.dumps(man, indent=1, default=str))
     return dict(rows=review_rows, classes=classes, overlap=overlap, manifest=man)
 

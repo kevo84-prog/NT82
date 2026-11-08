@@ -9,6 +9,8 @@ Sample (Phase2_registration.md section 6, G4):
   DRAW_R4    10 R4 trades from the other 17 sessions;
   DRAW_R1R3  10 trades from the R1, R2 and R3 ledgers pooled.
 Both draws are always taken, whatever the trade counts on the fixed days.
+v1.1 (Nov 8, 2026): --phase phase3 (default phase2, unchanged): fixed days Dec 10, Dec 18, 2025, Jan 14, Jan 29, 2026;
+DRAW_R4 from the other 37 Phase 3 sessions; dates checked against Dec 5, 2025 - Feb 4, 2026. Same seed and method.
 Method: each pool is sorted by (strategy, date, entry_time, trade_id); one numpy Generator,
 np.random.default_rng(20251205), draws DRAW_R4 first and DRAW_R1R3 second, each as the first k entries of
 rng.permutation(len(pool)), k = min(10, len(pool)). A pool with fewer than 10 trades is taken whole and marked
@@ -28,11 +30,13 @@ from pathlib import Path
 
 import numpy as np
 
-VERSION = "g4-draw-v1.0"
+VERSION = "g4-draw-v1.1"   # v1.1 (Nov 8, 2026): --phase (phase3 fixed days registered in Phase3_registration.md); phase2 unchanged
 SEED = 20251205
 K = 10
 FIXED_DAYS = ("2025-11-06", "2025-11-12", "2025-11-19", "2025-12-03")
 PHASE2_FIRST, PHASE2_LAST = "2025-11-05", "2025-12-04"
+PHASES = {"phase2": dict(fixed_days=FIXED_DAYS, first=PHASE2_FIRST, last=PHASE2_LAST),
+          "phase3": dict(fixed_days=("2025-12-10", "2025-12-18", "2026-01-14", "2026-01-29"), first="2025-12-05", last="2026-02-04")}
 KEYS = ("strategy", "trade_id", "date", "entry_time")
 COLUMNS = ["draw", "order", "strategy", "trade_id", "date", "entry_time", "pool_size", "note"]
 
@@ -41,7 +45,7 @@ def sha(p: Path) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def read_keys(path: Path, strategy: str) -> list:
+def read_keys(path: Path, strategy: str, phase: str = "phase2") -> list:
     """The key columns of one ledger. The strategy column must start with the expected name (R1 .. R4)."""
     rows = []
     with open(path, newline="", encoding="utf-8-sig") as fh:
@@ -53,8 +57,8 @@ def read_keys(path: Path, strategy: str) -> list:
             k = {c: x[c] for c in KEYS}
             if not k["strategy"].startswith(strategy):
                 raise SystemExit(f"{path}: strategy {k['strategy']!r} is not {strategy}")
-            if not PHASE2_FIRST <= k["date"] <= PHASE2_LAST:
-                raise SystemExit(f"{path}: date {k['date']} outside Phase 2")
+            if not PHASES[phase]["first"] <= k["date"] <= PHASES[phase]["last"]:
+                raise SystemExit(f"{path}: date {k['date']} outside {phase}")
             rows.append(k)
     seen = set()
     for k in rows:
@@ -68,13 +72,13 @@ def order(pool: list) -> list:
     return sorted(pool, key=lambda k: (k["strategy"], k["date"], k["entry_time"], k["trade_id"]))
 
 
-def draw(r1: list, r2: list, r3: list, r4: list, seed: int = SEED, k: int = K) -> list:
+def draw(r1: list, r2: list, r3: list, r4: list, seed: int = SEED, k: int = K, fixed_days=FIXED_DAYS) -> list:
     out = []
-    fixed = order([x for x in r4 if x["date"] in FIXED_DAYS])
+    fixed = order([x for x in r4 if x["date"] in fixed_days])
     for i, x in enumerate(fixed, 1):
         out.append(dict(draw="FIXED_DAY", order=i, **x, pool_size=len(fixed), note=""))
     rng = np.random.default_rng(seed)
-    for name, pool in (("DRAW_R4", order([x for x in r4 if x["date"] not in FIXED_DAYS])), ("DRAW_R1R3", order(r1 + r2 + r3))):
+    for name, pool in (("DRAW_R4", order([x for x in r4 if x["date"] not in fixed_days])), ("DRAW_R1R3", order(r1 + r2 + r3))):
         n = min(k, len(pool))
         idx = rng.permutation(len(pool))[:n] if len(pool) else []
         note = "SHORT_POOL" if len(pool) < k else ""
@@ -88,15 +92,17 @@ def main(argv=None):
     for s in ("r1", "r2", "r3", "r4"):
         ap.add_argument(f"--{s}", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--phase", default="phase2", choices=sorted(PHASES))
     a = ap.parse_args(argv)
+    fixed_days = PHASES[a.phase]["fixed_days"]
     paths = {s: Path(getattr(a, s.lower())) for s in ("R1", "R2", "R3", "R4")}
-    led = {s: read_keys(p, s) for s, p in paths.items()}
-    rows = draw(led["R1"], led["R2"], led["R3"], led["R4"])
+    led = {s: read_keys(p, s, a.phase) for s, p in paths.items()}
+    rows = draw(led["R1"], led["R2"], led["R3"], led["R4"], fixed_days=fixed_days)
     out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=COLUMNS, lineterminator="\n"); w.writeheader(); w.writerows(rows)
     counts = {d: sum(1 for r in rows if r["draw"] == d) for d in ("FIXED_DAY", "DRAW_R4", "DRAW_R1R3")}
-    man = dict(version=VERSION, script_sha256=sha(Path(__file__)), seed=SEED, k=K, fixed_days=list(FIXED_DAYS),
+    man = dict(version=VERSION, phase=a.phase, script_sha256=sha(Path(__file__)), seed=SEED, k=K, fixed_days=list(fixed_days),
                numpy_version=np.__version__, inputs={s: dict(path=str(p), sha256=sha(p)) for s, p in paths.items()},
                sample=str(out), sample_sha256=sha(out), counts=counts, generated=dt.datetime.now().isoformat(timespec="seconds"))
     Path(str(out) + ".manifest.json").write_text(json.dumps(man, indent=1), encoding="utf-8")

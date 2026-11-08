@@ -1,0 +1,76 @@
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
+plan_id=2026-01-05-b1a
+date=2026-01-05
+asof=08:25
+packet_asof=08:10
+context=Bearish
+context_note=Book 1A context rule; htf_val=24870.0 htf_vah=25819.75 wk_val_state=INSIDE wk_vah_state=TESTING
+zone=25439.50-25497.25|D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25523.50-25555.00|D_PWKVAL_PD2VAL_PDVAH_PDTVAH_PD2TVAL_ONVAH_P4|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25663.25-25673.25|T_PD3L|DECISION|long=INITIATION|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25687.00-25747.00|D_PD2H_PD3VAL_PD3TVAL_HTFPOC_PWKPOC_PWKTPOC_P3|DECISION|long=NONE|short=NONE|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=24865.00-24875.00|T_HTFVAL|TARGET
+zone=25275.00-25285.00|T_DELTA_BUY_PD|TARGET
+zone=25390.00-25400.00|T_DELTA_BUY_PD|TARGET
+zone=25421.25-25431.25|T_D_ONVAL_WKVAL|TARGET
+zone=25470.00-25480.00|T_DELTA_BUY_WK|TARGET
+zone=25470.00-25480.00|T_DELTA_BUY_ON|TARGET
+zone=25576.75-25587.50|T_PD2POC_PD2TPOC|TARGET
+zone=25611.75-25621.75|T_ONH|TARGET
+zone=25629.00-25639.75|T_PD2VAH_PD2TVAH|TARGET
+zone=25650.00-25660.00|T_DELTA_SELL_PD|TARGET
+zone=25749.75-25759.75|T_PD3TVAH|TARGET
+zone=25814.75-25824.75|T_HTFVAH|TARGET
+zone=25888.75-25898.75|T_PWKH|TARGET
+balance=25370.25-25633.25
+balance_poc=25600.00
+invalidate_above=25548.50|Balanced
+macro=not verified (backtest)
+news=not used (backtest)
+# --- Book 1A fields (logged by S1.4, not read) ---
+market_context=BEARISH
+draw_status=ACTIVE
+context_base=BEARISH
+htf_acceptance=NONE
+# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=BASE
+weekly_guard=PASS
+htfval_state=accept=INSIDE|failed_reclaim=0
+htfvah_state=accept=INSIDE|failed_reclaim=0
+draw=25545.00-25555.00|HVL
+value_follows=DIVERGENT_UP
+on_inventory=NET_LONG
+on_vs_settle=212.0
+htf_structure=BALANCE
+gex_regime=NEG
+vwap_0810=25507.16
+wkvwap_0810=25507.16
+vwap_vs_price=90.09
+wkval_state=accept=INSIDE|failed_reclaim=0
+wkvah_state=accept=TESTING|failed_reclaim=0
+zone_meta=D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_|families=5|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,VWAP|levels=12|PD2L,ONPOC,ONTPOC,ONTVAL,VWAPL1,WKPOC,VWAP_SD1_DN,WKVWAP_SD1_DN,T_DELTA_BUY_WK,T_DELTA_BUY_ON,WKPOC_AREA,ONPOC_AREA|first_touch=YES|tests=5|edge_control=BUYERS|accept=None|stop_ticks=233
+side_conflict=D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_|long|context=INITIATION,edge_control=ANY; side_conflict=D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_|short|context=ANY,edge_control=INITIATION
+zone_meta=D_PWKVAL_PD2VAL_PDVAH_PDTVAH_PD2TVAL_ONVAH_P4|families=4|AUCTION_VALUE,DELTA,GEX,VWAP|levels=12|PDVAH,ONVAH,ONTVAH,VWAPU1,WKVAH,PWKVAL,VWAP_SD1_UP,WKVWAP_SD1_UP,HVL,HVL_0DTE,T_DELTA_SELL_WK,T_DELTA_SELL_ON|first_touch=YES|tests=7|edge_control=SELLERS|accept=TESTING|stop_ticks=128
+side_conflict=D_PWKVAL_PD2VAL_PDVAH_PDTVAH_PD2TVAL_ONVAH_P4|long|context=INITIATION,edge_control=ANY
+ladder=D_PWKVAL_PD2VAL_PDVAH_PDTVAH_PD2TVAL_ONVAH_P4|long|TP1=25763.75-25803.75|TP2=|RUN=|R_TP1=6.52|R_TP2=|R_RUN=
+ladder=D_PWKVAL_PD2VAL_PDVAH_PDTVAH_PD2TVAL_ONVAH_P4|short|TP1=25457.25-25497.25|TP2=25390.00-25400.00|RUN=25421.25-25431.25|R_TP1=0.82|R_TP2=3.86|R_RUN=2.88
+zone_meta=T_PD3L|families=2|STRUCTURE,DELTA|levels=2|PD3L,T_DELTA_SELL_PD|first_touch=YES|tests=12|edge_control=None|accept=None|stop_ticks=42
+ladder=T_PD3L|long|TP1=25763.75-25803.75|TP2=|RUN=|R_TP1=8.62|R_TP2=|R_RUN=
+ladder=T_PD3L|short|TP1=25457.25-25497.25|TP2=25390.00-25400.00|RUN=25421.25-25431.25|R_TP1=15.81|R_TP2=25.07|R_RUN=22.10
+zone_meta=D_PD2H_PD3VAL_PD3TVAL_HTFPOC_PWKPOC_PWKTPOC_P3|families=3|STRUCTURE,VOLUME,GEX|levels=4|PD2H,PWKPOC,HTFPOC,CR_0DTE|first_touch=YES|tests=6|edge_control=None|accept=None|stop_ticks=242
+research_check_b=pass
+research_check_f=no_trade=08:58-09:15
+research_1adr_would_drop=D_PDL_PWKL_PDVAL
+research_60pt_would_cut=none
+gex_model=MQ_REPLICA
+gex_source=EOD_PRIOR
+mq_cr=26000.00
+mq_ps=24500.00
+mq_hvl=25550.00
+mq_cr_0dte=25700.00
+mq_ps_0dte=25300.00
+mq_hvl_0dte=25550.00
+# --- review ---
+review=APPROVED
+review_note=C: D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_ long NONE: 1 NQ does not fit $1000 (stop 233 ticks); C: D_PD2L_ONTVAL_WKTVAL_ONPOC_WKPOC_ONTPOC_P1_REJ_LOW_PD_WKPOC_ short NONE: 1 NQ does not fit $1000 (stop 233 ticks); C: D_PD2H_PD3VAL_PD3TVAL_HTFPOC_PWKPOC_PWKTPOC_P3 long NONE: 1 NQ does not fit $1000 (stop 242 ticks); C: D_PD2H_PD3VAL_PD3TVAL_HTFPOC_PWKPOC_PWKTPOC_P3 short NONE: 1 NQ does not fit $1000 (stop 242 ticks)
+end=1
