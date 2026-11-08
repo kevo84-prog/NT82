@@ -184,9 +184,12 @@ Comparisons P1 R4 vs R1, P2 R4 vs R3, P3 R3 vs R2 (Phase3_change_list.md). For e
 - bootstrap: `rng = np.random.default_rng(20251205)`, means of `x[rng.integers(0, n, size=(10000, n))]`, lower bound =
   5th percentile; check: lower bound > 0;
 - max drawdown of the arm <= 1.25 x the comparator's (cumulative realized net R, the report card's trade order);
-- trades that differ >= 20, counted as Book 1's `differing_trades`: matched by (date, signal time), signal time = the
-  EvidenceTimeCT of the trade's candidate row in its own strategy log (as `phase2_review_apply` derives it); removed +
-  admitted + entered or exited differently (entry price, exit price or exit time); size is not part of the Book 1 match;
+- trades that differ >= 20, counted as Book 1's `differing_trades`: matched by (date, signal time), signal time as Book
+  1's replay defines it (`arm_replay.replay`: "the candidate's queueing bar", i.e. `arm_replay.attempts` t = the
+  EvidenceTimeCT of the candidate row, or of its CONFIRM row for an AwaitConfirm entry, as HH:MM:SS), taken from each
+  run's own attempts / retests files (source rule in `phase3_compare.py`; corrected Nov 8, 2026 before the freeze: the
+  earlier text said "the candidate row" only, which differs from Book 1 for AwaitConfirm entries); removed + admitted +
+  entered or exited differently (entry price, exit price or exit time); size is not part of the Book 1 match;
 - 2-tick check: the mean per-session paired difference of the slip2 stress ledgers (arm and comparator both at 2 ticks)
   >= 0;
 - pass ("promote") = all four checks; otherwise "insufficient evidence" (replay plan section 9). Book 1's code also
@@ -194,10 +197,23 @@ Comparisons P1 R4 vs R1, P2 R4 vs R3, P3 R3 vs R2 (Phase3_change_list.md). For e
 Also reported for every comparison (section 9): paired daily results, the interval, max drawdown, number of changed
 trades, RISK_REJECT count and RISK_BREACH_FILL events. Net R alone never decides. Seed 20251205.
 
-**Open for Kyron before the tag:** (a) the population that decides (ALL, 41 sessions, or UNEXPOSED, 38); both are
-computed and reported, and the plan does not say which decides in the replay; (b) the comparison code
-(`book1a/phase3_compare.py`, implementing exactly the rule above) is not yet written; it is to be written and tested on
-synthetic ledgers before the tag.
+**Deciding population (registered Nov 8, 2026, before any outcome; Kyron approved, checker and reviewer review of
+Step A):** the primary comparisons P1 (R4 vs R1), P2 (R4 vs R3) and P3 (R3 vs R2) are decided on **ALL 41 sessions**,
+labelled **"in-sample, includes 3 exposed sessions (Part 3)"**. The same rule on the **38 UNEXPOSED sessions** is a
+registered **sensitivity**, never called independent or out-of-sample. If the two verdicts differ, the comparison is
+reported **SENSITIVE_TO_EXPOSED_SESSIONS**; no selection either way (the ALL verdict stays the decision, the UNEXPOSED
+verdict is shown beside it).
+
+**Comparison code:** `book1a/phase3_compare.py` (phase3-compare-v1.0), a thin wrapper that imports and calls Book 1's
+`jeron_engine.arms.promotion` **unchanged** (arm, comparator, sessions, arm_2t, a0_2t; seed 20251205, n 10,000). It only
+maps Book 1A ledger rows to the dicts `arms.promotion` reads: `date` (ledger date), `signal_time` (source rule above),
+`entry` / `exit` (ledger entry_price / exit_price), `exit_time` (ledger date + exit_time), `R` = ledger `realized_net_R`
+(replay plan 4a). Sessions = the registered list of the population (zero-trade sessions included); a population's
+trades are the trades on its sessions. 2-tick inputs = the slip2 stress ledgers (`book1a.run_stress --stress slip2`).
+A duplicate (date, signal_time) key in any strategy, a duplicate trade_id, a missing realized_net_R, a trade outside
+the 41 sessions or a signal time the run files do not give stops the run before `arms.promotion` is called. No formula
+is re-implemented. Output: the `arms.promotion` dict per comparison and population, the population labels and the
+sensitivity label. Tested on synthetic ledgers only (`tests/test_phase3_compare.py`).
 
 ## 6. Change list rule (Phase 4)
 
