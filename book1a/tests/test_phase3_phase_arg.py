@@ -31,7 +31,7 @@ class TestPopulations(unittest.TestCase):
         self.assertFalse(set(pops["ALL"]) & RP.EXPOSED)
 
     def test_report_run_refuses_other_phases(self):
-        for ph in ("phase1", "phase4", "Phase3", ""):
+        for ph in ("phase1", "phase5", "Phase3", ""):
             with self.assertRaises(RuntimeError):
                 RP.run(ph, {}, {}, {}, "x", "y")
 
@@ -54,15 +54,15 @@ class TestReviewFields(unittest.TestCase):
         self.assertEqual(F.compute("phase2", [], None, None), [])
 
     def test_others_refused(self):
-        for ph in ("phase1", "phase4", "PHASE3"):
+        for ph in ("phase1", "phase5", "PHASE3"):
             with self.assertRaises(RuntimeError):
                 F.compute(ph, [], None, None)
 
 
 class TestReviewApply(unittest.TestCase):
-    def test_refuses_phase4(self):
+    def test_refuses_phase5(self):
         with self.assertRaises(RuntimeError):
-            A.run("phase4", *(Path("x"),) * 8)
+            A.run("phase5", *(Path("x"),) * 8)
 
     def test_phase3_plan_paths_are_the_41_sessions(self):
         with tempfile.TemporaryDirectory() as td:

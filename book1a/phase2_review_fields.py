@@ -30,9 +30,10 @@ import numpy as np
 
 from book1a import sessions as S
 
-VERSION = "phase2-review-fields-v1.2"   # v1.2 (Nov 8, 2026): phase argument, phase3 allowed (Phase 3 Step A6); phase2 unchanged
+VERSION = "phase2-review-fields-v1.3"   # v1.3 (Nov 9, 2026): phase4 allowed (Phase 4 Step A); phase2 / phase3 unchanged
+                                        # v1.2 (Nov 8, 2026): phase argument, phase3 allowed (Phase 3 Step A6); phase2 unchanged
                                         # v1.1 (Nov 6, 2026): session-close cut (Book 1 calendar), compute() wired for phase2
-PHASES = ("phase2", "phase3")           # the phases whose registration uses these fields
+PHASES = ("phase2", "phase3", "phase4")  # the phases whose registration uses these fields
 TICK = 0.25
 WINDOW_MIN = 30
 

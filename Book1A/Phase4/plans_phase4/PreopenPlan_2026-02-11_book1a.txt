@@ -1,0 +1,81 @@
+# JeronPreopenPlan v1.5 (Book 1A plan builder, map v2.4 outputs; book1a.plan_v24 plan-v2.4-book1a-v1.6)
+plan_id=2026-02-11-b1a
+date=2026-02-11
+asof=08:25
+packet_asof=08:10
+context=Balanced
+context_note=Book 1A context rule; htf_val=25125.0 htf_vah=25924.75 wk_val_state=INSIDE wk_vah_state=TESTING
+zone=25307.50-25317.50|T_WKTPOC|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25324.75-25334.75|T_ONTVAH|DECISION|long=ANY|short=ANY|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=25394.75-25434.75|D_WKTVAH_PWKPOC_PDTVAH_PDVAH_WKVAH_PWKTPOC_P2|DECISION|long=ANY|short=INITIATION|alt_long=ANY|alt_short=ANY|confidence=med|note=book1a
+zone=24234.75-24244.75|T_PWKL|TARGET
+zone=24695.75-24705.75|T_PD3L|TARGET
+zone=24725.00-24748.25|T_PWKTVAL_PWKVAL|TARGET
+zone=24852.50-24865.00|T_PD3VAL_PD3TVAL|TARGET
+zone=24950.50-24963.00|T_PD2L_PD2VAL|TARGET
+zone=25040.00-25050.00|T_PD3POC|TARGET
+zone=25092.50-25102.50|T_PD3TPOC|TARGET
+zone=25115.00-25125.00|T_DELTA_BUY_WK|TARGET
+zone=25141.25-25151.25|T_ONL|TARGET
+zone=25234.00-25244.00|T_WKVAL|TARGET
+zone=25310.00-25320.00|T_DELTA_BUY_PD|TARGET
+zone=25344.50-25382.50|T_D_ONVAH_PDTPOC_PDPOC_WKPOC_PD2VAH_PD2TPOC|TARGET
+zone=25347.50-25387.50|T_WKPOC_AREA|TARGET
+zone=25350.00-25360.00|T_DELTA_BUY_ON|TARGET
+zone=25390.00-25410.00|T_DELTA_BUY_WK|TARGET
+zone=25442.25-25457.00|T_D_PDH_ONH|TARGET
+zone=25624.00-25634.00|T_PWKVAH|TARGET
+zone=25644.75-25654.75|T_PWKTVAH|TARGET
+zone=25692.50-25702.50|T_HTFPOC|TARGET
+zone=25919.75-25929.75|T_HTFVAH|TARGET
+zone=26022.75-26032.75|T_PWKH|TARGET
+balance=25261.00-25416.50
+balance_poc=25370.00
+macro=not verified (backtest)
+news=not used (backtest)
+# --- Book 1A fields (logged by S1.4, not read) ---
+market_context=BALANCED
+draw_status=NONE
+context_base=BALANCED
+htf_acceptance=NONE
+# htf_acceptance: ours: acceptance outside composite value as context evidence, informed by Jeron Part 1, 00:34:58
+context_source=NONE
+weekly_guard=N/A
+htfval_state=accept=INSIDE|failed_reclaim=0
+htfvah_state=accept=INSIDE|failed_reclaim=0
+value_follows=WITH_PRICE
+on_inventory=NET_LONG
+on_vs_settle=199.5
+htf_structure=BALANCE
+gex_regime=NEG
+vwap_0810=25295.40
+wkvwap_0810=25290.48
+vwap_vs_price=122.35
+wkval_state=accept=INSIDE|failed_reclaim=0
+wkvah_state=accept=TESTING|failed_reclaim=0
+zone_meta=T_WKTPOC|families=2|DELTA,GEX|levels=3|HVL,HVL_0DTE,T_DELTA_BUY_PD|first_touch=YES|tests=12|edge_control=None|accept=None|stop_ticks=42
+ladder=T_WKTPOC|long|TP1=25324.75-25334.75|TP2=25347.50-25387.50|RUN=25409.25-25419.25|R_TP1=0.69|R_TP2=2.86|R_RUN=8.74
+ladder=T_WKTPOC|short|TP1=24955.50-24995.50|TP2=|RUN=25234.00-25244.00|R_TP1=29.71|R_TP2=|R_RUN=6.05
+zone_meta=T_ONTVAH|families=2|AUCTION_VALUE,DELTA|levels=2|ONTVAH,T_DELTA_BUY_PD|first_touch=YES|tests=14|edge_control=None|accept=None|stop_ticks=42
+ladder=T_ONTVAH|long|TP1=25344.50-25354.50|TP2=25390.00-25410.00|RUN=25409.25-25419.25|R_TP1=0.93|R_TP2=5.26|R_RUN=7.10
+ladder=T_ONTVAH|short|TP1=24955.50-24995.50|TP2=|RUN=25234.00-25244.00|R_TP1=31.36|R_TP2=|R_RUN=7.69
+zone_meta=D_WKTVAH_PWKPOC_PDTVAH_PDVAH_WKVAH_PWKTPOC_P2|families=6|AUCTION_VALUE,STRUCTURE,DELTA,VOLUME,GEX,VWAP|levels=7|PDVAH,PD2H,WKVAH,PWKPOC,WKVWAP_SD1_UP,CR_0DTE,T_DELTA_BUY_WK|first_touch=YES|tests=14|edge_control=BUYERS|accept=TESTING|stop_ticks=162
+side_conflict=D_WKTVAH_PWKPOC_PDTVAH_PDVAH_WKVAH_PWKTPOC_P2|short|context=ANY,edge_control=INITIATION
+ladder=D_WKTVAH_PWKPOC_PDTVAH_PDVAH_WKVAH_PWKTPOC_P2|long|TP1=25624.00-25634.00|TP2=|RUN=|R_TP1=4.67|R_TP2=|R_RUN=
+ladder=D_WKTVAH_PWKPOC_PDTVAH_PDVAH_WKVAH_PWKTPOC_P2|short|TP1=24955.50-24995.50|TP2=|RUN=25234.00-25244.00|R_TP1=9.86|R_TP2=|R_RUN=3.72
+research_check_b=would fail: no decision zone on each side (logged only)
+research_check_f=no_trade=08:30-08:40
+research_1adr_would_drop=none
+research_60pt_would_cut=none
+gex_model=MQ_REPLICA
+gex_source=EOD_PRIOR
+mq_cr=26000.00
+mq_ps=25000.00
+mq_hvl=25300.00
+mq_cr_0dte=25400.00
+mq_ps_0dte=25000.00
+mq_hvl_0dte=25310.00
+# --- review ---
+review=APPROVED
+review_note=Z3: D_ONVAH_PDTPOC_PDPOC_WKPOC_PD2VAH_PD2TPOC at the balance POC: TARGET only; Z3: WKPOC_AREA at the balance POC: TARGET only
+end=1

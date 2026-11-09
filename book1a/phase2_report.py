@@ -5,6 +5,8 @@ Written Nov 7, 2026 (Step A follow-up), before any Phase 2 trading run, on synth
 "phase2" and (v1.1, Nov 8, 2026, Phase 3 Step A6: generalized only by the phase argument) "phase3". Each phase has its
 own exposure set (EXPOSED_BY_PHASE, replay plan section 8); every rule below is unchanged. Population sizes are the
 phase's (Phase 2: 21 / 13; Phase 3: 41 / 38).
+v1.2 (Nov 9, 2026, Phase 4 Step A): "phase4" allowed, generalized only by the phase argument (Phase 4: 52 / 43; its
+exposure set = phase4_sessions.EXPOSED, Parts 5 and 6 unresolved weeks); phase2 and phase3 unchanged.
 
 Definitions (registration section 2, implemented exactly):
   trade R            ledger realized_net_R (theoretical R: ledger theoretical_R); trade USD: ledger net_usd
@@ -49,14 +51,19 @@ import numpy as np
 
 from book1a import sessions as S
 
-VERSION = "phase2-report-v1.1"   # v1.1 (Nov 8, 2026): phase argument (phase3 allowed, its own EXPOSED set); phase2 unchanged
+VERSION = "phase2-report-v1.2"   # v1.2 (Nov 9, 2026): phase4 allowed (its own EXPOSED set); phase2 / phase3 unchanged
+# v1.1 (Nov 8, 2026): phase argument (phase3 allowed, its own EXPOSED set); phase2 unchanged
 SEED = 20251205
 B = 10_000
 STRATEGIES = ("R1", "R2", "R3", "R4")
 USD_DRAWDOWN = ("R3", "R4")                       # registered: max drawdown in dollars for R3 / R4
 EXPOSED = {dt.date(2025, 11, d) for d in (17, 18, 19, 20, 21, 24, 25, 26)}
 # replay plan section 8 per phase: Phase 2 Parts 1 and 2; Phase 3 the Part 3 sessions (change log Nov 8, 2026)
-EXPOSED_BY_PHASE = {"phase2": EXPOSED, "phase3": {dt.date(2026, 1, 12), dt.date(2026, 1, 14), dt.date(2026, 1, 16)}}
+EXPOSED_BY_PHASE = {"phase2": EXPOSED, "phase3": {dt.date(2026, 1, 12), dt.date(2026, 1, 14), dt.date(2026, 1, 16)},
+                    # Phase 4 (Nov 9, 2026): Parts 5 and 6 unresolved, the trading weeks of their approximate dates
+                    "phase4": {dt.date(2026, 3, 30), dt.date(2026, 3, 31), dt.date(2026, 4, 1), dt.date(2026, 4, 2),
+                               dt.date(2026, 4, 6), dt.date(2026, 4, 7), dt.date(2026, 4, 8), dt.date(2026, 4, 9),
+                               dt.date(2026, 4, 10)}}
 FLATTEN = dt.time(14, 55)                         # frozen Book 1 fills.FLATTEN
 TOD_BUCKETS = (("08:30-08:45", dt.time(8, 30), dt.time(8, 45)), ("08:45-10:00", dt.time(8, 45), dt.time(10, 0)),
                ("10:00-13:00", dt.time(10, 0), dt.time(13, 0)), ("13:00+", dt.time(13, 0), None))
@@ -355,7 +362,7 @@ def gex_regimes(path, sessions: Sequence[dt.date]) -> Dict[dt.date, Optional[str
 
 
 def run(phase: str, ledgers: Dict[str, str], attempts: Dict[str, str], stress: Dict[str, Dict[str, str]], gex: str, out: str) -> dict:
-    """Step B only. Refuses every phase not in EXPOSED_BY_PHASE (phase2, phase3)."""
+    """Step B only. Refuses every phase not in EXPOSED_BY_PHASE (phase2, phase3, phase4)."""
     if phase not in EXPOSED_BY_PHASE:
         raise RuntimeError(f"phase2_report: {sorted(EXPOSED_BY_PHASE)} only, not {phase!r}")
     sess = S.phase_sessions(phase)

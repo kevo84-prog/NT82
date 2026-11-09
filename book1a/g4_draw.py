@@ -11,6 +11,8 @@ Sample (Phase2_registration.md section 6, G4):
 Both draws are always taken, whatever the trade counts on the fixed days.
 v1.1 (Nov 8, 2026): --phase phase3 (default phase2, unchanged): fixed days Dec 10, Dec 18, 2025, Jan 14, Jan 29, 2026;
 DRAW_R4 from the other 37 Phase 3 sessions; dates checked against Dec 5, 2025 - Feb 4, 2026. Same seed and method.
+v1.2 (Nov 9, 2026): --phase phase4: fixed days Feb 11, Mar 4, Mar 17 and Apr 9, 2026 (registered in Phase4_registration.md
+before any Phase 4 run); DRAW_R4 from the other 48 Phase 4 sessions; dates checked against Feb 5 - Apr 21, 2026.
 Method: each pool is sorted by (strategy, date, entry_time, trade_id); one numpy Generator,
 np.random.default_rng(20251205), draws DRAW_R4 first and DRAW_R1R3 second, each as the first k entries of
 rng.permutation(len(pool)), k = min(10, len(pool)). A pool with fewer than 10 trades is taken whole and marked
@@ -30,13 +32,14 @@ from pathlib import Path
 
 import numpy as np
 
-VERSION = "g4-draw-v1.1"   # v1.1 (Nov 8, 2026): --phase (phase3 fixed days registered in Phase3_registration.md); phase2 unchanged
+VERSION = "g4-draw-v1.2"   # v1.2 (Nov 9, 2026): phase4 fixed days; phase2 / phase3 unchanged. v1.1 v1.1 (Nov 8, 2026): --phase (phase3 fixed days registered in Phase3_registration.md); phase2 unchanged
 SEED = 20251205
 K = 10
 FIXED_DAYS = ("2025-11-06", "2025-11-12", "2025-11-19", "2025-12-03")
 PHASE2_FIRST, PHASE2_LAST = "2025-11-05", "2025-12-04"
 PHASES = {"phase2": dict(fixed_days=FIXED_DAYS, first=PHASE2_FIRST, last=PHASE2_LAST),
-          "phase3": dict(fixed_days=("2025-12-10", "2025-12-18", "2026-01-14", "2026-01-29"), first="2025-12-05", last="2026-02-04")}
+          "phase3": dict(fixed_days=("2025-12-10", "2025-12-18", "2026-01-14", "2026-01-29"), first="2025-12-05", last="2026-02-04"),
+          "phase4": dict(fixed_days=("2026-02-11", "2026-03-04", "2026-03-17", "2026-04-09"), first="2026-02-05", last="2026-04-21")}
 KEYS = ("strategy", "trade_id", "date", "entry_time")
 COLUMNS = ["draw", "order", "strategy", "trade_id", "date", "entry_time", "pool_size", "note"]
 

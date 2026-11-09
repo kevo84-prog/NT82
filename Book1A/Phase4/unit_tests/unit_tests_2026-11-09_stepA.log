@@ -1,0 +1,263 @@
+K:\Book1A_runner\code\book1a\diag_phase1b.py:906: SyntaxWarning: "\B" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\B"? A raw string is also an option.
+  ap.add_argument("--inputs", default=None, help="K:\Book1A_inputs: builds GEX V3, volatility control, pc_gamma_ratio, pin_zone")
+....K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp5cfgys4g\\run\\strategy\\JOFS_test.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp5cfgys4g\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arms.py:37: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp5cfgys4g\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\tests\test_candidate_log.py:50: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp5cfgys4g\\cands.csv' mode='r' encoding='utf-8'>
+  got = list(csv.DictReader(open(out)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..........................................C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpqfn8o793'>
+  _warnings.warn(warn_message, ResourceWarning)
+..C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpc3vusq2o'>
+  _warnings.warn(warn_message, ResourceWarning)
+.C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmp59s44dfn'>
+  _warnings.warn(warn_message, ResourceWarning)
+..C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpx9q08273'>
+  _warnings.warn(warn_message, ResourceWarning)
+C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpcvxiqd7t'>
+  _warnings.warn(warn_message, ResourceWarning)
+.C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpybgr8_qv'>
+  _warnings.warn(warn_message, ResourceWarning)
+.C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpmvbnbcnu'>
+  _warnings.warn(warn_message, ResourceWarning)
+.C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpfp_9_ula'>
+  _warnings.warn(warn_message, ResourceWarning)
+..C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmp12hwv1tl'>
+  _warnings.warn(warn_message, ResourceWarning)
+C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpn810s5no'>
+  _warnings.warn(warn_message, ResourceWarning)
+C:\Users\new\AppData\Local\Python\pythoncore-3.14-64\Lib\tempfile.py:962: ResourceWarning: Implicitly cleaning up <TemporaryDirectory 'C:\\Users\\new\\AppData\\Local\\Temp\\tmpbmemfi6n'>
+  _warnings.warn(warn_message, ResourceWarning)
+.......................................................................K:\Book1A_runner\code\book1a\tests\test_ledger.py:60: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpd157ci8i\\R4.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(p)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\tests\test_ledger.py:66: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpd157ci8i\\R4_full.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(p2)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.........K:\Book1A_runner\code\book1a\tests\test_lookahead.py:80: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpuvfzwko8\\audit.csv' mode='r' encoding='utf-8'>
+  txt = open(p).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........................................K:\Book1A_runner\code\book1a\gex_check.py:30: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpjs43o_lg\\gex.csv' mode='r' encoding='utf-8-sig'>
+  rows = {r["session"]: r for r in csv.DictReader(open(csv_path, newline="", encoding="utf-8-sig"))}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_runner\code\book1a\gex_check.py:30: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpg1ohd3kw\\gex.csv' mode='r' encoding='utf-8-sig'>
+  rows = {r["session"]: r for r in csv.DictReader(open(csv_path, newline="", encoding="utf-8-sig"))}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmphxf3ostb\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmphxf3ostb\\run\\plans\\PreopenPlan_2025-11-28.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmphxf3ostb\\run\\plans\\PreopenPlan_2025-12-01.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+................................................................................................................................................................................................................K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp_s0sw0_t\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp_s0sw0_t\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp_s0sw0_t\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp_s0sw0_t\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpq0_g7uqs\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpq0_g7uqs\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpwjul9d3s\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpwjul9d3s\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+................K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp4fhnl1wz\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp4fhnl1wz\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmps49jclrw\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmps49jclrw\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp6nn21w_4\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp6nn21w_4\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmphrjvn90i\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmphrjvn90i\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpoichwzhr\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpoichwzhr\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpwvtqlu_5\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpwvtqlu_5\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpz34y8857\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpz34y8857\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp90_o_b7m\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp90_o_b7m\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp7j_k7ryd\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp7j_k7ryd\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpou5_qegv\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpou5_qegv\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp6mj5ho9v\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp6mj5ho9v\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp4xumq0cr\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp4xumq0cr\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpshia9glz\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpshia9glz\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp0ejiz2kz\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp0ejiz2kz\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.......K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmprb3xtxm8\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmprb3xtxm8\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp14lcuhy0\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp14lcuhy0\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpev2hgpb1\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpev2hgpb1\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpoytnt7_0\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpoytnt7_0\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp8m0mkffe\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp8m0mkffe\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp05byu5ei\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp05byu5ei\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpfh84k_ne\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpfh84k_ne\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpx_z37ju2\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpx_z37ju2\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpv4dinhi2\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpv4dinhi2\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpbcta_ail\\run\\strategy\\JOFS_t.csv' mode='r' encoding='utf-8-sig'>
+  self.rows = list(csv.DictReader(open(jofs, newline="", encoding="utf-8-sig")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_inputs\jeron_engine\arm_replay.py:64: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpbcta_ail\\run\\plans\\PreopenPlan_2025-10-22.txt' mode='r' encoding='utf-8'>
+  for line in open(f, encoding="utf-8"):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.................K:\Book1A_runner\code\book1a\manifest.py:74: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpl8cizo6n\\ref.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\manifest.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpl8cizo6n\\ours.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\manifest.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpl8cizo6n\\ref.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_runner\code\book1a\manifest.py:74: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp0m9dg2k2\\ref.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\manifest.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp0m9dg2k2\\ours.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\manifest.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmp0m9dg2k2\\ref.csv' mode='r' encoding='utf-8'>
+  rows = list(csv.DictReader(open(path, newline="")))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.K:\Book1A_runner\code\book1a\replay_diff.py:30: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpahqnbh8t\\a\\f.json' mode='r' encoding='utf-8'>
+  txt = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+K:\Book1A_runner\code\book1a\replay_diff.py:30: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\new\\AppData\\Local\\Temp\\tmpahqnbh8t\\b\\f.json' mode='r' encoding='utf-8'>
+  txt = json.load(open(path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.....................
+----------------------------------------------------------------------
+Ran 461 tests in 5.800s
+
+OK
+sample written: C:\Users\new\AppData\Local\Temp\tmps5j6hxpw\sample\g4_sample.csv (28 rows)
+sample written: C:\Users\new\AppData\Local\Temp\tmph2tn55ul\sample\g4_sample.csv (28 rows)
+sample written: C:\Users\new\AppData\Local\Temp\tmprf1rgtdb\sample.csv (24 rows)
+sample written: C:\Users\new\AppData\Local\Temp\tmpcr4vp9bt\sample.csv (24 rows)
+DIFF EMPTY -> C:\Users\new\AppData\Local\Temp\tmpz_ejwcuq\rep.md
+DIFF NOT EMPTY: 1 files, 0 / 0 unpaired -> C:\Users\new\AppData\Local\Temp\tmpz_ejwcuq\rep.md

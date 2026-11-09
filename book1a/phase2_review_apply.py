@@ -69,6 +69,8 @@ changed during the run; a review count that differs from the ledger count. Outpu
 v1.2 (Nov 8, 2026, Phase 3 Step A6): generalized only by the phase argument. --phase phase3 runs the same code on the
 41 Phase 3 sessions (their exposure set in phase2_report.EXPOSED_BY_PHASE, their plans and plan hash table); outputs
 are named <phase>_review*.  --phase phase2 is unchanged (same rules, same output names).
+v1.3 (Nov 9, 2026, Phase 4 Step A): --phase phase4 allowed (52 sessions, their exposure set, plans and plan hash table);
+generalized only by the phase argument; phase2 and phase3 unchanged.
 """
 from __future__ import annotations
 
@@ -90,12 +92,14 @@ from book1a import bars as BARS, diag_phase1b as DG, phase2_report as RP, phase2
 from book1a.book1_import import jeron_engine  # noqa: F401
 from jeron_engine import fills
 
-VERSION = "phase2-review-apply-v1.2"   # v1.2 (Nov 8, 2026): phase argument (phase3 allowed); phase2 unchanged
-PHASES = ("phase2", "phase3")
+VERSION = "phase2-review-apply-v1.3"   # v1.3 (Nov 9, 2026): phase4 allowed; v1.2 (Nov 8, 2026): phase3 allowed; phase2 unchanged
+PHASES = ("phase2", "phase3", "phase4")
 AMENDMENT = {"phase2": "post-freeze reporting implementation amendment (Nov 7, 2026); not part of the frozen "
                        "implementation; tag book1a-phase2-frozen stays on e1d37a1",
              "phase3": "Phase 3 reporting code, registered in Phase3_registration.md (Step A, Nov 8, 2026) before any "
-                       "Phase 3 run; the same v1.1 rules, generalized only by the phase argument"}
+                       "Phase 3 run; the same v1.1 rules, generalized only by the phase argument",
+             "phase4": "Phase 4 reporting code, registered in Phase4_registration.md (Step A, Nov 9, 2026) before any "
+                       "Phase 4 run; the same v1.1 rules, generalized only by the phase argument"}
 LABEL = "replay (in-sample), descriptive only"
 STRATEGIES = ("R1", "R2", "R3", "R4")
 GEX_CAT = ("gamma_regime", "hvl_side", "pin_zone")
@@ -379,7 +383,7 @@ def run(phase: str, a0: Path, r3: Path, r4: Path, diag: Path, gex: Path, plans: 
     sess = S.phase_sessions(phase)
     sess_set = set(sess)
     pops = RP.populations(sess, phase)
-    nsess, pname = len(sess), {"phase2": "Phase 2", "phase3": "Phase 3"}[phase]
+    nsess, pname = len(sess), {"phase2": "Phase 2", "phase3": "Phase 3", "phase4": "Phase 4"}[phase]
 
     # ledgers
     ledgers, led_sha = {}, {}

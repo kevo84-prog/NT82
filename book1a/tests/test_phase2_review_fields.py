@@ -177,7 +177,7 @@ class TestComputeWiring(unittest.TestCase):
 
 class TestGuard(unittest.TestCase):
     def test_phase2_only(self):
-        for ph in ("phase1", "phase1b", "phase4", "", "Phase2", "Phase3"):
+        for ph in ("phase1", "phase1b", "phase5", "", "Phase2", "Phase3"):
             with self.assertRaises(RuntimeError):
                 F.compute(ph, [], None, None)
 
