@@ -174,6 +174,20 @@ def derive(GC, MQ, chain, row, s: dt.date):
                 n_front_options=int(len(ch)))
 
 
+def level_match(a, b) -> bool:
+    """Repro check of one numeric level: a = rebuilt value (mq_levels.compute_levels), b = frozen gex_levels_block1.csv cell.
+    Post-freeze calculation fix (Phase 3 Step B, Nov 9, 2026, Kyron): two absent values match. Rebuilt absent = None or a
+    float NaN; frozen absent = None or a string empty after strip() (a 'nan' text cell is NOT absent). One absent and one
+    present = mismatch. Present values: unchanged comparison, tolerance max(1e-6, 1e-9 * |b|); other text still raises."""
+    a_absent = a is None or (isinstance(a, float) and math.isnan(a))
+    b_absent = b is None or (isinstance(b, str) and b.strip() == "")
+    if a_absent and b_absent:
+        return True
+    if b_absent:
+        return False
+    return a is not None and abs(float(a) - float(b)) <= max(1e-6, 1e-9 * abs(float(b)))
+
+
 def run(inputs: Path, sessions, out: Path):
     GC, MQ = import_code(inputs)
     out.mkdir(parents=True, exist_ok=True)
@@ -191,7 +205,7 @@ def run(inputs: Path, sessions, out: Path):
             elif k == "options_used":
                 rep[k] = a is not None and str(int(a)) == str(b)
             else:
-                rep[k] = a is not None and b not in (None, "") and abs(float(a) - float(b)) <= max(1e-6, 1e-9 * abs(float(b)))
+                rep[k] = level_match(a, b)
         x = derive(GC, MQ, chain, row, dt.date.fromisoformat(s)) if chain is not None else {}
         res.append(dict(session=s, report_date=row["report_date"], available_at=f"{row['report_date']} 23:00 ET", front=row["front"],
                         settle=row["settle"], repro_all_match="Y" if all(rep.values()) else "N",
